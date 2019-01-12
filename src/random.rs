@@ -18,15 +18,15 @@ fn random_float() -> f64 {
 }
 
 
-fn random_32bit_int<N: Into<f64>>(max: N) -> u32 {
-    (random_float() * max.into()) as u32
+fn random_64_bit_int<N: Into<f64>>(max: N) -> u64 {
+    (random_float() * max.into()) as u64
 }
 
 
 pub fn random_block() -> String {
     pad(
         BLOCK_SIZE as u32,
-        to_base_str(random_32bit_int(DISCRETE_VALUES as u32))
+        &to_base_str(random_64_bit_int(DISCRETE_VALUES as u32))
     )
 }
 

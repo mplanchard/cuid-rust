@@ -13,7 +13,7 @@ mod time;
 static COUNTER: AtomicUsize = AtomicUsize::new(0);
 static BASE: u8 = 36;
 static BLOCK_SIZE: u8 = 4;
-static DISCRETE_VALUES: usize = 1679616;  // BASE^BLOCK_SIZE
+static DISCRETE_VALUES: u32 = 1679616;  // BASE^BLOCK_SIZE
 
 
 
@@ -24,7 +24,7 @@ mod tests {
     #[test]
     fn correct_discrete_values() {
         assert_eq!(
-            (BASE as usize).pow(BLOCK_SIZE as u32),
+            (BASE as u32).pow(BLOCK_SIZE as u32),
             DISCRETE_VALUES,
         );
     }

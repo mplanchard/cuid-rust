@@ -6,8 +6,9 @@ use super::BASE;
 
 fn to_radix_str<N: Into<u64>>(radix: u8, number: N) -> String {
     let number = number.into();
-    let radix = radix as u64;
-    if number < radix {
+    if number < radix as u64 {
+        // Casting number to u32 is okay here, b/c radix started out as
+        // u8, so number cannot be larger than a u8
         return char::from_digit(number as u32, radix as u32)
             .unwrap()
             .to_string();
@@ -17,8 +18,8 @@ fn to_radix_str<N: Into<u64>>(radix: u8, number: N) -> String {
     let mut num = number;
 
     while num > 0 {
-        remainders.push((num % radix) as u8);
-        num = num / radix;
+        remainders.push((num % radix as u64) as u8);
+        num = num / radix as u64;
     }
 
     remainders
@@ -34,8 +35,7 @@ pub fn to_base_str<N: Into<u64>>(number: N) -> String {
 }
 
 
-fn pad_with_char<S: Into<String>>(pad_char: char, size: u32, to_pad: S) -> String {
-    let to_pad = to_pad.into();
+fn pad_with_char(pad_char: char, size: u32, to_pad: &str) -> String {
     let size = size as usize;
     let length = to_pad.len();
     iter::repeat(pad_char)
@@ -46,7 +46,7 @@ fn pad_with_char<S: Into<String>>(pad_char: char, size: u32, to_pad: S) -> Strin
 }
 
 
-pub fn pad<S: Into<String>>(size: u32, to_pad: S) -> String {
+pub fn pad(size: u32, to_pad: &str) -> String {
     pad_with_char('0', size, to_pad)
 }
 
