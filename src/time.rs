@@ -4,7 +4,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use text::to_base_str;
 
 
-pub fn timestamp() -> String {
+pub fn timestamp() -> Box<str> {
     to_base_str(
         SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs()
     )

@@ -1,5 +1,5 @@
 use std::sync::atomic::Ordering;
-use super::{ BASE, BLOCK_SIZE, COUNTER, DISCRETE_VALUES };
+use super::{COUNTER, DISCRETE_VALUES};
 
 
 pub fn fetch_and_increment() -> u32 {
@@ -31,4 +31,16 @@ mod tests {
     }
 
     // TODO: Multi-thread counter tests
+}
+
+#[cfg(test)]
+mod benchmarks {
+    use test::Bencher;
+    use super::*;
+
+    #[bench]
+    fn basic_increment(b: &mut Bencher) {
+        b.iter(|| fetch_and_increment())
+    }
+
 }

@@ -1,11 +1,7 @@
-use rand::{ CryptoRng, Rng, thread_rng };
+use rand::{CryptoRng, Rng, thread_rng};
 
-use super::{ BLOCK_SIZE, DISCRETE_VALUES };
-use text::{ pad, to_base_str };
-
-// The default implemention is cryptographically secure, as it
-// is a shortcut for thread_rng().gen(), and ThreadRng implements
-// the CryptoRng trait.
+use super::{BLOCK_SIZE, DISCRETE_VALUES};
+use text::{pad, to_base_str};
 
 
 fn random_float_from_rng<R: Rng + CryptoRng>(mut rng: R) -> f64 {
@@ -23,7 +19,7 @@ fn random_64_bit_int<N: Into<f64>>(max: N) -> u64 {
 }
 
 
-pub fn random_block() -> String {
+pub fn random_block() -> Box<str> {
     pad(
         BLOCK_SIZE as u32,
         &to_base_str(random_64_bit_int(DISCRETE_VALUES as u32))
@@ -46,4 +42,28 @@ mod test_randoms {
         assert!(random_block() != random_block())
     }
 
+}
+
+#[cfg(test)]
+mod benchmarks {
+    use super::*;
+    use std::u32;
+    use test::Bencher;
+
+    #[bench]
+    fn bench_random_float(b: &mut Bencher) {
+        b.iter(|| random_float())
+    }
+
+    #[bench]
+    fn bench_random_64_bit_int(b: &mut Bencher) {
+        // this shouldn't take noticeably more time than generating a
+        // random float
+        b.iter(|| random_64_bit_int(u32::MAX))
+    }
+
+    #[bench]
+    fn bench_random_block(b: &mut Bencher) {
+        b.iter(|| random_block())
+    }
 }
