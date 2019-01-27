@@ -2,6 +2,8 @@
 #![feature(no_more_cas)]  // used by counter
 use std::sync::atomic::{ATOMIC_USIZE_INIT, AtomicUsize};
 
+#[macro_use]
+extern crate lazy_static;
 extern crate hostname;
 extern crate rand;
 extern crate test;
@@ -18,13 +20,17 @@ static BLOCK_SIZE: u8 = 4;
 static DISCRETE_VALUES: u32 = 1679616;  // BASE^BLOCK_SIZE
 static START_STR: &str = "c";
 
+lazy_static! {
+    static ref FINGERPRINT: String = fingerprint::fingerprint().into();
+}
+
 
 pub fn cuid() -> String {
     [
         START_STR,
         &time::timestamp(),
         &text::to_base_str(counter::fetch_and_increment()),
-        &fingerprint::fingerprint(),
+        &FINGERPRINT,
         &random::random_block(),
         &random::random_block(),
     ].concat()
@@ -34,7 +40,7 @@ pub fn cuid() -> String {
 pub fn slug() -> String {
     let timestamp = time::timestamp();
     let counter = text::to_base_str(counter::fetch_and_increment());
-    let fp = fingerprint::fingerprint();
+    let fp = &FINGERPRINT;
     let rand = random::random_block();
     [
         &timestamp[timestamp.len()-2..],
@@ -87,6 +93,28 @@ mod tests {
     #[test]
     fn slug_is_slug() {
         assert!(is_slug(slug()));
+    }
+
+}
+
+
+#[cfg(test)]
+mod benchmarks {
+    use test::Bencher;
+    use super::*;
+
+    #[bench]
+    fn bench_cuid(b: &mut Bencher) {
+        b.iter(|| {
+            cuid();
+        })
+    }
+
+    #[bench]
+    fn bench_slug(b: &mut Bencher) {
+        b.iter(|| {
+            slug();
+        })
     }
 
 }
