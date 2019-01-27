@@ -40,13 +40,12 @@ pub fn cuid() -> String {
 pub fn slug() -> String {
     let timestamp = time::timestamp();
     let counter = text::to_base_str(counter::fetch_and_increment());
-    let fp = &FINGERPRINT;
     let rand = random::random_block();
     [
         &timestamp[timestamp.len()-2..],
         &counter[counter.len().saturating_sub(4)..],
-        &fp[..1],
-        &fp[fp.len()-1..],
+        &FINGERPRINT[..1],
+        &FINGERPRINT[FINGERPRINT.len()-1..],
         &rand[rand.len()-2..],
     ].concat()
 }
