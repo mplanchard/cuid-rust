@@ -1,5 +1,6 @@
 use std::process;
 
+use error::CuidError;
 use hostname::get_hostname;
 
 use text::{ to_base_str, pad };
@@ -15,29 +16,31 @@ fn pid() -> Box<str> {
 }
 
 
-fn convert_hostname(hostname_getter: fn() -> Option<String>) -> Box<str> {
-    pad(
-        FINGERPRINT_PADDING as u32,
-        &to_base_str(
-            hostname_getter()
-                .map(|h| {
-                    h.chars().fold(
-                        h.len() + BASE as usize,
-                        |acc, c| acc + c as usize
-                    )
-                }).unwrap() as u64
-        )
-    ).into()
+fn convert_hostname(
+    hostname_getter: fn() -> Option<String>
+) -> Result<Box<str>, CuidError> {
+    hostname_getter()
+        .map(|h| {
+            h.chars().fold(
+                h.len() + BASE as usize,
+                |acc, c| acc + c as usize
+            )
+        })
+        .map(|print| print as u64)
+        .map(to_base_str)
+        .map(|base_str| pad(FINGERPRINT_PADDING as u32, &base_str))
+        .map(|box_str| box_str.into())
+        .ok_or_else(|| CuidError::FingerprintError)
 }
 
 
-fn host_id() -> Box<str> {
+fn host_id() -> Result<Box<str>, CuidError> {
     convert_hostname(get_hostname)
 }
 
 
-pub fn fingerprint() -> Box<str> {
-    [pid(), host_id()].concat().into()
+pub fn fingerprint() -> Result<Box<str>, CuidError> {
+    host_id().map(|hid| [pid(), hid].concat().into())
 }
 
 
@@ -56,30 +59,41 @@ mod fingerprint_tests {
 
     #[test]
     fn test_convert_hostname_1() {
-        assert_eq!("a3", &*convert_hostname(|| Some("foo".into())))
+        assert_eq!(
+            "a3",
+            &*convert_hostname(|| Some("foo".into())).unwrap()
+        )
     }
 
     #[test]
     fn test_convert_hostname_2() {
-        assert_eq!("9o", &*convert_hostname(|| Some("bar".into())))
+        assert_eq!(
+            "9o",
+            &*convert_hostname(|| Some("bar".into())).unwrap()
+        )
     }
 
     #[test]
     fn test_convert_hostname_3() {
-        assert_eq!("nf", &*convert_hostname(|| Some("mr-magoo".into())))
+        assert_eq!(
+            "nf",
+            &*convert_hostname(|| Some("mr-magoo".into())).unwrap()
+        )
     }
 
     #[test]
     fn test_convert_hostname_4() {
         assert_eq!(
             "j9",
-            &*convert_hostname(|| Some("wow-what-a-long-hostname-you-have".into()))
+            &*convert_hostname(
+                || Some("wow-what-a-long-hostname-you-have".into())
+            ).unwrap()
         )
     }
 
     #[test]
     fn fingerprint_len() {
-        assert_eq!(4, fingerprint().len())
+        assert_eq!(4, fingerprint().unwrap().len())
     }
 
 }

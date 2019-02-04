@@ -9,6 +9,7 @@ extern crate rand;
 extern crate test;
 
 mod counter;
+mod error;
 mod fingerprint;
 mod random;
 mod text;
@@ -21,7 +22,7 @@ static DISCRETE_VALUES: u32 = 1679616;  // BASE^BLOCK_SIZE
 static START_STR: &str = "c";
 
 lazy_static! {
-    static ref FINGERPRINT: String = fingerprint::fingerprint().into();
+    static ref FINGERPRINT: String = fingerprint::fingerprint().unwrap().into();
 }
 
 
