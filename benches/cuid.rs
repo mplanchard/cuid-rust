@@ -8,7 +8,7 @@ use criterion::Criterion;
 fn bench_cuid(c: &mut Criterion) {
     c.bench_function(
         "generate cuid",
-        |b| b.iter(|| cuid::cuid())
+        |b| b.iter(|| cuid::cuid().unwrap())
     );
 }
 
@@ -16,7 +16,7 @@ fn bench_cuid(c: &mut Criterion) {
 fn bench_slug(c: &mut Criterion) {
     c.bench_function(
         "generate cuid slug",
-        |b| b.iter(|| cuid::slug())
+        |b| b.iter(|| cuid::slug().unwrap())
     );
 }
 

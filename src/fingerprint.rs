@@ -14,7 +14,7 @@ static FINGERPRINT_PADDING: u8 = 2;
 fn pid() -> Result<Box<str>, CuidError> {
     to_base_str(process::id())
         .map(|s| pad(FINGERPRINT_PADDING as u32, &s))
-        .map_err(|err| CuidError::FingerprintError("Could not encode pid"))
+        .map_err(|_| CuidError::FingerprintError("Could not encode pid"))
 }
 
 
@@ -112,28 +112,28 @@ mod benchmarks {
     #[bench]
     fn bench_pid(b: &mut Bencher) {
         b.iter(|| {
-            pid();
+            pid().unwrap();
         })
     }
 
     #[bench]
     fn bench_convert_hostname_real(b: &mut Bencher) {
         b.iter(|| {
-            convert_hostname(get_hostname);
+            convert_hostname(get_hostname).unwrap();
         })
     }
 
     #[bench]
     fn bench_convert_hostname_mock(b: &mut Bencher) {
         b.iter(|| {
-            convert_hostname(|| Some(String::from("hostname")));
+            convert_hostname(|| Some(String::from("hostname"))).unwrap();
         })
     }
 
     #[bench]
     fn bench_fingerprint(b: &mut Bencher) {
         b.iter(|| {
-            fingerprint();
+            fingerprint().unwrap();
         })
     }
 }

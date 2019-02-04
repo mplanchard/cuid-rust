@@ -15,6 +15,8 @@ mod random;
 mod text;
 mod time;
 
+pub use error::CuidError;
+
 static COUNTER: AtomicUsize = ATOMIC_USIZE_INIT;
 static BASE: u8 = 36;
 static BLOCK_SIZE: u8 = 4;
@@ -26,29 +28,29 @@ lazy_static! {
 }
 
 
-pub fn cuid() -> String {
-    [
+pub fn cuid() -> Result<String, CuidError> {
+    Ok([
         START_STR,
-        &time::timestamp().unwrap(),
-        &counter::current().unwrap(),
+        &time::timestamp()?,
+        &counter::current()?,
         &FINGERPRINT,
-        &random::random_block().unwrap(),
-        &random::random_block().unwrap(),
-    ].concat()
+        &random::random_block()?,
+        &random::random_block()?,
+    ].concat())
 }
 
 
-pub fn slug() -> String {
-    let timestamp = time::timestamp().unwrap();
-    let count = counter::current().unwrap();
-    let rand = random::random_block().unwrap();
-    [
+pub fn slug() -> Result<String, CuidError> {
+    let timestamp = time::timestamp()?;
+    let count = counter::current()?;
+    let rand = random::random_block()?;
+    Ok([
         &timestamp[timestamp.len()-2..],
         &count[count.len().saturating_sub(4)..],
         &FINGERPRINT[..1],
         &FINGERPRINT[FINGERPRINT.len()-1..],
         &rand[rand.len()-2..],
-    ].concat()
+    ].concat())
 }
 
 
@@ -77,22 +79,22 @@ mod tests {
 
     #[test]
     fn cuid_is_cuid() {
-        assert!(is_cuid(cuid()));
+        assert!(is_cuid(cuid().unwrap()));
     }
 
     #[test]
     fn slug_max_len() {
-        assert!(slug().len() <= 10);
+        assert!(slug().unwrap().len() <= 10);
     }
 
     #[test]
     fn slug_min_len() {
-        assert!(slug().len() >= 7);
+        assert!(slug().unwrap().len() >= 7);
     }
 
     #[test]
     fn slug_is_slug() {
-        assert!(is_slug(slug()));
+        assert!(is_slug(slug().unwrap()));
     }
 
 }
@@ -106,14 +108,14 @@ mod benchmarks {
     #[bench]
     fn bench_cuid(b: &mut Bencher) {
         b.iter(|| {
-            cuid();
+            cuid().unwrap();
         })
     }
 
     #[bench]
     fn bench_slug(b: &mut Bencher) {
         b.iter(|| {
-            slug();
+            slug().unwrap();
         })
     }
 

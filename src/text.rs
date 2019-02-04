@@ -156,21 +156,21 @@ mod benchmarks {
     #[bench]
     fn to_radix_str_less_than_radix(b: &mut Bencher) {
         b.iter(|| {
-            to_radix_str(16, 10u8);
+            to_radix_str(16, 10u8).unwrap();
         });
     }
 
     #[bench]
     fn to_radix_str_medium(b: &mut Bencher) {
         b.iter(|| {
-            to_radix_str(16, 1_000_000_000u32);
+            to_radix_str(16, 1_000_000_000u32).unwrap();
         });
     }
 
     #[bench]
     fn to_radix_str_large(b: &mut Bencher) {
         b.iter(|| {
-            to_radix_str(16, u32::MAX);
+            to_radix_str(16, u32::MAX).unwrap();
         });
     }
 
