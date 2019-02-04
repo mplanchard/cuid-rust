@@ -1,6 +1,8 @@
 use std::char;
 use std::f64;
 
+use error::CuidError;
+
 use super::BASE;
 
 
@@ -9,19 +11,19 @@ fn digits_in_base<N: Into<f64>>(base: u8, number: N) -> u64 {
 }
 
 
-fn to_radix_str<N: Into<u64>>(radix: u8, number: N) -> Box<str> {
+fn to_radix_str<N: Into<u64>>(radix: u8, number: N) -> Result<Box<str>, CuidError> {
     let mut number = number.into();
     if number < radix.into() {
         // No need to allocate a vector or do any math
         // NOTE: we are okay to cast to u32 here, b/c number < radix,
         // which has to be 255 or below.
         return char::from_digit(number as u32, radix.into())
-            .unwrap()
-            .to_string()
-            .into();
+            .map(|c| c.to_string())
+            .map(|s| Box::from(s))
+            .ok_or(CuidError::TextError("Bad digit"))
     }
     else if number > f64::MAX as u64 {
-        panic!("Cannot convert numbers larger than {}", f64::MAX);
+        return Err(CuidError::TextError("Input number too large"));
     }
 
     let mut chars: Vec<char> = Vec::with_capacity(
@@ -33,12 +35,11 @@ fn to_radix_str<N: Into<u64>>(radix: u8, number: N) -> Box<str> {
         );
         number = number / radix as u64;
     }
-    chars.iter().rev().collect::<String>().into()
-
+    Ok(chars.iter().rev().collect::<String>().into())
 }
 
 
-pub fn to_base_str<N: Into<u64>>(number: N) -> Box<str> {
+pub fn to_base_str<N: Into<u64>>(number: N) -> Result<Box<str>, CuidError> {
     to_radix_str(BASE, number)
 }
 
@@ -114,27 +115,27 @@ mod radix_str_tests {
 
     #[test]
     fn hex_number_below_radix() {
-        assert_eq!("8", &*to_radix_str(16, 8u8));
+        assert_eq!("8", &*to_radix_str(16, 8u8).unwrap());
     }
 
     #[test]
     fn hex_number_below_radix_letter() {
-        assert_eq!("a", &*to_radix_str(16, 10u8));
+        assert_eq!("a", &*to_radix_str(16, 10u8).unwrap());
     }
 
     #[test]
     fn number_above_radix() {
-        assert_eq!("10", &*to_radix_str(16, 16u8))
+        assert_eq!("10", &*to_radix_str(16, 16u8).unwrap())
     }
 
     #[test]
     fn number_well_above_radix() {
-        assert_eq!("16i", &*to_radix_str(32, 1234u16))
+        assert_eq!("16i", &*to_radix_str(32, 1234u16).unwrap())
     }
 
     #[test]
     fn large_base_36() {
-        assert_eq!("7cik2", &*to_radix_str(36, 12341234u32))
+        assert_eq!("7cik2", &*to_radix_str(36, 12341234u32).unwrap())
     }
 
 }

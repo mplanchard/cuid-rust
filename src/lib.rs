@@ -32,8 +32,8 @@ pub fn cuid() -> String {
         &time::timestamp().unwrap(),
         &counter::current().unwrap(),
         &FINGERPRINT,
-        &random::random_block(),
-        &random::random_block(),
+        &random::random_block().unwrap(),
+        &random::random_block().unwrap(),
     ].concat()
 }
 
@@ -41,7 +41,7 @@ pub fn cuid() -> String {
 pub fn slug() -> String {
     let timestamp = time::timestamp().unwrap();
     let count = counter::current().unwrap();
-    let rand = random::random_block();
+    let rand = random::random_block().unwrap();
     [
         &timestamp[timestamp.len()-2..],
         &count[count.len().saturating_sub(4)..],

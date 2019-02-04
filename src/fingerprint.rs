@@ -11,8 +11,10 @@ use super::BASE;
 static FINGERPRINT_PADDING: u8 = 2;
 
 
-fn pid() -> Box<str> {
-    pad(FINGERPRINT_PADDING as u32, &to_base_str(process::id()))
+fn pid() -> Result<Box<str>, CuidError> {
+    to_base_str(process::id())
+        .map(|s| pad(FINGERPRINT_PADDING as u32, &s))
+        .map_err(|err| CuidError::FingerprintError("Could not encode pid"))
 }
 
 
@@ -28,9 +30,11 @@ fn convert_hostname(
         })
         .map(|print| print as u64)
         .map(to_base_str)
+        .unwrap_or(
+            Err(CuidError::FingerprintError("Could not retrieve hostname")),
+        )
         .map(|base_str| pad(FINGERPRINT_PADDING as u32, &base_str))
         .map(|box_str| box_str.into())
-        .ok_or_else(|| CuidError::FingerprintError)
 }
 
 
@@ -40,7 +44,9 @@ fn host_id() -> Result<Box<str>, CuidError> {
 
 
 pub fn fingerprint() -> Result<Box<str>, CuidError> {
-    host_id().map(|hid| [pid(), hid].concat().into())
+    let hid = host_id()?;
+    let procid = pid()?;
+    Ok([procid, hid].concat().into())
 }
 
 
@@ -51,7 +57,7 @@ mod fingerprint_tests {
 
     #[test]
     fn test_pid_length() {
-        assert_eq!(pid().len(), FINGERPRINT_PADDING as usize)
+        assert_eq!(pid().unwrap().len(), FINGERPRINT_PADDING as usize)
     }
 
     // The below expected host_ids were all generated directly using

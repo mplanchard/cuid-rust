@@ -15,7 +15,7 @@ fn fetch_and_increment() -> Result<u32, CuidError> {
 
 
 pub fn current() -> Result<Box<str>, CuidError> {
-    fetch_and_increment().map(to_base_str)
+    fetch_and_increment().map(to_base_str)?
 }
 
 
