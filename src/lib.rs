@@ -29,8 +29,8 @@ lazy_static! {
 pub fn cuid() -> String {
     [
         START_STR,
-        &time::timestamp(),
-        &text::to_base_str(counter::fetch_and_increment()),
+        &time::timestamp().unwrap(),
+        &counter::current().unwrap(),
         &FINGERPRINT,
         &random::random_block(),
         &random::random_block(),
@@ -39,12 +39,12 @@ pub fn cuid() -> String {
 
 
 pub fn slug() -> String {
-    let timestamp = time::timestamp();
-    let counter = text::to_base_str(counter::fetch_and_increment());
+    let timestamp = time::timestamp().unwrap();
+    let count = counter::current().unwrap();
     let rand = random::random_block();
     [
         &timestamp[timestamp.len()-2..],
-        &counter[counter.len().saturating_sub(4)..],
+        &count[count.len().saturating_sub(4)..],
         &FINGERPRINT[..1],
         &FINGERPRINT[FINGERPRINT.len()-1..],
         &rand[rand.len()-2..],

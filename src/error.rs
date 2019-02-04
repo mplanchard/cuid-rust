@@ -1,12 +1,13 @@
 use std::error as stderr;
 use std::fmt;
+use std::time::SystemTimeError;
 
 
 #[derive(Debug)]
 pub enum CuidError {
     CounterError,
     FingerprintError,
-    TimestampError,
+    TimestampError(SystemTimeError),
 }
 
 impl fmt::Display for CuidError {
@@ -18,8 +19,8 @@ impl fmt::Display for CuidError {
             CuidError::FingerprintError => write!(
                 f, "Could not create system fingerprint!"
             ),
-            CuidError::TimestampError => write!(
-                f, "Could not calculate time since Epoch!"
+            CuidError::TimestampError(ref err) => write!(
+                f, "SystemTimeError: {}", err
             ),
         }
     }
@@ -30,7 +31,13 @@ impl stderr::Error for CuidError {
         match *self {
             CuidError::CounterError => "Could not retrieve counter",
             CuidError::FingerprintError => "Could not generate fingerprint",
-            CuidError::TimestampError => "Could not generate timestamp",
+            CuidError::TimestampError(_) => "Could not generate timestamp",
         }
+    }
+}
+
+impl From<SystemTimeError> for CuidError {
+    fn from(err: SystemTimeError) -> Self {
+        CuidError::TimestampError(err)
     }
 }

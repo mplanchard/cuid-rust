@@ -1,13 +1,15 @@
 
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use error::CuidError;
 use text::to_base_str;
 
 
-pub fn timestamp() -> Box<str> {
-    to_base_str(
-        SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs()
-    )
+pub fn timestamp() -> Result<Box<str>, CuidError> {
+    SystemTime::now().duration_since(UNIX_EPOCH)
+        .map(|time| time.as_secs())
+        .map(to_base_str)
+        .map_err(|time_err| CuidError::from(time_err))
 }
 
 
