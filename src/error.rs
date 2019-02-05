@@ -3,6 +3,7 @@ use std::fmt;
 use std::time::SystemTimeError;
 
 
+/// Errors for the CUID library
 #[derive(Debug)]
 pub enum CuidError {
     CounterError,

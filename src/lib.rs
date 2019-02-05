@@ -28,6 +28,15 @@ lazy_static! {
 }
 
 
+/// Generate a CUID
+///
+/// # Examples
+///
+/// ```
+/// extern crate cuid;
+/// let id = cuid::cuid();
+/// assert!(cuid::is_cuid(id.unwrap()));
+/// ```
 pub fn cuid() -> Result<String, CuidError> {
     Ok([
         START_STR,
@@ -40,6 +49,18 @@ pub fn cuid() -> Result<String, CuidError> {
 }
 
 
+/// Generate a CUID slug
+///
+/// CUID slugs are shorter, appropriate for short URLs or other uses
+/// where uniqueness across deployments is not the primary requirement.
+///
+/// # Examples
+///
+/// ```
+/// extern crate cuid;
+/// let slug = cuid::slug();
+/// assert!(cuid::is_slug(slug.unwrap()));
+/// ```
 pub fn slug() -> Result<String, CuidError> {
     let timestamp = time::timestamp()?;
     let count = counter::current()?;
@@ -54,11 +75,29 @@ pub fn slug() -> Result<String, CuidError> {
 }
 
 
+/// Return whether a string is a legitimate CUID
+///
+/// # Examples
+///
+/// ```
+/// extern crate cuid;
+/// let id = cuid::cuid().unwrap();
+/// assert!(cuid::is_cuid(id));
+/// ```
 pub fn is_cuid<S: Into<String>>(to_check: S) -> bool {
     &to_check.into()[..1] == START_STR
 }
 
 
+/// Return whether a string is a legitimate CUID slug
+///
+/// # Examples
+///
+/// ```
+/// extern crate cuid;
+/// let slug = cuid::slug().unwrap();
+/// assert!(cuid::is_slug(slug));
+/// ```
 pub fn is_slug<S: Into<String>>(to_check: S) -> bool {
     let length = to_check.into().len();
     length >= 7 && length <=10
