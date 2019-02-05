@@ -1,3 +1,7 @@
+//! # cuid-rust
+//!
+//! CUID generation in rust
+//!
 #![feature(test)]  // used for benchmarking
 #![feature(no_more_cas)]  // used by counter
 use std::sync::atomic::{ATOMIC_USIZE_INIT, AtomicUsize};
