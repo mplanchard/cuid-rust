@@ -8,6 +8,14 @@ binary search lookup performance."
 This is a rust implementation of the CUID library, the original JavaScript
 implementation of which may be found [here](https://github.com/ericelliott/cuid)
 
+## Installation
+
+In cargo.toml
+
+```toml
+cuid = "0.1.0"
+```
+
 ## Usage
 
 ```rust
