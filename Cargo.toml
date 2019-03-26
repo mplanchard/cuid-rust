@@ -12,6 +12,7 @@ criterion = "~0.2"
 hostname = "~0.1"
 lazy_static = "~1.2"
 rand = "~0.6"
+parking_lot = "0.7"
 
 [[bench]]
 name = "cuid"

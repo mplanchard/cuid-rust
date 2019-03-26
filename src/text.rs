@@ -5,11 +5,9 @@ use error::CuidError;
 
 use super::BASE;
 
-
 fn digits_in_base<N: Into<f64>>(base: u8, number: N) -> u64 {
     number.into().log(base as f64) as u64 + 1
 }
-
 
 fn to_radix_str<N: Into<u64>>(radix: u8, number: N) -> Result<Box<str>, CuidError> {
     let mut number = number.into();
@@ -20,37 +18,29 @@ fn to_radix_str<N: Into<u64>>(radix: u8, number: N) -> Result<Box<str>, CuidErro
         return char::from_digit(number as u32, radix.into())
             .map(|c| c.to_string())
             .map(|s| Box::from(s))
-            .ok_or(CuidError::TextError("Bad digit"))
-    }
-    else if number > f64::MAX as u64 {
+            .ok_or(CuidError::TextError("Bad digit"));
+    } else if number > f64::MAX as u64 {
         return Err(CuidError::TextError("Input number too large"));
     }
 
-    let mut chars: Vec<char> = Vec::with_capacity(
-        digits_in_base(radix, number as f64) as usize
-    );
+    let mut chars: Vec<char> = Vec::with_capacity(digits_in_base(radix, number as f64) as usize);
     while number > 0 {
-        chars.push(
-            char::from_digit((number % radix as u64) as u32, radix.into()).unwrap()
-        );
+        chars.push(char::from_digit((number % radix as u64) as u32, radix.into()).unwrap());
         number = number / radix as u64;
     }
     Ok(chars.iter().rev().collect::<String>().into())
 }
 
-
 pub fn to_base_str<N: Into<u64>>(number: N) -> Result<Box<str>, CuidError> {
     to_radix_str(BASE, number)
 }
-
 
 fn pad_with_char(pad_char: char, size: u32, to_pad: &str) -> Box<str> {
     let size = size as usize;
     let length = to_pad.len();
     if length == size {
         return to_pad.into();
-    }
-    else if length > size {
+    } else if length > size {
         return to_pad[length - size..].into();
     }
     let mut ret = String::with_capacity(size as usize);
@@ -61,11 +51,9 @@ fn pad_with_char(pad_char: char, size: u32, to_pad: &str) -> Box<str> {
     ret.into()
 }
 
-
 pub fn pad(size: u32, to_pad: &str) -> Box<str> {
     pad_with_char('0', size, to_pad)
 }
-
 
 #[cfg(test)]
 mod pad_tests {
@@ -97,7 +85,6 @@ mod pad_tests {
     }
 
 }
-
 
 #[cfg(test)]
 mod radix_str_tests {
@@ -136,63 +123,6 @@ mod radix_str_tests {
     #[test]
     fn large_base_36() {
         assert_eq!("7cik2", &*to_radix_str(36, 12341234u32).unwrap())
-    }
-
-}
-
-#[cfg(test)]
-mod benchmarks {
-    use super::*;
-    use std::u32;
-    use test::Bencher;
-
-    #[bench]
-    fn digits_in_some_base(b: &mut Bencher) {
-        b.iter(|| {
-            digits_in_base(16, 12345678);
-        });
-    }
-
-    #[bench]
-    fn to_radix_str_less_than_radix(b: &mut Bencher) {
-        b.iter(|| {
-            to_radix_str(16, 10u8).unwrap();
-        });
-    }
-
-    #[bench]
-    fn to_radix_str_medium(b: &mut Bencher) {
-        b.iter(|| {
-            to_radix_str(16, 1_000_000_000u32).unwrap();
-        });
-    }
-
-    #[bench]
-    fn to_radix_str_large(b: &mut Bencher) {
-        b.iter(|| {
-            to_radix_str(16, u32::MAX).unwrap();
-        });
-    }
-
-    #[bench]
-    fn pad_equal(b: &mut Bencher) {
-        b.iter(|| {
-            pad_with_char('0', 12, "ooo ooo ooo ");
-        });
-    }
-
-    #[bench]
-    fn pad_small_string(b: &mut Bencher) {
-        b.iter(|| {
-            pad_with_char('0', 12, "oo");
-        });
-    }
-
-    #[bench]
-    fn pad_larger_string(b: &mut Bencher) {
-        b.iter(|| {
-            pad_with_char('0', 12, "ooo ooo ooo ooo ");
-        });
     }
 
 }

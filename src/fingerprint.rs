@@ -3,13 +3,11 @@ use std::process;
 use error::CuidError;
 use hostname::get_hostname;
 
-use text::{ to_base_str, pad };
+use text::{pad, to_base_str};
 
 use super::BASE;
 
-
 static FINGERPRINT_PADDING: u8 = 2;
-
 
 fn pid() -> Result<Box<str>, CuidError> {
     to_base_str(process::id())
@@ -17,38 +15,30 @@ fn pid() -> Result<Box<str>, CuidError> {
         .map_err(|_| CuidError::FingerprintError("Could not encode pid"))
 }
 
-
-fn convert_hostname(
-    hostname_getter: fn() -> Option<String>
-) -> Result<Box<str>, CuidError> {
+fn convert_hostname(hostname_getter: fn() -> Option<String>) -> Result<Box<str>, CuidError> {
     hostname_getter()
         .map(|h| {
-            h.chars().fold(
-                h.len() + BASE as usize,
-                |acc, c| acc + c as usize
-            )
+            h.chars()
+                .fold(h.len() + BASE as usize, |acc, c| acc + c as usize)
         })
         .map(|print| print as u64)
         .map(to_base_str)
-        .unwrap_or(
-            Err(CuidError::FingerprintError("Could not retrieve hostname")),
-        )
+        .unwrap_or(Err(CuidError::FingerprintError(
+            "Could not retrieve hostname",
+        )))
         .map(|base_str| pad(FINGERPRINT_PADDING as u32, &base_str))
         .map(|box_str| box_str.into())
 }
 
-
 fn host_id() -> Result<Box<str>, CuidError> {
     convert_hostname(get_hostname)
 }
-
 
 pub fn fingerprint() -> Result<Box<str>, CuidError> {
     let hid = host_id()?;
     let procid = pid()?;
     Ok([procid, hid].concat().into())
 }
-
 
 #[cfg(test)]
 mod fingerprint_tests {
@@ -65,18 +55,12 @@ mod fingerprint_tests {
 
     #[test]
     fn test_convert_hostname_1() {
-        assert_eq!(
-            "a3",
-            &*convert_hostname(|| Some("foo".into())).unwrap()
-        )
+        assert_eq!("a3", &*convert_hostname(|| Some("foo".into())).unwrap())
     }
 
     #[test]
     fn test_convert_hostname_2() {
-        assert_eq!(
-            "9o",
-            &*convert_hostname(|| Some("bar".into())).unwrap()
-        )
+        assert_eq!("9o", &*convert_hostname(|| Some("bar".into())).unwrap())
     }
 
     #[test]
@@ -91,9 +75,7 @@ mod fingerprint_tests {
     fn test_convert_hostname_4() {
         assert_eq!(
             "j9",
-            &*convert_hostname(
-                || Some("wow-what-a-long-hostname-you-have".into())
-            ).unwrap()
+            &*convert_hostname(|| Some("wow-what-a-long-hostname-you-have".into())).unwrap()
         )
     }
 
@@ -102,38 +84,4 @@ mod fingerprint_tests {
         assert_eq!(4, fingerprint().unwrap().len())
     }
 
-}
-
-#[cfg(test)]
-mod benchmarks {
-    use test::Bencher;
-    use super::*;
-
-    #[bench]
-    fn bench_pid(b: &mut Bencher) {
-        b.iter(|| {
-            pid().unwrap();
-        })
-    }
-
-    #[bench]
-    fn bench_convert_hostname_real(b: &mut Bencher) {
-        b.iter(|| {
-            convert_hostname(get_hostname).unwrap();
-        })
-    }
-
-    #[bench]
-    fn bench_convert_hostname_mock(b: &mut Bencher) {
-        b.iter(|| {
-            convert_hostname(|| Some(String::from("hostname"))).unwrap();
-        })
-    }
-
-    #[bench]
-    fn bench_fingerprint(b: &mut Bencher) {
-        b.iter(|| {
-            fingerprint().unwrap();
-        })
-    }
 }
