@@ -1,6 +1,4 @@
-use super::{COUNTER, DISCRETE_VALUES};
-use error::CuidError;
-use text::to_base_str;
+use super::{BLOCK_SIZE, COUNTER, DISCRETE_VALUES};
 
 fn fetch_and_increment() -> u32 {
     let mut counter = COUNTER.lock();
@@ -14,8 +12,12 @@ fn fetch_and_increment() -> u32 {
     }
 }
 
-pub fn current() -> Result<Box<str>, CuidError> {
-    to_base_str(fetch_and_increment())
+pub fn current() -> String {
+    format!(
+        "{:0width$}",
+        fetch_and_increment(),
+        width = BLOCK_SIZE as usize
+    )
 }
 
 #[cfg(test)]

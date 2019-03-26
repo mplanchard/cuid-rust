@@ -43,7 +43,7 @@ pub fn cuid() -> Result<String, CuidError> {
     Ok([
         START_STR,
         &time::timestamp()?,
-        &counter::current()?,
+        &counter::current(),
         &FINGERPRINT,
         &random::random_block()?,
         &random::random_block()?,
@@ -65,7 +65,7 @@ pub fn cuid() -> Result<String, CuidError> {
 /// ```
 pub fn slug() -> Result<String, CuidError> {
     let timestamp = time::timestamp()?;
-    let count = counter::current()?;
+    let count = counter::current();
     let rand = random::random_block()?;
     Ok([
         &timestamp[timestamp.len() - 2..],
