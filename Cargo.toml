@@ -10,7 +10,7 @@ criterion = "~0.2"
 
 [dependencies]
 hostname = "~0.1"
-lazy_static = "~1.3"
+lazy_static = "1.4"
 rand = "~0.6"
 parking_lot = "0.7"
 
