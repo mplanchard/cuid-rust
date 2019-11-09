@@ -10,7 +10,6 @@ pub fn timestamp() -> Result<Box<str>, CuidError> {
         .map(|time| time.as_secs())
         .map(to_base_str)
         .unwrap_or(Err(CuidError::TextError("Could not convert time to str")))
-        .map_err(|time_err| CuidError::from(time_err))
 }
 
 

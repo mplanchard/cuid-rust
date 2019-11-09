@@ -13,6 +13,14 @@ hostname = "~0.1"
 lazy_static = "~1.2"
 rand = "~0.6"
 
+[lib]
+name = "cuid"
+path = "src/lib.rs"
+
+[[bin]]
+name = "cuid"
+path = "src/bin.rs"
+
 [[bench]]
 name = "cuid"
 harness = false
