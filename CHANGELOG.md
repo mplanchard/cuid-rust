@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2020-02-22
+
 ### Added
 
 - Support for stable Rust (2018 edition)
+- The crate now includes a simple binary (`cuid`) that can be used to generate
+  CUIDs on the commandline
 
 ### Changed
 
@@ -28,4 +32,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Benchmark suite
 
 [Unreleased]: https://github.com/mplanchard/cuid-rust/compare/v0.1.0...HEAD
+[1.0.0]: https://github.com/mplanchard/cuid-rust/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/mplanchard/cuid-rust/compare/b691e4c32e25d7239157e85598c74a9f59124417...v0.1.0
