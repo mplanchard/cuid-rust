@@ -1,6 +1,3 @@
-use std::convert::TryInto;
-use std::sync::atomic::Ordering;
-
 use crate::error::CuidError;
 use crate::text::to_base_string;
 use crate::{COUNTER, DISCRETE_VALUES};
@@ -10,12 +7,14 @@ use crate::{COUNTER, DISCRETE_VALUES};
 ///
 /// If the counter has reached its max (DISCRETE VALUES), reset it to 0.
 fn fetch_and_increment() -> Result<u32, CuidError> {
-    COUNTER.compare_and_swap(
-        DISCRETE_VALUES.try_into()?,
-        0,
-        Ordering::SeqCst,
-    );
-    Ok(COUNTER.fetch_add(1, Ordering::SeqCst).try_into()?)
+    let mut counter = COUNTER.lock().map_err(|_| CuidError::CounterError)?;
+    let current = *counter;
+    if current == DISCRETE_VALUES - 1 {
+        *counter = 0;
+    } else {
+        *counter += 1;
+    };
+    Ok(current)
 }
 
 
@@ -31,17 +30,34 @@ mod tests {
 
     #[test]
     fn counter_increasing_basic() {
-        COUNTER.store(0, Ordering::SeqCst);
-        assert_eq!(0, fetch_and_increment().unwrap());
-        assert_eq!(1, fetch_and_increment().unwrap());
-        assert_eq!(2, fetch_and_increment().unwrap());
+        let start = 0;
+        {
+            let mut counter = COUNTER.lock().unwrap();
+            *counter = start;
+        }
+        // Tests run in parallel, so we're not necessarily guaranteed
+        // consistent ordering in the context of a test.
+        let first = fetch_and_increment().unwrap();
+        assert!(first >= start);
+        let second = fetch_and_increment().unwrap();
+        assert!(second > first);
+        let third = fetch_and_increment().unwrap();
+        assert!(third > second);
     }
 
     #[test]
     fn counter_increasing_rollover() {
-        COUNTER.store((DISCRETE_VALUES - 1) as usize, Ordering::SeqCst);
-        assert_eq!(DISCRETE_VALUES - 1, fetch_and_increment().unwrap());
-        assert_eq!(0, fetch_and_increment().unwrap());
+        let max = DISCRETE_VALUES - 1;
+        {
+            let mut counter = COUNTER.lock().unwrap();
+            *counter = max;
+        }
+        // Tests run in parallel, so we're not necessarily guaranteed
+        // consistent ordering in the context of a test.
+        fetch_and_increment().unwrap();  // will return the max unless another thread rolled us over
+        let rolled_over = fetch_and_increment().unwrap();  // must be rolled over
+
+        assert!(rolled_over < max);
     }
 
     // TODO: Multi-thread counter tests

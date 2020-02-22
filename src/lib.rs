@@ -2,7 +2,7 @@
 //!
 //! CUID generation in rust
 //!
-use std::sync::atomic::AtomicUsize;
+use std::sync::{Arc, Mutex};
 
 #[macro_use]
 extern crate lazy_static;
@@ -16,13 +16,13 @@ mod time;
 
 pub use error::CuidError;
 
-static COUNTER: AtomicUsize = AtomicUsize::new(0);
 static BASE: u8 = 36;
 static BLOCK_SIZE: u8 = 4;
 static DISCRETE_VALUES: u32 = 1679616; // BASE^BLOCK_SIZE
 static START_STR: &str = "c";
 
 lazy_static! {
+    static ref COUNTER: Arc<Mutex<u32>> = Arc::new(Mutex::new(0));
     static ref FINGERPRINT: String =
         fingerprint::fingerprint().expect("Could not determine system fingerprint!");
 }
