@@ -22,7 +22,14 @@ cuid = "0.1.0"
 use cuid;
 
 fn main() -> () {
-    println!("{}", cuid.cuid());
-    println!("{}", cuid.slug());
+    println!("{}", cuid.cuid().unwrap());
+    println!("{}", cuid.slug().unwrap());
 }
+```
+
+This package also provides a binary:
+
+```sh
+> cargo run cuid
+cq64d5t05g4lx7twdb3t
 ```
