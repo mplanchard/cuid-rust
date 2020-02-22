@@ -1,0 +1,102 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'cuid'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=cuid"
+                ],
+                "filter": {
+                    "name": "cuid",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'cuid'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=cuid",
+                    "--package=cuid"
+                ],
+                "filter": {
+                    "name": "cuid",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'cuid'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=cuid",
+                    "--package=cuid"
+                ],
+                "filter": {
+                    "name": "cuid",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'collisions'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=collisions",
+                    "--package=cuid"
+                ],
+                "filter": {
+                    "name": "collisions",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug benchmark 'cuid'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bench=cuid",
+                    "--package=cuid"
+                ],
+                "filter": {
+                    "name": "cuid",
+                    "kind": "bench"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
