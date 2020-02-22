@@ -8,12 +8,14 @@ rust:
   - beta
   - nightly
 matrix:
-  allow_failures:
-    - rust: stable
-    - rust: beta
   fast_finish: true
 cache: cargo
-
 script:
   - cargo test
   - cargo bench
+jobs:
+  exclude:
+    - rust: stable
+      script: cargo bench
+    - rust: beta
+      script: cargo bench
