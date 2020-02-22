@@ -2,15 +2,10 @@
 //!
 //! CUID generation in rust
 //!
-#![feature(test)]  // used for benchmarking
-#![feature(no_more_cas)]  // used by counter
-use std::sync::atomic::{ATOMIC_USIZE_INIT, AtomicUsize};
+use std::sync::atomic::AtomicUsize;
 
 #[macro_use]
 extern crate lazy_static;
-extern crate hostname;
-extern crate rand;
-extern crate test;
 
 mod counter;
 mod error;
@@ -21,22 +16,22 @@ mod time;
 
 pub use error::CuidError;
 
-static COUNTER: AtomicUsize = ATOMIC_USIZE_INIT;
+static COUNTER: AtomicUsize = AtomicUsize::new(0);
 static BASE: u8 = 36;
 static BLOCK_SIZE: u8 = 4;
-static DISCRETE_VALUES: u32 = 1679616;  // BASE^BLOCK_SIZE
+static DISCRETE_VALUES: u32 = 1679616; // BASE^BLOCK_SIZE
 static START_STR: &str = "c";
 
 lazy_static! {
-    static ref FINGERPRINT: String = fingerprint::fingerprint().unwrap().into();
+    static ref FINGERPRINT: String =
+        fingerprint::fingerprint().expect("Could not determine system fingerprint!");
 }
-
 
 /// Generate a CUID
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust
 /// extern crate cuid;
 /// let id = cuid::cuid();
 /// assert!(cuid::is_cuid(id.unwrap()));
@@ -49,9 +44,9 @@ pub fn cuid() -> Result<String, CuidError> {
         &FINGERPRINT,
         &random::random_block()?,
         &random::random_block()?,
-    ].concat())
+    ]
+    .concat())
 }
-
 
 /// Generate a CUID slug
 ///
@@ -60,7 +55,7 @@ pub fn cuid() -> Result<String, CuidError> {
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust
 /// extern crate cuid;
 /// let slug = cuid::slug();
 /// assert!(cuid::is_slug(slug.unwrap()));
@@ -70,20 +65,20 @@ pub fn slug() -> Result<String, CuidError> {
     let count = counter::current()?;
     let rand = random::random_block()?;
     Ok([
-        &timestamp[timestamp.len()-2..],
+        &timestamp[timestamp.len() - 2..],
         &count[count.len().saturating_sub(4)..],
         &FINGERPRINT[..1],
-        &FINGERPRINT[FINGERPRINT.len()-1..],
-        &rand[rand.len()-2..],
-    ].concat())
+        &FINGERPRINT[FINGERPRINT.len() - 1..],
+        &rand[rand.len() - 2..],
+    ]
+    .concat())
 }
-
 
 /// Return whether a string is a legitimate CUID
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust
 /// extern crate cuid;
 /// let id = cuid::cuid().unwrap();
 /// assert!(cuid::is_cuid(id));
@@ -92,21 +87,19 @@ pub fn is_cuid<S: Into<String>>(to_check: S) -> bool {
     &to_check.into()[..1] == START_STR
 }
 
-
 /// Return whether a string is a legitimate CUID slug
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust
 /// extern crate cuid;
 /// let slug = cuid::slug().unwrap();
 /// assert!(cuid::is_slug(slug));
 /// ```
 pub fn is_slug<S: Into<String>>(to_check: S) -> bool {
     let length = to_check.into().len();
-    length >= 7 && length <=10
+    length >= 7 && length <= 10
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -114,10 +107,7 @@ mod tests {
 
     #[test]
     fn correct_discrete_values() {
-        assert_eq!(
-            (BASE as u32).pow(BLOCK_SIZE as u32),
-            DISCRETE_VALUES,
-        );
+        assert_eq!((BASE as u32).pow(BLOCK_SIZE as u32), DISCRETE_VALUES,);
     }
 
     #[test]
@@ -139,14 +129,13 @@ mod tests {
     fn slug_is_slug() {
         assert!(is_slug(slug().unwrap()));
     }
-
 }
 
-
+#[cfg(nightly)]
 #[cfg(test)]
 mod benchmarks {
-    use test::Bencher;
     use super::*;
+    use test::Bencher;
 
     #[bench]
     fn bench_cuid(b: &mut Bencher) {
@@ -161,5 +150,4 @@ mod benchmarks {
             slug().unwrap();
         })
     }
-
 }

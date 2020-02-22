@@ -1,9 +1,8 @@
 use std::char;
 use std::f64;
 
-use error::CuidError;
-
-use super::BASE;
+use crate::BASE;
+use crate::error::CuidError;
 
 
 fn digits_in_base<N: Into<f64>>(base: u8, number: N) -> u64 {
@@ -11,7 +10,7 @@ fn digits_in_base<N: Into<f64>>(base: u8, number: N) -> u64 {
 }
 
 
-fn to_radix_str<N: Into<u64>>(radix: u8, number: N) -> Result<Box<str>, CuidError> {
+fn to_radix_string<N: Into<u64>>(radix: u8, number: N) -> Result<String, CuidError> {
     let mut number = number.into();
     if number < radix.into() {
         // No need to allocate a vector or do any math
@@ -19,7 +18,6 @@ fn to_radix_str<N: Into<u64>>(radix: u8, number: N) -> Result<Box<str>, CuidErro
         // which has to be 255 or below.
         return char::from_digit(number as u32, radix.into())
             .map(|c| c.to_string())
-            .map(|s| Box::from(s))
             .ok_or(CuidError::TextError("Bad digit"))
     }
     else if number > f64::MAX as u64 {
@@ -35,35 +33,36 @@ fn to_radix_str<N: Into<u64>>(radix: u8, number: N) -> Result<Box<str>, CuidErro
         );
         number = number / radix as u64;
     }
-    Ok(chars.iter().rev().collect::<String>().into())
+    Ok(chars.iter().rev().collect::<String>())
 }
 
 
-pub fn to_base_str<N: Into<u64>>(number: N) -> Result<Box<str>, CuidError> {
-    to_radix_str(BASE, number)
+pub fn to_base_string<N: Into<u64>>(number: N) -> Result<String, CuidError> {
+    to_radix_string(BASE, number)
 }
 
 
-fn pad_with_char(pad_char: char, size: u32, to_pad: &str) -> Box<str> {
+fn pad_with_char<S: AsRef<str>>(pad_char: char, size: u32, to_pad: S) -> String {
     let size = size as usize;
-    let length = to_pad.len();
+    let pad_ref = to_pad.as_ref();
+    let length = pad_ref.len();
     if length == size {
-        return to_pad.into();
+        return pad_ref.into();
     }
     else if length > size {
-        return to_pad[length - size..].into();
+        return pad_ref[length - size..].into();
     }
     let mut ret = String::with_capacity(size as usize);
     for _ in 0..(size - length) {
         ret.push(pad_char);
     }
-    ret.push_str(to_pad);
-    ret.into()
+    ret.push_str(pad_ref);
+    ret
 }
 
 
-pub fn pad(size: u32, to_pad: &str) -> Box<str> {
-    pad_with_char('0', size, to_pad)
+pub fn pad<S: AsRef<str>>(size: u32, to_pad: S) -> String {
+    pad_with_char('0', size, to_pad.as_ref())
 }
 
 
@@ -115,31 +114,32 @@ mod radix_str_tests {
 
     #[test]
     fn hex_number_below_radix() {
-        assert_eq!("8", &*to_radix_str(16, 8u8).unwrap());
+        assert_eq!("8", &*to_radix_string(16, 8u8).unwrap());
     }
 
     #[test]
     fn hex_number_below_radix_letter() {
-        assert_eq!("a", &*to_radix_str(16, 10u8).unwrap());
+        assert_eq!("a", &*to_radix_string(16, 10u8).unwrap());
     }
 
     #[test]
     fn number_above_radix() {
-        assert_eq!("10", &*to_radix_str(16, 16u8).unwrap())
+        assert_eq!("10", &*to_radix_string(16, 16u8).unwrap())
     }
 
     #[test]
     fn number_well_above_radix() {
-        assert_eq!("16i", &*to_radix_str(32, 1234u16).unwrap())
+        assert_eq!("16i", &*to_radix_string(32, 1234u16).unwrap())
     }
 
     #[test]
     fn large_base_36() {
-        assert_eq!("7cik2", &*to_radix_str(36, 12341234u32).unwrap())
+        assert_eq!("7cik2", &*to_radix_string(36, 12341234u32).unwrap())
     }
 
 }
 
+#[cfg(nightly)]
 #[cfg(test)]
 mod benchmarks {
     use super::*;

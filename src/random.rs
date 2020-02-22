@@ -1,8 +1,8 @@
 use rand::{CryptoRng, Rng, thread_rng};
 
-use error::CuidError;
-use text::{pad, to_base_str};
-use super::{BLOCK_SIZE, DISCRETE_VALUES};
+use crate::error::CuidError;
+use crate::text::{pad, to_base_string};
+use crate::{BLOCK_SIZE, DISCRETE_VALUES};
 
 
 fn random_float_from_rng<R: Rng + CryptoRng>(mut rng: R) -> f64 {
@@ -20,9 +20,9 @@ fn random_64_bit_int<N: Into<f64>>(max: N) -> u64 {
 }
 
 
-pub fn random_block() -> Result<Box<str>, CuidError> {
-    to_base_str(random_64_bit_int(DISCRETE_VALUES as u32))
-        .map(|s| pad(BLOCK_SIZE as u32, &s))
+pub fn random_block() -> Result<String, CuidError> {
+    to_base_string(random_64_bit_int(DISCRETE_VALUES as u32))
+        .map(|s| pad(BLOCK_SIZE as u32, s))
 }
 
 
@@ -43,6 +43,7 @@ mod test_randoms {
 
 }
 
+#[cfg(nightly)]
 #[cfg(test)]
 mod benchmarks {
     use super::*;

@@ -1,21 +1,27 @@
+use std::convert::TryInto;
 use std::sync::atomic::Ordering;
-use error::CuidError;
-use text::to_base_str;
-use super::{COUNTER, DISCRETE_VALUES};
+
+use crate::error::CuidError;
+use crate::text::to_base_string;
+use crate::{COUNTER, DISCRETE_VALUES};
 
 
+/// Fetch the counter value and increment it.
+///
+/// If the counter has reached its max (DISCRETE VALUES), reset it to 0.
 fn fetch_and_increment() -> Result<u32, CuidError> {
-    COUNTER.fetch_update(
-        |c| { if c < (DISCRETE_VALUES - 1) as usize { Some(c + 1) } else { Some(0) } },
+    COUNTER.compare_and_swap(
+        DISCRETE_VALUES.try_into()?,
+        0,
         Ordering::SeqCst,
-        Ordering::SeqCst,
-    ).map(|res| res as u32)
-    .map_err(|_| CuidError::CounterError)
+    );
+    Ok(COUNTER.fetch_add(1, Ordering::SeqCst).try_into()?)
 }
 
 
-pub fn current() -> Result<Box<str>, CuidError> {
-    fetch_and_increment().map(to_base_str)?
+/// Return the current counter value in the appropriate base as a String.
+pub fn current() -> Result<String, CuidError> {
+    fetch_and_increment().map(to_base_string)?
 }
 
 
@@ -25,7 +31,7 @@ mod tests {
 
     #[test]
     fn counter_increasing_basic() {
-        COUNTER.store(0 as usize, Ordering::SeqCst);
+        COUNTER.store(0, Ordering::SeqCst);
         assert_eq!(0, fetch_and_increment().unwrap());
         assert_eq!(1, fetch_and_increment().unwrap());
         assert_eq!(2, fetch_and_increment().unwrap());
@@ -41,6 +47,7 @@ mod tests {
     // TODO: Multi-thread counter tests
 }
 
+#[cfg(nightly)]
 #[cfg(test)]
 mod benchmarks {
     use test::Bencher;

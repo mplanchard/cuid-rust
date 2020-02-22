@@ -1,14 +1,14 @@
 
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use error::CuidError;
-use text::to_base_str;
+use crate::error::CuidError;
+use crate::text::to_base_string;
 
 
-pub fn timestamp() -> Result<Box<str>, CuidError> {
+pub fn timestamp() -> Result<String, CuidError> {
     SystemTime::now().duration_since(UNIX_EPOCH)
         .map(|time| time.as_secs())
-        .map(to_base_str)
+        .map(to_base_string)
         .unwrap_or(Err(CuidError::TextError("Could not convert time to str")))
 }
 
