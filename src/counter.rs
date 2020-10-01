@@ -1,6 +1,6 @@
 use crate::error::CuidError;
-use crate::text::to_base_string;
-use crate::{COUNTER, DISCRETE_VALUES};
+use crate::text::{to_base_string, pad};
+use crate::{COUNTER, DISCRETE_VALUES, BLOCK_SIZE};
 
 
 /// Fetch the counter value and increment it.
@@ -20,7 +20,7 @@ fn fetch_and_increment() -> Result<u32, CuidError> {
 
 /// Return the current counter value in the appropriate base as a String.
 pub fn current() -> Result<String, CuidError> {
-    fetch_and_increment().map(to_base_string)?
+    fetch_and_increment().map(to_base_string)?.map(|s| pad(BLOCK_SIZE, &s))
 }
 
 
@@ -43,6 +43,23 @@ mod tests {
         assert!(second > first);
         let third = fetch_and_increment().unwrap();
         assert!(third > second);
+    }
+
+    #[test]
+    fn counter_is_monotonic_with_increasing_length() {
+        // Ensure that counter is lexigraphically-monotonic even if the counter length in base-36
+        // increases (1 digit -> 2 digits).
+        let start = 35;
+        {
+            let mut counter = COUNTER.lock().unwrap();
+            *counter = start;
+        }
+        // Tests run in parallel, so we're not necessarily guaranteed
+        // consistent ordering in the context of a test.
+        // Prefer running tests with: cargo test -- --test-threads=1
+        let first = current().unwrap();
+        let second = current().unwrap();
+        assert!(second > first);
     }
 
     #[test]

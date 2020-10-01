@@ -6,11 +6,11 @@ use crate::BASE;
 use crate::error::CuidError;
 use crate::text::{pad, to_base_string};
 
-static FINGERPRINT_PADDING: u8 = 2;
+static FINGERPRINT_PADDING: usize = 2;
 
 fn pid() -> Result<String, CuidError> {
     to_base_string(process::id())
-        .map(|s| pad(FINGERPRINT_PADDING as u32, &s))
+        .map(|s| pad(FINGERPRINT_PADDING, &s))
         .map_err(|_| CuidError::FingerprintError("Could not encode pid"))
 }
 
@@ -20,7 +20,7 @@ fn convert_hostname(hn: &String) -> Result<String, CuidError> {
         hn.chars()
             .fold(hn.len() + BASE as usize, |acc, c| acc + c as usize) as u64,
     )
-    .map(|base_str| pad(FINGERPRINT_PADDING as u32, &base_str))
+    .map(|base_str| pad(FINGERPRINT_PADDING, &base_str))
 }
 
 fn host_id() -> Result<String, CuidError> {
@@ -41,7 +41,7 @@ mod fingerprint_tests {
 
     #[test]
     fn test_pid_length() {
-        assert_eq!(pid().unwrap().len(), FINGERPRINT_PADDING as usize)
+        assert_eq!(pid().unwrap().len(), FINGERPRINT_PADDING)
     }
 
     // The below expected host_ids were all generated directly using

@@ -11,5 +11,5 @@ matrix:
   fast_finish: true
 cache: cargo
 script:
-  - cargo test
+  - cargo test -- --test-threads 1
   - cargo bench
