@@ -14,7 +14,7 @@ implementation of which may be found [here](https://github.com/ericelliott/cuid)
 In cargo.toml
 
 ```toml
-cuid = "1.0.0"
+cuid = "1.0.1"
 ```
 
 ## Usage

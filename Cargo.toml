@@ -1,6 +1,6 @@
 [package]
 name = "cuid"
-version = "1.0.0"
+version = "1.0.1"
 license = "MIT"
 authors = ["Matthew Planchard <msplanchard@gmail.com>"]
 description = "An ipmlementation of CUID protocol in rust"
