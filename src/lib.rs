@@ -17,7 +17,7 @@ mod time;
 pub use error::CuidError;
 
 static BASE: u8 = 36;
-static BLOCK_SIZE: u8 = 4;
+static BLOCK_SIZE: usize = 4;
 static DISCRETE_VALUES: u32 = 1679616; // BASE^BLOCK_SIZE
 static START_STR: &str = "c";
 
@@ -107,7 +107,12 @@ mod tests {
 
     #[test]
     fn correct_discrete_values() {
-        assert_eq!((BASE as u32).pow(BLOCK_SIZE as u32), DISCRETE_VALUES,);
+        assert_eq!((BASE as u32).pow(BLOCK_SIZE as u32), DISCRETE_VALUES);
+    }
+
+    #[test]
+    fn cuid_len() {
+        assert_eq!(cuid().unwrap().len(), 25);
     }
 
     #[test]

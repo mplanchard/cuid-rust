@@ -22,7 +22,7 @@ fn random_64_bit_int<N: Into<f64>>(max: N) -> u64 {
 
 pub fn random_block() -> Result<String, CuidError> {
     to_base_string(random_64_bit_int(DISCRETE_VALUES as u32))
-        .map(|s| pad(BLOCK_SIZE as u32, s))
+        .map(|s| pad(BLOCK_SIZE, s))
 }
 
 
@@ -32,7 +32,7 @@ mod test_randoms {
 
     #[test]
     fn random_block_len() {
-        assert!(random_block().unwrap().len() == BLOCK_SIZE as usize)
+        assert_eq!(random_block().unwrap().len(), BLOCK_SIZE);
     }
 
     // TODO: This is theoretically a bit brittle?

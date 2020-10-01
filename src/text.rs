@@ -10,7 +10,7 @@ fn digits_in_base<N: Into<f64>>(base: u8, number: N) -> u64 {
 }
 
 
-fn to_radix_string<N: Into<u64>>(radix: u8, number: N) -> Result<String, CuidError> {
+fn to_radix_string<N: Into<u128>>(radix: u8, number: N) -> Result<String, CuidError> {
     let mut number = number.into();
     if number < radix.into() {
         // No need to allocate a vector or do any math
@@ -20,7 +20,7 @@ fn to_radix_string<N: Into<u64>>(radix: u8, number: N) -> Result<String, CuidErr
             .map(|c| c.to_string())
             .ok_or(CuidError::TextError("Bad digit"))
     }
-    else if number > f64::MAX as u64 {
+    else if number > f64::MAX as u128 {
         return Err(CuidError::TextError("Input number too large"));
     }
 
@@ -29,21 +29,20 @@ fn to_radix_string<N: Into<u64>>(radix: u8, number: N) -> Result<String, CuidErr
     );
     while number > 0 {
         chars.push(
-            char::from_digit((number % radix as u64) as u32, radix.into()).unwrap()
+            char::from_digit((number % radix as u128) as u32, radix.into()).unwrap()
         );
-        number = number / radix as u64;
+        number = number / radix as u128;
     }
     Ok(chars.iter().rev().collect::<String>())
 }
 
 
-pub fn to_base_string<N: Into<u64>>(number: N) -> Result<String, CuidError> {
+pub fn to_base_string<N: Into<u128>>(number: N) -> Result<String, CuidError> {
     to_radix_string(BASE, number)
 }
 
 
-fn pad_with_char<S: AsRef<str>>(pad_char: char, size: u32, to_pad: S) -> String {
-    let size = size as usize;
+fn pad_with_char<S: AsRef<str>>(pad_char: char, size: usize, to_pad: S) -> String {
     let pad_ref = to_pad.as_ref();
     let length = pad_ref.len();
     if length == size {
@@ -61,7 +60,7 @@ fn pad_with_char<S: AsRef<str>>(pad_char: char, size: u32, to_pad: S) -> String 
 }
 
 
-pub fn pad<S: AsRef<str>>(size: u32, to_pad: S) -> String {
+pub fn pad<S: AsRef<str>>(size: usize, to_pad: S) -> String {
     pad_with_char('0', size, to_pad.as_ref())
 }
 
