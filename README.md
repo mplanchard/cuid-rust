@@ -2,6 +2,7 @@
 
 [![Travis Build Status](https://travis-ci.com/mplanchard/cuid-rust.svg?branch=master "Master Status")](https://travis-ci.com/mplanchard/cuid-rust)
 [![Crates.io](https://img.shields.io/crates/v/cuid "Crates.io")](https://crates.io/crates/cuid/)
+[![docs.rs](https://docs.rs/cuid/badge.svg)](https://docs.rs/cuid/badge.svg)
 
 Cuids are "Collision-resistant ids optimized for horizontal scaling and
 binary search lookup performance."
