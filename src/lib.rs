@@ -6,10 +6,10 @@
 //! use cuid;
 //!
 //! // Get a full CUID
-//! println!(cuid.cuid().unwrap());
+//! println!("{}", cuid::cuid().unwrap());
 //!
 //! // Get a shorter, URL-appropriate CUID slug
-//! println!(cuid.slug().unwrap());
+//! println!("{}", cuid::slug().unwrap());
 //! ```
 //!
 //! Note that this crate also provides a very simple, single purpose

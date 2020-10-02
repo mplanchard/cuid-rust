@@ -24,8 +24,8 @@ cuid = "1.0.1"
 use cuid;
 
 fn main() -> () {
-    println!("{}", cuid.cuid().unwrap());
-    println!("{}", cuid.slug().unwrap());
+    println!("{}", cuid::cuid().unwrap());
+    println!("{}", cuid::slug().unwrap());
 }
 ```
 
