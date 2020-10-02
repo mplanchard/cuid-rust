@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Generated CUIDs now have a consistent length, aligning with the 
-  reference implementation (#2, thanks @rasendubi!)
+  reference implementation (#2, thanks [@rasendubi]!)
 
 ## [1.0.0] - 2020-02-22
 
@@ -42,3 +42,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.1]: https://github.com/mplanchard/cuid-rust/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/mplanchard/cuid-rust/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/mplanchard/cuid-rust/compare/b691e4c32e25d7239157e85598c74a9f59124417...v0.1.0
+
+[@rasendubi]: https://github.com/rasendubi
