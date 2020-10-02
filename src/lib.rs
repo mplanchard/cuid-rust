@@ -2,6 +2,26 @@
 //!
 //! CUID generation in rust
 //!
+//! ```rust
+//! use cuid;
+//!
+//! // Get a full CUID
+//! println!(cuid.cuid().unwrap());
+//!
+//! // Get a shorter, URL-appropriate CUID slug
+//! println!(cuid.slug().unwrap());
+//! ```
+//!
+//! Note that this crate also provides a very simple, single purpose
+//! commandline interface:
+//!
+//! ```sh
+//! $> cuid
+//! ckfritrvg0000kdtwc766fful
+//! ```
+//!
+//! See the [original implementation] for more details on CUIDs in general.
+//!
 use std::sync::{Arc, Mutex};
 
 #[macro_use]
