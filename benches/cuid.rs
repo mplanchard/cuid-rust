@@ -42,7 +42,7 @@ fn bench_multithread_perf(c: &mut Criterion) {
 
             for _ in 0..4 {
                 let t = thread::spawn(move || {
-                    for _ in 0..10000 {
+                    for _ in 0..10_000 {
                         cuid::cuid().unwrap();
                     }
                 });
@@ -64,7 +64,7 @@ fn bench_multithread_perf_lots_of_threads(c: &mut Criterion) {
 
             for _ in 0..16 {
                 let t = thread::spawn(move || {
-                    for _ in 0..10000 {
+                    for _ in 0..10_000 {
                         cuid::cuid().unwrap();
                     }
                 });
