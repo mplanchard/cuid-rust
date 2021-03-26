@@ -1,40 +1,40 @@
-use crate::error::CuidError;
-use crate::text::{to_base_string, pad};
-use crate::{COUNTER, DISCRETE_VALUES, BLOCK_SIZE};
+use std::sync::atomic::Ordering;
 
+use crate::error::CuidError;
+use crate::text::{pad, to_base_string};
+use crate::{BLOCK_SIZE, COUNTER, DISCRETE_VALUES};
 
 /// Fetch the counter value and increment it.
 ///
 /// If the counter has reached its max (DISCRETE VALUES), reset it to 0.
 fn fetch_and_increment() -> Result<u32, CuidError> {
-    let mut counter = COUNTER.lock().map_err(|_| CuidError::CounterError)?;
-    let current = *counter;
-    if current == DISCRETE_VALUES - 1 {
-        *counter = 0;
-    } else {
-        *counter += 1;
-    };
-    Ok(current)
+    COUNTER
+        .fetch_update(Ordering::Acquire, Ordering::Acquire, |i| match i {
+            i if i == DISCRETE_VALUES - 1 => Some(0),
+            _ => Some(i + 1),
+        })
+        .map_err(|_| CuidError::CounterError)
 }
-
 
 /// Return the current counter value in the appropriate base as a String.
 pub fn current() -> Result<String, CuidError> {
-    fetch_and_increment().map(to_base_string)?.map(|s| pad(BLOCK_SIZE, &s))
+    fetch_and_increment()
+        .map(to_base_string)?
+        .map(|mut s| pad(BLOCK_SIZE, s))
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    // These tests are ignored because they depend on global state and must be
+    // run with --test-threads=1 in order to work.
+
     #[test]
+    #[ignore]
     fn counter_increasing_basic() {
         let start = 0;
-        {
-            let mut counter = COUNTER.lock().unwrap();
-            *counter = start;
-        }
+        COUNTER.store(start, Ordering::SeqCst);
         // Tests run in parallel, so we're not necessarily guaranteed
         // consistent ordering in the context of a test.
         let first = fetch_and_increment().unwrap();
@@ -46,14 +46,12 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn counter_is_monotonic_with_increasing_length() {
         // Ensure that counter is lexigraphically-monotonic even if the counter length in base-36
         // increases (1 digit -> 2 digits).
         let start = 35;
-        {
-            let mut counter = COUNTER.lock().unwrap();
-            *counter = start;
-        }
+        COUNTER.store(start, Ordering::SeqCst);
         // Tests run in parallel, so we're not necessarily guaranteed
         // consistent ordering in the context of a test.
         // Prefer running tests with: cargo test -- --test-threads=1
@@ -63,16 +61,14 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn counter_increasing_rollover() {
         let max = DISCRETE_VALUES - 1;
-        {
-            let mut counter = COUNTER.lock().unwrap();
-            *counter = max;
-        }
+        COUNTER.store(max, Ordering::SeqCst);
         // Tests run in parallel, so we're not necessarily guaranteed
         // consistent ordering in the context of a test.
-        fetch_and_increment().unwrap();  // will return the max unless another thread rolled us over
-        let rolled_over = fetch_and_increment().unwrap();  // must be rolled over
+        fetch_and_increment().unwrap(); // will return the max unless another thread rolled us over
+        let rolled_over = fetch_and_increment().unwrap(); // must be rolled over
 
         assert!(rolled_over < max);
     }
@@ -83,12 +79,11 @@ mod tests {
 #[cfg(nightly)]
 #[cfg(test)]
 mod benchmarks {
-    use test::Bencher;
     use super::*;
+    use test::Bencher;
 
     #[bench]
     fn basic_increment(b: &mut Bencher) {
         b.iter(|| fetch_and_increment())
     }
-
 }
