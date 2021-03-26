@@ -35,3 +35,33 @@ This package also provides a binary:
 > cargo run cuid
 cq64d5t05g4lx7twdb3t
 ```
+
+## Tests
+
+Tests can be run with
+
+```text
+cargo test
+```
+
+Note that some tests require tests run in a single thread. These are ignored by
+default. They can be run with:
+
+```text
+cargo test -- --ignored --test-threads=1
+```
+
+## Benchmarking
+
+Inline benchmarks are available when running with the nightly toolchain. There
+are also criterion bnechmarks in [`benches/cuid.rs`][benches].
+
+If you're on a Linux system, it's recommended to run benchmarks with the
+maximum possible priority, via `nice`, in order to avoid confounding effects
+from other processes running on the system:
+
+```text
+$ nice -n -20 cargo bench
+```
+
+[benches]: ./benches/cuid.rs
