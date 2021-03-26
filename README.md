@@ -29,11 +29,15 @@ fn main() -> () {
 }
 ```
 
+`cuid` is safe to use across threads. When used in a multithreaded context, all
+threads share the same atomic counter, which is used as a component of the
+generated CUID.
+
 This package also provides a binary:
 
 ```sh
 > cargo run cuid
-cq64d5t05g4lx7twdb3t
+ckmqrwysb0000iz5p4u1b79hd
 ```
 
 ## Performance
@@ -41,8 +45,11 @@ cq64d5t05g4lx7twdb3t
 Performance is one of the primary concerns of this library (see
 [Benchmarking](#benchmarking), below).
 
-Currently, it takes about 405 nanoseconds to generate a CUID, or 335 nanoseconds
-to generate a CUID slug, on modern desktop hardware.
+This implementation is currently about 20x faster than the reference JavaScript
+implementation.
+
+It takes about 400 nanoseconds to generate a CUID, or 335 nanoseconds
+to generate a CUID slug, on relatively modern desktop hardware.
 
 In a long-running process or thread, CUID generation is faster, since the system
 fingerprint is calculated once and then re-used for the lifetime of the process.
