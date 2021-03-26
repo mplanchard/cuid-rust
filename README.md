@@ -36,6 +36,18 @@ This package also provides a binary:
 cq64d5t05g4lx7twdb3t
 ```
 
+## Performance
+
+Performance is one of the primary concerns of this library (see
+[Benchmarking](#benchmarking), below).
+
+Currently, it takes about 405 nanoseconds to generate a CUID, or 335 nanoseconds
+to generate a CUID slug, on modern desktop hardware.
+
+In a long-running process or thread, CUID generation is faster, since the system
+fingerprint is calculated once and then re-used for the lifetime of the process.
+In this case, CUID generation takes about 125 ns.
+
 ## Tests
 
 Tests can be run with
