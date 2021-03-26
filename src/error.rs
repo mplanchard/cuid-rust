@@ -1,10 +1,9 @@
 use std::error as stderr;
 use std::ffi;
-use std::io;
 use std::fmt;
+use std::io;
 use std::num;
 use std::time::SystemTimeError;
-
 
 /// Errors for the CUID library
 #[derive(Debug)]
@@ -21,27 +20,19 @@ pub enum CuidError {
 impl fmt::Display for CuidError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            CuidError::CounterError => write!(
-                f, "Could not retrieve counter value!"
-            ),
-            CuidError::IntegerConversionError(err) => write!(
-                f, "Failed to convert integer: {}", err
-            ),
-            CuidError::FingerprintError(err) => write!(
-                f, "Could not generate fingerprint: {}", err
-            ),
-            CuidError::IOError(err) => write!(
-                f, "Error reading or writing to the system: {}", err
-            ),
-            CuidError::OsStringError(err) => write!(
-                f, "Failed to convert Operating System String: {:?}", err
-            ),
-            CuidError::TextError(err) => write!(
-                f, "TextError: {}", err
-            ),
-            CuidError::TimestampError(err) => write!(
-                f, "SystemTimeError: {}", err
-            ),
+            CuidError::CounterError => write!(f, "Could not retrieve counter value!"),
+            CuidError::IntegerConversionError(err) => {
+                write!(f, "Failed to convert integer: {}", err)
+            }
+            CuidError::FingerprintError(err) => {
+                write!(f, "Could not generate fingerprint: {}", err)
+            }
+            CuidError::IOError(err) => write!(f, "Error reading or writing to the system: {}", err),
+            CuidError::OsStringError(err) => {
+                write!(f, "Failed to convert Operating System String: {:?}", err)
+            }
+            CuidError::TextError(err) => write!(f, "TextError: {}", err),
+            CuidError::TimestampError(err) => write!(f, "SystemTimeError: {}", err),
         }
     }
 }

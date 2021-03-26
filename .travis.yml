@@ -11,5 +11,8 @@ matrix:
   fast_finish: true
 cache: cargo
 script:
-  - cargo test -- --test-threads 1
+  - cargo test
+  # A subset of tests are ignored in the normal runs b/c they cannot be
+  # tested in parallel
+  - cargo test -- --ignored --test-threads 1
   - cargo bench
