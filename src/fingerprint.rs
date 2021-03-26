@@ -10,7 +10,7 @@ static FINGERPRINT_PADDING: usize = 2;
 
 fn pid() -> Result<String, CuidError> {
     to_base_string(process::id())
-        .map(|mut s| pad(FINGERPRINT_PADDING, s))
+        .map(|s| pad(FINGERPRINT_PADDING, s))
         .map_err(|_| CuidError::FingerprintError("Could not encode pid"))
 }
 
@@ -20,7 +20,7 @@ fn convert_hostname(hn: &String) -> Result<String, CuidError> {
         hn.chars()
             .fold(hn.len() + BASE as usize, |acc, c| acc + c as usize) as u64,
     )
-    .map(|mut base_str| pad(FINGERPRINT_PADDING, base_str))
+    .map(|base_str| pad(FINGERPRINT_PADDING, base_str))
 }
 
 fn host_id() -> Result<String, CuidError> {
@@ -29,9 +29,10 @@ fn host_id() -> Result<String, CuidError> {
 }
 
 pub fn fingerprint() -> Result<String, CuidError> {
-    let hid = host_id()?;
+    let mut hid = host_id()?;
     let procid = pid()?;
-    Ok([procid, hid].concat())
+    hid.push_str(&procid);
+    Ok(hid)
 }
 
 #[cfg(test)]

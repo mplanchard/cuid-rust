@@ -20,7 +20,7 @@ fn fetch_and_increment() -> Result<u32, CuidError> {
 pub fn current() -> Result<String, CuidError> {
     fetch_and_increment()
         .map(to_base_string)?
-        .map(|mut s| pad(BLOCK_SIZE, s))
+        .map(|s| pad(BLOCK_SIZE, s))
 }
 
 #[cfg(test)]

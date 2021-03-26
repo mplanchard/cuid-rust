@@ -13,7 +13,7 @@ fn bench_cuid(c: &mut Criterion) {
 fn bench_many_cuids(c: &mut Criterion) {
     c.bench_function("generate many cuids", |b| {
         b.iter(|| {
-            (0..100).for_each(|_| {
+            (0..10_000).for_each(|_| {
                 cuid::cuid().unwrap();
             })
         })
@@ -27,7 +27,7 @@ fn bench_slug(c: &mut Criterion) {
 fn bench_many_slugs(c: &mut Criterion) {
     c.bench_function("generate many slugs", |b| {
         b.iter(|| {
-            (0..100).for_each(|_| {
+            (0..10_000).for_each(|_| {
                 cuid::slug().unwrap();
             })
         })

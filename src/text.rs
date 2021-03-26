@@ -20,7 +20,7 @@ fn to_radix_string<N: Into<u128>>(radix: u8, number: N) -> Result<String, CuidEr
     }
 
     // 64 chars should almost always be enough to fill without needing to grow
-    let mut chars: Vec<char> = Vec::with_capacity(64);
+    let mut chars: Vec<char> = Vec::with_capacity(32);
     while number > 0 {
         // We can unwrap here b/c we know that the modulus must be less than the
         // radix, which is less than 256
@@ -45,15 +45,16 @@ fn pad_with_char(pad_char: char, size: usize, mut to_pad: String) -> String {
         to_pad.replace_range(0..length - size, "");
         return to_pad;
     }
+
     let size_diff = size - length;
     to_pad.reserve(size_diff);
-    for _ in 0..(size - length) {
+    for _ in 0..size_diff {
         to_pad.insert(0, pad_char);
     }
     to_pad
 }
 
-pub fn pad(size: usize, mut to_pad: String) -> String {
+pub fn pad(size: usize, to_pad: String) -> String {
     pad_with_char('0', size, to_pad)
 }
 

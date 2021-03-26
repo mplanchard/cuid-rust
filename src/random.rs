@@ -17,7 +17,7 @@ fn random_64_bit_int<N: Into<f64>>(max: N) -> u64 {
 }
 
 pub fn random_block() -> Result<String, CuidError> {
-    to_base_string(random_64_bit_int(DISCRETE_VALUES as u32)).map(|mut s| pad(BLOCK_SIZE, s))
+    to_base_string(random_64_bit_int(DISCRETE_VALUES as u32)).map(|s| pad(BLOCK_SIZE, s))
 }
 
 #[cfg(test)]
