@@ -1,69 +1,61 @@
 use std::char;
 use std::f64;
 
-use crate::BASE;
 use crate::error::CuidError;
-
-
-fn digits_in_base<N: Into<f64>>(base: u8, number: N) -> u64 {
-    number.into().log(base as f64) as u64 + 1
-}
-
+use crate::BASE;
 
 fn to_radix_string<N: Into<u128>>(radix: u8, number: N) -> Result<String, CuidError> {
     let mut number = number.into();
+    let rad_u32: u32 = radix.into();
+
     if number < radix.into() {
         // No need to allocate a vector or do any math
         // NOTE: we are okay to cast to u32 here, b/c number < radix,
         // which has to be 255 or below.
-        return char::from_digit(number as u32, radix.into())
+        return char::from_digit(number as u32, rad_u32)
             .map(|c| c.to_string())
-            .ok_or(CuidError::TextError("Bad digit"))
-    }
-    else if number > f64::MAX as u128 {
+            .ok_or(CuidError::TextError("Bad digit"));
+    } else if number > f64::MAX as u128 {
         return Err(CuidError::TextError("Input number too large"));
     }
 
-    let mut chars: Vec<char> = Vec::with_capacity(
-        digits_in_base(radix, number as f64) as usize
-    );
+    // 64 chars should almost always be enough to fill without needing to grow
+    let mut chars: Vec<char> = Vec::with_capacity(64);
     while number > 0 {
-        chars.push(
-            char::from_digit((number % radix as u128) as u32, radix.into()).unwrap()
-        );
+        // We can unwrap here b/c we know that the modulus must be less than the
+        // radix, which is less than 256
+        chars.push(char::from_digit((number % radix as u128) as u32, rad_u32).unwrap());
         number = number / radix as u128;
     }
-    Ok(chars.iter().rev().collect::<String>())
+    chars.reverse();
+    Ok(chars.into_iter().collect())
 }
-
 
 pub fn to_base_string<N: Into<u128>>(number: N) -> Result<String, CuidError> {
     to_radix_string(BASE, number)
 }
 
-
-fn pad_with_char<S: AsRef<str>>(pad_char: char, size: usize, to_pad: S) -> String {
-    let pad_ref = to_pad.as_ref();
-    let length = pad_ref.len();
+fn pad_with_char(pad_char: char, size: usize, mut to_pad: String) -> String {
+    let length = to_pad.len();
     if length == size {
-        return pad_ref.into();
+        return to_pad;
+    } else if length > size {
+        // Cut from the start of the string to pad down to the expected size,
+        // e.g. for a size of 2, `abc` would become `bc`
+        to_pad.replace_range(0..length - size, "");
+        return to_pad;
     }
-    else if length > size {
-        return pad_ref[length - size..].into();
-    }
-    let mut ret = String::with_capacity(size as usize);
+    let size_diff = size - length;
+    to_pad.reserve(size_diff);
     for _ in 0..(size - length) {
-        ret.push(pad_char);
+        to_pad.insert(0, pad_char);
     }
-    ret.push_str(pad_ref);
-    ret
+    to_pad
 }
 
-
-pub fn pad<S: AsRef<str>>(size: usize, to_pad: S) -> String {
-    pad_with_char('0', size, to_pad.as_ref())
+pub fn pad(size: usize, mut to_pad: String) -> String {
+    pad_with_char('0', size, to_pad)
 }
-
 
 #[cfg(test)]
 mod pad_tests {
@@ -71,45 +63,33 @@ mod pad_tests {
 
     #[test]
     fn does_not_pad_str_of_size() {
-        assert_eq!("foo", &*pad_with_char('a', 3, "foo"))
+        assert_eq!("foo", &*pad_with_char('a', 3, "foo".into()))
     }
 
     #[test]
     fn single_char_pad() {
-        assert_eq!("afoo", &*pad_with_char('a', 4, "foo"))
+        assert_eq!("afoo", &*pad_with_char('a', 4, "foo".into()))
     }
 
     #[test]
     fn multichar_pad() {
-        assert_eq!("aaafoo", &*pad_with_char('a', 6, "foo"))
+        assert_eq!("aaafoo", &*pad_with_char('a', 6, "foo".into()))
     }
 
     #[test]
     fn smaller_pad() {
-        assert_eq!("c", &*pad_with_char('a', 1, "abc"))
+        assert_eq!("c", &*pad_with_char('a', 1, "abc".into()))
     }
 
     #[test]
     fn pad_0s() {
-        assert_eq!("00foo", &*pad(5, "foo"))
+        assert_eq!("00foo", &*pad(5, "foo".into()))
     }
-
 }
-
 
 #[cfg(test)]
 mod radix_str_tests {
     use super::*;
-
-    #[test]
-    fn digits_in_base_7() {
-        assert_eq!(4, digits_in_base(7, 1446))
-    }
-
-    #[test]
-    fn digits_in_base_4() {
-        assert_eq!(3, digits_in_base(4, 48))
-    }
 
     #[test]
     fn hex_number_below_radix() {
@@ -135,7 +115,6 @@ mod radix_str_tests {
     fn large_base_36() {
         assert_eq!("7cik2", &*to_radix_string(36, 12341234u32).unwrap())
     }
-
 }
 
 #[cfg(nightly)]
@@ -193,5 +172,4 @@ mod benchmarks {
             pad_with_char('0', 12, "ooo ooo ooo ooo ");
         });
     }
-
 }
