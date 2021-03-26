@@ -15,7 +15,7 @@ criterion = "~0.3"
 [dependencies]
 hostname = "~0.3"
 lazy_static = "~1.4"
-rand = "~0.7"
+rand = "~0.8"
 
 [lib]
 name = "cuid"
