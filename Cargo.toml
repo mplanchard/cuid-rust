@@ -13,9 +13,9 @@ repository = "https://github.com/mplanchard/cuid-rust"
 criterion = "~0.3"
 
 [dependencies]
-hostname = "~0.3"
+hostname = "~0.3.0"
 lazy_static = "~1.4"
-rand = "~0.8"
+rand = "~0.8.0"
 
 [lib]
 name = "cuid"
