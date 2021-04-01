@@ -1,6 +1,5 @@
-use std::process::exit;
 use cuid::cuid;
-
+use std::process::exit;
 
 /// Generate a new CUID and print it to stdout
 pub fn main() {
