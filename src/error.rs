@@ -11,6 +11,7 @@ pub enum CuidError {
     CounterError,
     IntegerConversionError(num::TryFromIntError),
     FingerprintError(&'static str),
+    #[allow(clippy::upper_case_acronyms)]
     IOError(io::Error),
     OsStringError(ffi::OsString),
     TextError(&'static str),

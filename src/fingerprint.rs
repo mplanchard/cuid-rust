@@ -1,7 +1,5 @@
 use std::process;
 
-use hostname;
-
 use crate::error::CuidError;
 use crate::text::{pad, to_base_string};
 use crate::BASE;
