@@ -121,7 +121,7 @@ pub fn is_cuid<S: Into<String>>(to_check: S) -> bool {
 /// ```
 pub fn is_slug<S: Into<String>>(to_check: S) -> bool {
     let length = to_check.into().len();
-    length >= 7 && length <= 10
+    (7..=10).contains(&length)
 }
 
 #[cfg(test)]
