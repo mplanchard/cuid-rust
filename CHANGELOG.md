@@ -14,10 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Significant performance improvements for multithreaded usage (~30-35%) due to
   the counter now using `AtomicU32` again rather than `Arc<Mutex<32>>`, enabled
   thanks to the stabilization of [`fetch_update`](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicU32.html#method.fetch_update)
-  (3a5cc2e)
+  ([3a5cc2e](https://github.com/mplanchard/cuid-rust/commit/3a5cc2e))
 - Generating CUIDs and slugs is now ~15-20% faster, thanks to reductions in the
   number of allocated strings and improvements to how space is pre-allocated
-  during the generation of radix strings (a09bfad)
+  during the generation of radix strings ([a09bfad](https://github.com/mplanchard/cuid-rust/commit/a09bfad))
 - Updated non-v1 requirements to require minor version compatibility
 - Updated `rand` requirement from `~0.7` to `~0.8.0`
 - Switched from Travis to GH Actions
