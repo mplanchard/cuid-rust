@@ -1,5 +1,5 @@
-use std::char;
 use std::f64;
+use std::{char, cmp::Ordering};
 
 use crate::error::CuidError;
 use crate::BASE;
@@ -25,7 +25,7 @@ fn to_radix_string<N: Into<u128>>(radix: u8, number: N) -> Result<String, CuidEr
         // We can unwrap here b/c we know that the modulus must be less than the
         // radix, which is less than 256
         chars.push(char::from_digit((number % radix as u128) as u32, rad_u32).unwrap());
-        number = number / radix as u128;
+        number /= radix as u128;
     }
     chars.reverse();
     Ok(chars.into_iter().collect())
@@ -37,13 +37,16 @@ pub fn to_base_string<N: Into<u128>>(number: N) -> Result<String, CuidError> {
 
 fn pad_with_char(pad_char: char, size: usize, mut to_pad: String) -> String {
     let length = to_pad.len();
-    if length == size {
-        return to_pad;
-    } else if length > size {
-        // Cut from the start of the string to pad down to the expected size,
-        // e.g. for a size of 2, `abc` would become `bc`
-        to_pad.replace_range(0..length - size, "");
-        return to_pad;
+
+    match length.cmp(&size) {
+        Ordering::Less => {}
+        Ordering::Equal => return to_pad,
+        Ordering::Greater => {
+            // Cut from the start of the string to pad down to the expected size,
+            // e.g. for a size of 2, `abc` would become `bc`
+            to_pad.replace_range(0..length - size, "");
+            return to_pad;
+        }
     }
 
     let size_diff = size - length;
