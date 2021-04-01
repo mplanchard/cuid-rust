@@ -13,7 +13,7 @@ fn pid() -> Result<String, CuidError> {
 }
 
 /// Convert the hostname to a padded String in the appropriate base
-fn convert_hostname(hn: &String) -> Result<String, CuidError> {
+fn convert_hostname(hn: &str) -> Result<String, CuidError> {
     to_base_string(
         hn.chars()
             .fold(hn.len() + BASE as usize, |acc, c| acc + c as usize) as u64,
@@ -23,7 +23,7 @@ fn convert_hostname(hn: &String) -> Result<String, CuidError> {
 
 fn host_id() -> Result<String, CuidError> {
     let hn = hostname::get()?;
-    convert_hostname(&hn.into_string()?)
+    convert_hostname(&hn.to_string_lossy())
 }
 
 pub fn fingerprint() -> Result<String, CuidError> {
@@ -48,24 +48,24 @@ mod fingerprint_tests {
 
     #[test]
     fn test_convert_hostname_1() {
-        assert_eq!("a3", &*convert_hostname(&"foo".into()).unwrap())
+        assert_eq!("a3", &*convert_hostname("foo").unwrap())
     }
 
     #[test]
     fn test_convert_hostname_2() {
-        assert_eq!("9o", &*convert_hostname(&"bar".into()).unwrap())
+        assert_eq!("9o", &*convert_hostname("bar").unwrap())
     }
 
     #[test]
     fn test_convert_hostname_3() {
-        assert_eq!("nf", &*convert_hostname(&"mr-magoo".into()).unwrap())
+        assert_eq!("nf", &*convert_hostname("mr-magoo").unwrap())
     }
 
     #[test]
     fn test_convert_hostname_4() {
         assert_eq!(
             "j9",
-            &*convert_hostname(&"wow-what-a-long-hostname-you-have".into()).unwrap()
+            &*convert_hostname("wow-what-a-long-hostname-you-have").unwrap()
         )
     }
 
