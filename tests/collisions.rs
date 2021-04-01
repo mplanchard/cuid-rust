@@ -11,31 +11,35 @@ fn check_cuid_collisions() {
         set.insert(id);
     }
     // we generated unique CUIDs
-    assert!(set.len() == 1_200_000)
+    assert!(set.len() == 1_200_000);
 }
 
 #[test]
+#[ignore]
 /// Build 1.2e6 slugs
 ///
-/// Note that the faster your system is, the more likely this is to fail, since
-/// the timestamp (a) is truncated as part of the slugification process, (b)
-/// more slugs will be generated at very similar timestamps, and (c) this test
-/// is occuring simultaneously to the cross-thread collision test, which
-/// generates 12 million IDs of its own, and the cuid collision test, which
-/// generates 1.2 million IDs, meaning we're definitely going to have some
+/// Note that, by default, the faster your system is, the more likely this is to
+/// fail, since the timestamp (a) is truncated as part of the slugification
+/// process, (b) more slugs will be generated at very similar timestamps, and
+/// (c) this test is occuring simultaneously to the cross-thread collision test,
+/// which generates 12 million IDs of its own, and the cuid collision test,
+/// which generates 1.2 million IDs, meaning we're definitely going to have some
 /// counter wraparound, since the counter only has ~1.6 million unique values.
 /// All that, combined with the fact that only a slice of one random block is
 /// used, means that the occasional collision is inevitable, even if pretty
-/// unlikely. It doesn't seem like CI is fast enough for this to be a major
-/// problem, but I have seen it locally a few times.
+/// unlikely.
+///
+/// To reduce the likelihood of a false negative from this test, we thereefore
+/// ignore it for normal test runs and run it with some other tests that we have
+/// to run in single-threaded mode.
 fn check_slug_collisions() {
     let mut set = HashSet::new();
     for _ in 0..1_200_000 {
         let id = cuid::slug().unwrap();
         set.insert(id);
     }
-    // we generated unique slugs
-    assert!(set.len() == 1_200_000)
+    // we had no duplicate slugs
+    assert!(set.len() == 1_200_000);
 }
 
 #[test]
