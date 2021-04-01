@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2021-04-01
+
 ### Changed
 
 - Significant performance improvements for multithreaded usage (~30-35%) due to
@@ -51,7 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CUID & CUID slug generation
 - Benchmark suite
 
-[unreleased]: https://github.com/mplanchard/cuid-rust/compare/v1.0.1...HEAD
+[unreleased]: https://github.com/mplanchard/cuid-rust/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/mplanchard/cuid-rust/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/mplanchard/cuid-rust/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/mplanchard/cuid-rust/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/mplanchard/cuid-rust/compare/b691e4c32e25d7239157e85598c74a9f59124417...v0.1.0
