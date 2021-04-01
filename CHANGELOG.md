@@ -7,11 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Significant performance improvements for multithreaded usage (~30-35%) due to
+  the counter now using `AtomicU32` again rather than `Arc<Mutex<32>>`, enabled
+  thanks to the stabilization of [`fetch_update`](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicU32.html#method.fetch_update)
+  (3a5cc2e)
+- Generating CUIDs and slugs is now ~15-20% faster, thanks to reductions in the
+  number of allocated strings and improvements to how space is pre-allocated
+  during the generation of radix strings (a09bfad)
+- Updated non-v1 requirements to require minor version compatibility
+- Updated `rand` requirement from `~0.7` to `~0.8.0`
+- Updated `hostname` requirement from `~0.3` to `~0.3.0`
+
 ## [1.0.1] - 2020-10-01
 
 ### Fixed
 
-- Generated CUIDs now have a consistent length, aligning with the 
+- Generated CUIDs now have a consistent length, aligning with the
   reference implementation (#2, thanks [@rasendubi]!)
 
 ## [1.0.0] - 2020-02-22
@@ -38,9 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CUID & CUID slug generation
 - Benchmark suite
 
-[Unreleased]: https://github.com/mplanchard/cuid-rust/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/mplanchard/cuid-rust/compare/v1.0.1...HEAD
 [1.0.1]: https://github.com/mplanchard/cuid-rust/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/mplanchard/cuid-rust/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/mplanchard/cuid-rust/compare/b691e4c32e25d7239157e85598c74a9f59124417...v0.1.0
-
 [@rasendubi]: https://github.com/rasendubi
