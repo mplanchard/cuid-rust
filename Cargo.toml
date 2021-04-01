@@ -8,6 +8,7 @@ description = "An ipmlementation of CUID protocol in rust"
 documentation = "https://docs.rs/cuid/latest/cuid/"
 homepage = "https://github.com/mplanchard/cuid-rust"
 repository = "https://github.com/mplanchard/cuid-rust"
+exclude = [".github/**", ".vscode/**"]
 
 [dev-dependencies]
 criterion = "~0.3"
