@@ -22,6 +22,8 @@
 //!
 //! See the [original implementation] for more details on CUIDs in general.
 //!
+//! [original implementation]: https://github.com/ericelliott/cuid
+//!
 use std::sync::atomic::AtomicU32;
 
 #[macro_use]
