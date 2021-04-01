@@ -18,12 +18,12 @@ fn check_cuid_collisions() {
 /// Build 1.2e6 slugs
 fn check_slug_collisions() {
     let mut set = HashSet::new();
-    for _ in 0..600_000 {
+    for _ in 0..1_200_000 {
         let id = cuid::slug().unwrap();
         set.insert(id);
     }
     // we generated 600k unique slugs
-    assert!(set.len() == 600_000)
+    assert!(set.len() == 1_200_000)
 }
 
 #[test]
