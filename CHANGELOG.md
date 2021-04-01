@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   during the generation of radix strings (a09bfad)
 - Updated non-v1 requirements to require minor version compatibility
 - Updated `rand` requirement from `~0.7` to `~0.8.0`
-- Updated `hostname` requirement from `~0.3` to `~0.3.0`
+- Switched from Travis to GH Actions
 
 ## [1.0.1] - 2020-10-01
 
