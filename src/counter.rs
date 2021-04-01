@@ -9,7 +9,7 @@ use crate::{BLOCK_SIZE, COUNTER, DISCRETE_VALUES};
 /// If the counter has reached its max (DISCRETE VALUES), reset it to 0.
 fn fetch_and_increment() -> Result<u32, CuidError> {
     COUNTER
-        .fetch_update(Ordering::Acquire, Ordering::Acquire, |i| match i {
+        .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |i| match i {
             i if i == DISCRETE_VALUES - 1 => Some(0),
             _ => Some(i + 1),
         })
