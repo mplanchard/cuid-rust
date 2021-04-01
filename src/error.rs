@@ -7,6 +7,7 @@ use std::time::SystemTimeError;
 
 /// Errors for the CUID library
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum CuidError {
     CounterError,
     IntegerConversionError(num::TryFromIntError),
