@@ -52,6 +52,15 @@ lazy_static! {
 
 /// Generate a CUID
 ///
+/// A CUID is composed of:
+///
+/// - The letter `c`
+/// - The timestamp in milliseconds as a base 36 number
+/// - An atomic counter that goes from 0 through 36^4 and then repeats, as a
+///   base 36 number
+/// - A (base 36) fingerprint derived from the system's hostname
+/// - Two random numbers between 0 and 36^4, each converted to base 36
+///
 /// # Examples
 ///
 /// ```rust
@@ -74,7 +83,24 @@ pub fn cuid() -> Result<String, CuidError> {
 /// Generate a CUID slug
 ///
 /// CUID slugs are shorter, appropriate for short URLs or other uses
-/// where uniqueness across deployments is not the primary requirement.
+/// where uniqueness is not the primary requirement.
+///
+/// Note that this library is capable of generating over 2 million CUID slugs
+/// per second on a single thread on a fast machine. If your use case involves
+/// generating slugs in loops across threads, it is very possible you'll wind up
+/// with some non-unique slugs, given that the components of the slug are:
+///
+/// - Two characters from the millisecond timestamp as base 36
+/// - Four characters from the atomic counter, which has only ~1.6 million
+///   unique values, as base 36
+/// - The first and last character of the fingerprint (which is always the same
+///   on a given host)
+/// - Two characters from a random block
+///
+/// For most use cases (i.e. generating fewer than a million slugs per second on
+/// a given host), slugs are very likely to be globally unique. However, please
+/// bear that limitation in mind, and use full CUIDs if you need a stronger
+/// guarantee of uniqueness.
 ///
 /// # Examples
 ///
