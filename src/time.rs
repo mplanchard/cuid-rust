@@ -16,6 +16,8 @@ mod time_tests {
     use super::super::BASE;
     use super::*;
 
+    // NOTE: this will start failing in ~2059, at which point this will need to
+    // be updated to 9
     #[test]
     fn test_timestamp_len() {
         assert_eq!(timestamp().unwrap().len(), 8);

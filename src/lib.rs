@@ -132,8 +132,19 @@ pub fn slug() -> Result<String, CuidError> {
 /// let id = cuid::cuid().unwrap();
 /// assert!(cuid::is_cuid(id));
 /// ```
-pub fn is_cuid<S: Into<String>>(to_check: S) -> bool {
-    &to_check.into()[..1] == START_STR
+pub fn is_cuid<S: AsRef<str>>(to_check: S) -> bool {
+    let to_check = to_check.as_ref();
+    match to_check.len() {
+        // the CUID length will increase as the timestamp increases. The
+        // timestamp portion currently represents 8 characters. It has the
+        // potential to increase to up to 15 characters when the timestamp
+        // reaches the maximum 64-bit integer, at which point the earth will be
+        // long gone, presumably along with this code. At that time, the CUID
+        // length would be 32. 9 characters gives us up through at least the
+        // year 5138, though, so checking for 25 or 26 characters should do it.
+        25..=26 => &to_check[..1] == START_STR,
+        _ => false,
+    }
 }
 
 /// Return whether a string is a legitimate CUID slug
@@ -145,9 +156,9 @@ pub fn is_cuid<S: Into<String>>(to_check: S) -> bool {
 /// let slug = cuid::slug().unwrap();
 /// assert!(cuid::is_slug(slug));
 /// ```
-pub fn is_slug<S: Into<String>>(to_check: S) -> bool {
-    let length = to_check.into().len();
-    (7..=10).contains(&length)
+pub fn is_slug<S: AsRef<str>>(to_check: S) -> bool {
+    // the slug will always be 10 characters
+    to_check.as_ref().len() == 10
 }
 
 #[cfg(test)]
@@ -170,13 +181,13 @@ mod tests {
     }
 
     #[test]
-    fn slug_max_len() {
-        assert!(slug().unwrap().len() <= 10);
+    fn cuid_is_not_cuid_zero_len() {
+        assert_eq!(is_cuid(""), false);
     }
 
     #[test]
-    fn slug_min_len() {
-        assert!(slug().unwrap().len() >= 7);
+    fn slug_len() {
+        assert!(slug().unwrap().len() == 10);
     }
 
     #[test]
