@@ -25,7 +25,5 @@ fn check_cuid_slug_length() {
         set.insert(id);
     }
     // all slugs are of the same length
-    // NOTE: this will start failing in ~2059, at which poit this will need to
-    // be updated to 26
     assert!(set.iter().all(|i| i.len() == 10));
 }
