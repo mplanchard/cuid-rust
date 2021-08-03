@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.3] - 2021-08-03
+
+### Fixed
+
+- 0-length strings now return `false` when being checked by `is_cuid()` rather
+  than panicking ([a4fca2f], reported by [@DeppLearning](https://github.com/DeppLearning))
+
+### Changed
+
+- Improved specificity of `is_cuid()` and `is_slug()` checks ([a4fca2f])
+- Use references for `is_cuid()` and `is_slug()` rather than converting to
+  strings ([a4fca2f])
+
 ## [1.0.2] - 2021-04-01
 
 ### Changed
@@ -53,9 +66,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CUID & CUID slug generation
 - Benchmark suite
 
-[unreleased]: https://github.com/mplanchard/cuid-rust/compare/v1.0.2...HEAD
+[unreleased]: https://github.com/mplanchard/cuid-rust/compare/v1.0.3...HEAD
+[1.0.3]: https://github.com/mplanchard/cuid-rust/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/mplanchard/cuid-rust/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/mplanchard/cuid-rust/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/mplanchard/cuid-rust/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/mplanchard/cuid-rust/compare/b691e4c32e25d7239157e85598c74a9f59124417...v0.1.0
 [@rasendubi]: https://github.com/rasendubi
+[a4fca2f]: https://github.com/mplanchard/cuid-rust/commit/a4fca2f
