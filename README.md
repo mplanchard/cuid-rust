@@ -18,6 +18,12 @@ In cargo.toml
 cuid = "1.1.0"
 ```
 
+Or install the binary:
+
+```sh
+> cargo install cuid
+```
+
 ## Usage
 
 ```rust
@@ -36,7 +42,7 @@ generated CUID.
 This package also provides a binary:
 
 ```sh
-> cargo run cuid
+> cuid
 ckmqrwysb0000iz5p4u1b79hd
 ```
 
