@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- ~10-20% performance improvement overall through optimization of 
+`pad_with_char()`([b5503d6])
+
 ## [1.1.0] - 2021-08-03
 
 ### Fixed
