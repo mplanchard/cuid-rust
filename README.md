@@ -54,7 +54,7 @@ Performance is one of the primary concerns of this library (see
 This implementation is currently about 20x faster than the reference JavaScript
 implementation.
 
-It takes about 400 nanoseconds to generate a CUID, or 335 nanoseconds
+It takes about 300 nanoseconds to generate a CUID, or 250 nanoseconds
 to generate a CUID slug, on relatively modern desktop hardware.
 
 In a long-running process or thread, CUID generation is faster, since the system
@@ -87,6 +87,12 @@ from other processes running on the system:
 
 ```text
 $ nice -n -20 cargo bench
+```
+
+Note that you may need to run `nice` as root:
+
+``` text
+sudo nice -n -20 su <username> -l -c "cd $PWD && cargo bench"
 ```
 
 [benches]: ./benches/cuid.rs

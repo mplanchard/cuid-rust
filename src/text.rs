@@ -1,9 +1,10 @@
-use std::f64;
 use std::{char, cmp::Ordering};
+use std::{f64, iter};
 
 use crate::error::CuidError;
 use crate::BASE;
 
+/// Convert a number to a string of the specified radix.
 fn to_radix_string<N: Into<u128>>(radix: u8, number: N) -> Result<String, CuidError> {
     let mut number = number.into();
     let rad_u32: u32 = radix.into();
@@ -19,7 +20,7 @@ fn to_radix_string<N: Into<u128>>(radix: u8, number: N) -> Result<String, CuidEr
         return Err(CuidError::TextError("Input number too large"));
     }
 
-    // 64 chars should almost always be enough to fill without needing to grow
+    // 32 chars should almost always be enough to fill without needing to grow
     let mut chars: Vec<char> = Vec::with_capacity(32);
     while number > 0 {
         // We can unwrap here b/c we know that the modulus must be less than the
@@ -35,6 +36,11 @@ pub fn to_base_string<N: Into<u128>>(number: N) -> Result<String, CuidError> {
     to_radix_string(BASE, number)
 }
 
+/// Pad a string `to_pad` up to size `size` with char `char`
+///
+/// Inserts `char` at the beginning of the string until the string is equal to
+/// size `size`. If `to_pad` is longer than `size`, remove characters from the
+/// start of the string until it is of size `size`.
 fn pad_with_char(pad_char: char, size: usize, mut to_pad: String) -> String {
     let length = to_pad.len();
 
@@ -44,16 +50,16 @@ fn pad_with_char(pad_char: char, size: usize, mut to_pad: String) -> String {
         Ordering::Greater => {
             // Cut from the start of the string to pad down to the expected size,
             // e.g. for a size of 2, `abc` would become `bc`
-            to_pad.replace_range(0..length - size, "");
-            return to_pad;
+            // benchmarking has shown that returning a new string here is faster
+            // than mutating the old one
+            return to_pad[length - size..].to_string();
         }
     }
 
     let size_diff = size - length;
-    to_pad.reserve(size_diff);
-    for _ in 0..size_diff {
-        to_pad.insert(0, pad_char);
-    }
+
+    let to_insert: String = iter::once(pad_char).cycle().take(size_diff).collect();
+    to_pad.insert_str(0, &to_insert);
     to_pad
 }
 

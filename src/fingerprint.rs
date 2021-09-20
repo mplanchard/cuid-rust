@@ -12,7 +12,12 @@ fn pid() -> Result<String, CuidError> {
         .map_err(|_| CuidError::FingerprintError("Could not encode pid"))
 }
 
-/// Convert the hostname to a padded String in the appropriate base
+/// Convert the hostname to a padded String in the appropriate base.
+///
+/// First converts the hostname to a number comprising the length of the
+/// hostname, added to the base radix for CUID strings, added to the sum of
+/// the integer value of each character in the hostname, then converts that
+/// number to base radix.
 fn convert_hostname(hn: &str) -> Result<String, CuidError> {
     to_base_string(
         hn.chars()
