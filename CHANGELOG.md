@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2021-10-03
+
 ### Added
 
 - Added `--slug`, `--version`, and `--help` arguments to `cuid` binary ([b93b5b3])
@@ -75,7 +77,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CUID & CUID slug generation
 - Benchmark suite
 
-[unreleased]: https://github.com/mplanchard/cuid-rust/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/mplanchard/cuid-rust/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/mplanchard/cuid-rust/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/mplanchard/cuid-rust/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/mplanchard/cuid-rust/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/mplanchard/cuid-rust/compare/v1.0.0...v1.0.1

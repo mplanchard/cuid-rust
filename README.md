@@ -15,7 +15,7 @@ implementation of which may be found [here](https://github.com/ericelliott/cuid)
 In cargo.toml
 
 ```toml
-cuid = "1.1.0"
+cuid = "1.2.0"
 ```
 
 Or install the binary:
@@ -39,12 +39,23 @@ fn main() -> () {
 threads share the same atomic counter, which is used as a component of the
 generated CUID.
 
-This package also provides a binary:
+This package also provides a binary if installed via `cargo install`. 
+
+Its default behavior is to generate a CUID:
 
 ```sh
 > cuid
 ckmqrwysb0000iz5p4u1b79hd
 ```
+
+You can also generate a slug:
+
+```sh
+>  cuid --slug
+4k0000dszy
+```
+
+See `cuid --help` for more information.
 
 ## Performance
 
