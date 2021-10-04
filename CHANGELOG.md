@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `--slug`, `--version`, and `--help` arguments to `cuid` binary ([b93b5b3])
+
 ### Changed
 
 - ~10-20% performance improvement overall through optimization of 
@@ -79,3 +83,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/mplanchard/cuid-rust/compare/b691e4c32e25d7239157e85598c74a9f59124417...v0.1.0
 [@rasendubi]: https://github.com/rasendubi
 [a4fca2f]: https://github.com/mplanchard/cuid-rust/commit/a4fca2f
+[b5503d6]: https://github.com/mplanchard/cuid-rust/commit/b5503d6 
+[b93b5b3]: https://github.com/mplanchard/cuid-rust/commit/b93b5b3 
