@@ -19,7 +19,7 @@ pub fn main() {
     }
 }
 
-const HELP: &'static str = r#"Usage: cuid [OPTION]...
+const HELP: &str = r#"Usage: cuid [OPTION]...
 Generate and print a CUID.
 
 Options:
@@ -27,7 +27,7 @@ Options:
   -h, --help     display this help and exit
   -v, --version  display version information and exit"#;
 
-const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// Commandline arguments for the CUID binary
 #[derive(Debug)]
@@ -52,7 +52,7 @@ impl From<Args> for CuidArgs {
             "--slug" => slug = true,
             _ => {
                 println!("error: unrecognized argument {}", arg);
-                println!("");
+                println!();
                 println!("{}", HELP);
                 exit(1);
             }
