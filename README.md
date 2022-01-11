@@ -72,6 +72,27 @@ In a long-running process or thread, CUID generation is faster, since the system
 fingerprint is calculated once and then re-used for the lifetime of the process.
 In this case, CUID generation takes about 125 ns.
 
+## Development
+
+A [`flake.nix`](https://nixos.wiki/wiki/Flakes) file is provided for easy
+installation of dependencies via the nix package manager. To start a shell with
+all of the dependencies available, run:
+
+```text
+nix develop
+```
+
+Or, if you are not yet using flakes, a `shell.nix` shim is provided, so you can
+do the same with
+
+```text
+nix-shell
+```
+
+If you use [direnv](https://direnv.net/), the `.envrc` file will automatically
+source the nix packages into your shell (or editor environment, if you use a
+direnv plugin).
+
 ## Tests
 
 Tests can be run with
