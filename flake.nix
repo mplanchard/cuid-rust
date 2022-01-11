@@ -32,10 +32,14 @@
               bashInteractive
               cargo-audit
               cargo-edit
+              coreutils
+              gnumake
+              jq  # used for benchmark parsing
               # Read our toolchain file to determine which version of rust,
               # components, and targets to install.
               (rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
               rust-analyzer
+              util-linux  # lspcu utility for getting info about cores
             ];
           };
         });

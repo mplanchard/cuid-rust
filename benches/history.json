@@ -1,0 +1,41 @@
+[
+  {
+    "cpuinfo": {
+      "cores": "8",
+      "cpu": "11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz"
+    },
+    "date": "2022-01-11T10:39:36-06:00",
+    "benches": [
+      {
+        "name": "generate cuid",
+        "mean": 407.159651098906,
+        "median": 405.80659888187097
+      },
+      {
+        "name": "generate cuid slug",
+        "mean": 265.8733050709411,
+        "median": 264.3128851437656
+      },
+      {
+        "name": "generate many cuids",
+        "mean": 4112901.1215384617,
+        "median": 4105396.192307692
+      },
+      {
+        "name": "generate many slugs",
+        "mean": 2645944.159523808,
+        "median": 2422971.2857142854
+      },
+      {
+        "name": "multithreaded perf",
+        "mean": 4986352.951818181,
+        "median": 4772311.909090908
+      },
+      {
+        "name": "multithreaded perf (many threads)",
+        "mean": 17973544.85,
+        "median": 17400171.666666664
+      }
+    ]
+  }
+]
