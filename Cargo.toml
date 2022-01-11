@@ -2,7 +2,7 @@
 name = "cuid"
 version = "1.2.0"
 license = "MIT"
-edition = "2018"
+edition = "2021"
 authors = ["Matthew Planchard <msplanchard@gmail.com>"]
 description = "An ipmlementation of CUID protocol in rust"
 documentation = "https://docs.rs/cuid/latest/cuid/"
