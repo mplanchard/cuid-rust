@@ -26,9 +26,6 @@
 //!
 use std::sync::atomic::AtomicU32;
 
-#[macro_use]
-extern crate lazy_static;
-
 mod counter;
 mod error;
 mod fingerprint;
@@ -37,6 +34,7 @@ mod text;
 mod time;
 
 pub use error::CuidError;
+use once_cell::sync::Lazy;
 
 static BASE: u8 = 36;
 static BLOCK_SIZE: usize = 4;
@@ -45,10 +43,8 @@ static START_STR: &str = "c";
 
 static COUNTER: AtomicU32 = AtomicU32::new(0);
 
-lazy_static! {
-    static ref FINGERPRINT: String =
-        fingerprint::fingerprint().expect("Could not determine system fingerprint!");
-}
+static FINGERPRINT: Lazy<String> =
+    Lazy::new(|| fingerprint::fingerprint().expect("Could not determine system fingerprint!"));
 
 /// Generate a CUID
 ///
