@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- The CI suite now runs both `cargo clippy` and `cargo audit` ([edb22b5])
+- Added nix files for dependency managements ([8d2c180])
+
+### Changed
+
+- Upgraded to use the Rust 2021 edition ([cdc594c])
+
 ## [1.2.0] - 2021-10-03
 
 ### Added
@@ -85,6 +94,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.0]: https://github.com/mplanchard/cuid-rust/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/mplanchard/cuid-rust/compare/b691e4c32e25d7239157e85598c74a9f59124417...v0.1.0
 [@rasendubi]: https://github.com/rasendubi
+[cdc594c]: https://github.com/mplanchard/cuid-rust/commit/cdc594c
+[edb22b5]: https://github.com/mplanchard/cuid-rust/commit/edb22b5
+[8d2c180]: https://github.com/mplanchard/cuid-rust/commit/8d2c180
 [a4fca2f]: https://github.com/mplanchard/cuid-rust/commit/a4fca2f
 [b5503d6]: https://github.com/mplanchard/cuid-rust/commit/b5503d6 
 [b93b5b3]: https://github.com/mplanchard/cuid-rust/commit/b93b5b3 
