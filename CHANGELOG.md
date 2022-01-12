@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded to use the Rust 2021 edition ([cdc594c])
+- Switched from `lazy_static` to `once_cell` ([3333dd4])
+- Added `inline` directive to external functions ([8714f67])
 
 ## [1.2.0] - 2021-10-03
 
@@ -94,6 +96,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.0]: https://github.com/mplanchard/cuid-rust/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/mplanchard/cuid-rust/compare/b691e4c32e25d7239157e85598c74a9f59124417...v0.1.0
 [@rasendubi]: https://github.com/rasendubi
+[8714f67]: https://github.com/mplanchard/cuid-rust/commit/8714f67
+[3333dd4]: https://github.com/mplanchard/cuid-rust/commit/3333dd4
 [cdc594c]: https://github.com/mplanchard/cuid-rust/commit/cdc594c
 [edb22b5]: https://github.com/mplanchard/cuid-rust/commit/edb22b5
 [8d2c180]: https://github.com/mplanchard/cuid-rust/commit/8d2c180
