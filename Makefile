@@ -13,7 +13,7 @@
 # Run benchmarks and store results
 bench:
 	rm -rf target/criterion
-	cargo bench --workspace
+	sudo nice -n -20 su $$USER -l -c "cd $$PWD && nix-shell --run 'cargo bench --workspace'"
 
 	CORES=$$(lscpu --json | jq '.lscpu | map(select(.field == "CPU(s):")) | .[0].data')
 	CPU=$$(lscpu --json | jq '.lscpu | map(select(.field == "Model name:")) | .[0].data')

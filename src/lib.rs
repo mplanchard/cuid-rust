@@ -33,17 +33,22 @@ mod random;
 mod text;
 mod time;
 
+use arraystring::{
+    typenum::{U2, U4},
+    ArrayString,
+};
 pub use error::CuidError;
 use once_cell::sync::Lazy;
 
 static BASE: u8 = 36;
-static BLOCK_SIZE: usize = 4;
+type BlockSize = U4;
+type FingerprintPadding = U2;
 static DISCRETE_VALUES: u32 = 1679616; // BASE^BLOCK_SIZE
 static START_STR: &str = "c";
 
 static COUNTER: AtomicU32 = AtomicU32::new(0);
 
-static FINGERPRINT: Lazy<String> =
+static FINGERPRINT: Lazy<ArrayString<BlockSize>> =
     Lazy::new(|| fingerprint::fingerprint().expect("Could not determine system fingerprint!"));
 
 /// Generate a CUID
@@ -163,7 +168,7 @@ mod tests {
 
     #[test]
     fn correct_discrete_values() {
-        assert_eq!((BASE as u32).pow(BLOCK_SIZE as u32), DISCRETE_VALUES);
+        assert_eq!((BASE as u32).pow(4 as u32), DISCRETE_VALUES);
     }
 
     #[test]

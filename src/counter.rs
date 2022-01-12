@@ -1,8 +1,10 @@
 use std::sync::atomic::Ordering;
 
+use arraystring::ArrayString;
+
 use crate::error::CuidError;
-use crate::text::{pad, to_base_string};
-use crate::{BLOCK_SIZE, COUNTER, DISCRETE_VALUES};
+use crate::text::{pad, to_base36_string};
+use crate::{BlockSize, COUNTER, DISCRETE_VALUES};
 
 /// Fetch the counter value and increment it.
 ///
@@ -17,10 +19,8 @@ fn fetch_and_increment() -> Result<u32, CuidError> {
 }
 
 /// Return the current counter value in the appropriate base as a String.
-pub fn current() -> Result<String, CuidError> {
-    fetch_and_increment()
-        .map(to_base_string)?
-        .map(|s| pad(BLOCK_SIZE, s))
+pub fn current() -> Result<ArrayString<BlockSize>, CuidError> {
+    fetch_and_increment().map(to_base36_string)?.map(|s| pad(s))
 }
 
 #[cfg(test)]

@@ -1,13 +1,17 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::error::CuidError;
-use crate::text::to_base_string;
+use arraystring::typenum::U23;
+use arraystring::ArrayString;
 
-pub fn timestamp() -> Result<String, CuidError> {
+use crate::error::CuidError;
+use crate::text::to_base36_string;
+use crate::BlockSize;
+
+pub fn timestamp() -> Result<ArrayString<U23>, CuidError> {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map(|time| time.as_millis())
-        .map(to_base_string)
+        .map(to_base36_string)
         .unwrap_or(Err(CuidError::TextError("Could not convert time to str")))
 }
 

@@ -1,14 +1,17 @@
 use std::process;
 
+use arraystring::typenum::U2;
+use arraystring::ArrayString;
+
 use crate::error::CuidError;
-use crate::text::{pad, to_base_string};
-use crate::BASE;
+use crate::text::{pad, to_base36_string};
+use crate::{BlockSize, FingerprintPadding, BASE};
 
 static FINGERPRINT_PADDING: usize = 2;
 
-fn pid() -> Result<String, CuidError> {
-    to_base_string(process::id())
-        .map(|s| pad(FINGERPRINT_PADDING, s))
+fn pid() -> Result<ArrayString<FingerprintPadding>, CuidError> {
+    to_base36_string(process::id())
+        .map(|s| pad::<FingerprintPadding>(s))
         .map_err(|_| CuidError::FingerprintError("Could not encode pid"))
 }
 
@@ -18,24 +21,27 @@ fn pid() -> Result<String, CuidError> {
 /// hostname, added to the base radix for CUID strings, added to the sum of
 /// the integer value of each character in the hostname, then converts that
 /// number to base radix.
-fn convert_hostname(hn: &str) -> Result<String, CuidError> {
-    to_base_string(
+fn convert_hostname(hn: &str) -> Result<ArrayString<FingerprintPadding>, CuidError> {
+    to_base36_string(
         hn.chars()
             .fold(hn.len() + BASE as usize, |acc, c| acc + c as usize) as u64,
     )
-    .map(|base_str| pad(FINGERPRINT_PADDING, base_str))
+    .map(|base_str| pad(base_str))
 }
 
-fn host_id() -> Result<String, CuidError> {
+fn host_id() -> Result<ArrayString<FingerprintPadding>, CuidError> {
     let hn = hostname::get()?;
     convert_hostname(&hn.to_string_lossy())
 }
 
-pub fn fingerprint() -> Result<String, CuidError> {
-    let mut hid = host_id()?;
+pub fn fingerprint() -> Result<ArrayString<BlockSize>, CuidError> {
+    let hid = host_id()?;
     let procid = pid()?;
-    hid.push_str(&procid);
-    Ok(hid)
+    let mut rv = ArrayString::<BlockSize>::new();
+    rv.push_str(&hid);
+    rv.push_str(&procid);
+    // // // // // // // // hid.push_str(&procid);
+    Ok(rv)
 }
 
 #[cfg(test)]
@@ -45,7 +51,7 @@ mod fingerprint_tests {
 
     #[test]
     fn test_pid_length() {
-        assert_eq!(pid().unwrap().len(), FINGERPRINT_PADDING)
+        assert_eq!(pid().unwrap().len(), FINGERPRINT_PADDING as u8)
     }
 
     // The below expected host_ids were all generated directly using
