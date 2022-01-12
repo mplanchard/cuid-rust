@@ -4,6 +4,45 @@
       "cores": "8",
       "cpu": "11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz"
     },
+    "date": "2022-01-11T19:12:34-06:00",
+    "benches": [
+      {
+        "name": "generate cuid",
+        "mean": 256.73174321170484,
+        "median": 235.5211134854001
+      },
+      {
+        "name": "generate cuid slug",
+        "mean": 205.68552765915842,
+        "median": 205.11760028638042
+      },
+      {
+        "name": "generate many cuids",
+        "mean": 2778186.7052631583,
+        "median": 2768190.8947368423
+      },
+      {
+        "name": "generate many slugs",
+        "mean": 2032755.2712,
+        "median": 1883355.94
+      },
+      {
+        "name": "multithreaded perf",
+        "mean": 3622232.3385714274,
+        "median": 3452972.0714285714
+      },
+      {
+        "name": "multithreaded perf (many threads)",
+        "mean": 13124530.3,
+        "median": 12674714.125
+      }
+    ]
+  },
+  {
+    "cpuinfo": {
+      "cores": "8",
+      "cpu": "11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz"
+    },
     "date": "2022-01-11T19:03:39-06:00",
     "benches": [
       {

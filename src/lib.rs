@@ -69,6 +69,7 @@ static FINGERPRINT: Lazy<ArrayString<BlockSize>> =
 /// let id = cuid::cuid();
 /// assert!(cuid::is_cuid(id.unwrap()));
 /// ```
+#[inline]
 pub fn cuid() -> Result<String, CuidError> {
     Ok([
         START_STR,
@@ -110,6 +111,7 @@ pub fn cuid() -> Result<String, CuidError> {
 /// let slug = cuid::slug();
 /// assert!(cuid::is_slug(slug.unwrap()));
 /// ```
+#[inline]
 pub fn slug() -> Result<String, CuidError> {
     let timestamp = time::timestamp()?;
     let count = counter::current()?;
@@ -133,6 +135,7 @@ pub fn slug() -> Result<String, CuidError> {
 /// let id = cuid::cuid().unwrap();
 /// assert!(cuid::is_cuid(id));
 /// ```
+#[inline]
 pub fn is_cuid<S: AsRef<str>>(to_check: S) -> bool {
     let to_check = to_check.as_ref();
     match to_check.len() {
@@ -157,6 +160,7 @@ pub fn is_cuid<S: AsRef<str>>(to_check: S) -> bool {
 /// let slug = cuid::slug().unwrap();
 /// assert!(cuid::is_slug(slug));
 /// ```
+#[inline]
 pub fn is_slug<S: AsRef<str>>(to_check: S) -> bool {
     // the slug will always be 10 characters
     to_check.as_ref().len() == 10
