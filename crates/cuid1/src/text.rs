@@ -6,6 +6,7 @@ use crate::BASE;
 
 /// Convert a number to a string of the specified radix.
 fn to_radix_string<N: Into<u128>>(radix: u8, number: N) -> Result<String, CuidError> {
+    // Ok(base36::encode(&number.into().to_le_bytes()))
     let mut number = number.into();
     let rad_u32: u32 = radix.into();
 

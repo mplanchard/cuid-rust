@@ -6,6 +6,7 @@ use crate::text::to_base_string;
 pub fn timestamp() -> Result<String, CuidError> {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
+        // millisecond timestamp to match javascript
         .map(|time| time.as_millis())
         .map(to_base_string)
         .unwrap_or(Err(CuidError::TextError("Could not convert time to str")))

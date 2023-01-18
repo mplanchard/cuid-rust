@@ -1,8 +1,8 @@
 use rand::{thread_rng, CryptoRng, Rng};
 
+use super::{BLOCK_SIZE, DISCRETE_VALUES};
 use crate::error::CuidError;
 use crate::text::{pad, to_base_string};
-use crate::{BLOCK_SIZE, DISCRETE_VALUES};
 
 fn random_float_from_rng<R: Rng + CryptoRng>(mut rng: R) -> f64 {
     rng.gen::<f64>()
@@ -17,7 +17,7 @@ fn random_64_bit_int<N: Into<f64>>(max: N) -> u64 {
 }
 
 pub fn random_block() -> Result<String, CuidError> {
-    to_base_string(random_64_bit_int(DISCRETE_VALUES as u32)).map(|s| pad(BLOCK_SIZE, s))
+    to_base_string(random_64_bit_int(DISCRETE_VALUES)).map(|s| pad(BLOCK_SIZE, s))
 }
 
 #[cfg(test)]

@@ -1,8 +1,8 @@
 use std::sync::atomic::Ordering;
 
+use super::{BLOCK_SIZE, COUNTER, DISCRETE_VALUES};
 use crate::error::CuidError;
 use crate::text::{pad, to_base_string};
-use crate::{BLOCK_SIZE, COUNTER, DISCRETE_VALUES};
 
 /// Fetch the counter value and increment it.
 ///

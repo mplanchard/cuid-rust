@@ -7,10 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Deprecated
+
+- The CUID v1 algorithm is now [deprecated](https://github.com/mplanchard/cuid-rust/issues/4),
+  so all cuid v1 functions have been marked as such. Please use the new `cuid2`
+  crate or the `cuid2()` function re-exported from the `cuid` crate.
+
 ### Added
 
 - The CI suite now runs both `cargo clippy` and `cargo audit` ([edb22b5])
-- Added nix files for dependency managements ([8d2c180])
+- Added nix files for dependency management ([8d2c180])
+- Added the `cuid2` crate, providing library and binary for v2 of the CUID
+  standard
+- Added `cuid2()` function in the `cuid` crate
 
 ### Changed
 

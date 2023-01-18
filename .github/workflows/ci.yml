@@ -9,8 +9,12 @@ jobs:
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
         toolchain: ["stable", "beta", "nightly"]
         test_args:
-          - ""
-          - "-- --ignored --test-threads 1"
+          - "-p cuid"
+          - "-p cuid -- collisions::test --ignored"
+          - "-p cuid -- collisions::single_thread --ignored --test-threads 1"
+          - "-p cuid2"
+          - "-p cuid2 -- --ignored test::collisions"
+          - "-p cuid2 -- --ignored test::distribution"
 
     runs-on: "${{ matrix.os }}"
     steps:
