@@ -1,0 +1,34 @@
+[package]
+name = "cuid"
+version = "1.3.0"
+description = "An ipmlementation of CUID protocol in rust"
+documentation = "https://docs.rs/cuid/latest/cuid/"
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+homepage.workspace = true
+repository.workspace = true
+
+[dev-dependencies]
+criterion = "~0.3"
+
+[dependencies]
+base36 = "0.0.1"
+bigint = "4.4.3"
+cuid2 = { path = "../cuid2" }
+hostname = "~0.3.0"
+num = { version = "0.4.0", features = ["num-bigint"] }
+once_cell = "1.9.0"
+rand = "~0.8.0"
+
+[lib]
+name = "cuid"
+path = "src/lib.rs"
+
+[[bin]]
+name = "cuid"
+path = "src/bin.rs"
+
+[[bench]]
+name = "cuid"
+harness = false

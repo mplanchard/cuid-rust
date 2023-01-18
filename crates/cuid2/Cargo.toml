@@ -1,0 +1,30 @@
+[package]
+name = "cuid2"
+version = "0.1.0"
+description = "An implementation of the CUID2 protocol in rust"
+documentation = "https://docs.rs/cuid/latest/cuid2/"
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+homepage.workspace = true
+repository.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "cuid2"
+path = "src/lib.rs"
+
+[[bin]]
+name = "cuid2"
+path = "src/bin.rs"
+
+[dependencies]
+num = { version = "0.4.0", features = ["num-bigint"] }
+proptest = "1.0.0"
+rand = "0.8.5"
+sha3 = "0.10.6"
+
+[dev-dependencies]
+# Our radix function is faster than this one, but we can use it to check our output
+num_cpus = "1.15.0"
+radix_fmt = "1.0.0"

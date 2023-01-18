@@ -1,3 +1,4 @@
+#[allow(deprecated)]
 use cuid::{cuid, slug};
 use std::{
     env::{self, Args},
@@ -8,7 +9,25 @@ use std::{
 pub fn main() {
     let args: CuidArgs = env::args().into();
 
-    let res = if args.slug { slug() } else { cuid() };
+    let res = match args.v2 {
+        true => {
+            if args.slug {
+                // construct a v2 cuid with the same length as cuid1 slugs
+                Ok(cuid2::CuidConstructor::new().with_length(10).create_id())
+            } else {
+                Ok(cuid2::create_id())
+            }
+        }
+        false => {
+            if args.slug {
+                #[allow(deprecated)]
+                slug()
+            } else {
+                #[allow(deprecated)]
+                cuid()
+            }
+        }
+    };
 
     match res {
         Ok(id) => println!("{}", id),
@@ -23,6 +42,7 @@ const HELP: &str = r#"Usage: cuid [OPTION]...
 Generate and print a CUID.
 
 Options:
+  --v2           generate a v2 CUID/slug (this will eventually be the default)
   --slug         generate a slug instead of a full CUID
   -h, --help     display this help and exit
   -v, --version  display version information and exit"#;
@@ -34,10 +54,12 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 struct CuidArgs {
     /// Whether to produce a slug instead of a CUID
     slug: bool,
+    v2: bool,
 }
 impl From<Args> for CuidArgs {
     fn from(args: Args) -> Self {
         let mut slug = false;
+        let mut v2 = false;
 
         // The first argument should be the binary name. Skip it.
         args.skip(1).for_each(|arg| match arg.as_str() {
@@ -50,6 +72,7 @@ impl From<Args> for CuidArgs {
                 exit(0);
             }
             "--slug" => slug = true,
+            "--v2" => v2 = true,
             _ => {
                 println!("error: unrecognized argument {}", arg);
                 println!();
@@ -58,6 +81,6 @@ impl From<Args> for CuidArgs {
             }
         });
 
-        CuidArgs { slug }
+        CuidArgs { slug, v2 }
     }
 }

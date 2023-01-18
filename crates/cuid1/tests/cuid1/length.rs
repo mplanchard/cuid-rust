@@ -1,7 +1,5 @@
 //! Test that CUIDs are of a predictable length
 
-use cuid;
-
 use std::collections::HashSet;
 
 #[test]

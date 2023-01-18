@@ -20,7 +20,7 @@
         # rust overlay
         let pkgs = import nixpkgs {
               inherit system;
-              overlays = [ rust-overlay.overlay ];
+              overlays = [ rust-overlay.overlays.default ];
             };
         in
         # "unpack" the pkgs attrset into the parent namespace

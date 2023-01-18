@@ -1,45 +1,18 @@
-//! # cuid-rust
-//!
-//! CUID generation in rust
-//!
-//! ```rust
-//! use cuid;
-//!
-//! // Get a full CUID
-//! println!("{}", cuid::cuid().unwrap());
-//!
-//! // Get a shorter, URL-appropriate CUID slug
-//! println!("{}", cuid::slug().unwrap());
-//! ```
-//!
-//! Note that this crate also provides a very simple, single purpose
-//! commandline interface:
-//!
-//! ```sh
-//! $> cuid
-//! ckfritrvg0000kdtwc766fful
-//! ```
-//!
-//! See the [original implementation] for more details on CUIDs in general.
-//!
-//! [original implementation]: https://github.com/ericelliott/cuid
-//!
-use std::sync::atomic::AtomicU32;
+//! CUID version one (deprecated, maintained for backwards compatibility)
 
 mod counter;
-mod error;
 mod fingerprint;
 mod random;
-mod text;
-mod time;
 
-pub use error::CuidError;
+use crate::error::CuidError;
+use crate::time;
+
 use once_cell::sync::Lazy;
+use std::sync::atomic::AtomicU32;
 
-static BASE: u8 = 36;
-static BLOCK_SIZE: usize = 4;
-static DISCRETE_VALUES: u32 = 1679616; // BASE^BLOCK_SIZE
-static START_STR: &str = "c";
+const BLOCK_SIZE: usize = 4;
+const DISCRETE_VALUES: u32 = 1679616; // BASE^BLOCK_SIZE
+const START_STR: &str = "c";
 
 static COUNTER: AtomicU32 = AtomicU32::new(0);
 
@@ -64,6 +37,10 @@ static FINGERPRINT: Lazy<String> =
 /// let id = cuid::cuid();
 /// assert!(cuid::is_cuid(id.unwrap()));
 /// ```
+#[deprecated(
+    since = "1.3.0",
+    note = "cuid() is deprecated. Use cuid2() instead. See https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
+)]
 #[inline]
 pub fn cuid() -> Result<String, CuidError> {
     Ok([
@@ -106,6 +83,10 @@ pub fn cuid() -> Result<String, CuidError> {
 /// let slug = cuid::slug();
 /// assert!(cuid::is_slug(slug.unwrap()));
 /// ```
+#[deprecated(
+    since = "1.3.0",
+    note = "slug() is based on cuid(), which is deprecated. Use cuid2() instead. See https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
+)]
 #[inline]
 pub fn slug() -> Result<String, CuidError> {
     let timestamp = time::timestamp()?;
@@ -130,6 +111,10 @@ pub fn slug() -> Result<String, CuidError> {
 /// let id = cuid::cuid().unwrap();
 /// assert!(cuid::is_cuid(id));
 /// ```
+#[deprecated(
+    since = "1.3.0",
+    note = "is_cuid() is based on cuid(), which is deprecated. Use cuid2() instead. See https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
+)]
 #[inline]
 pub fn is_cuid<S: AsRef<str>>(to_check: S) -> bool {
     let to_check = to_check.as_ref();
@@ -155,6 +140,10 @@ pub fn is_cuid<S: AsRef<str>>(to_check: S) -> bool {
 /// let slug = cuid::slug().unwrap();
 /// assert!(cuid::is_slug(slug));
 /// ```
+#[deprecated(
+    since = "1.3.0",
+    note = "is_slug() is based on cuid(), which is deprecated. Use cuid2() instead. See https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
+)]
 #[inline]
 pub fn is_slug<S: AsRef<str>>(to_check: S) -> bool {
     // the slug will always be 10 characters
@@ -163,11 +152,13 @@ pub fn is_slug<S: AsRef<str>>(to_check: S) -> bool {
 
 #[cfg(test)]
 mod tests {
+    #![allow(deprecated)]
+
     use super::*;
 
     #[test]
     fn correct_discrete_values() {
-        assert_eq!((BASE as u32).pow(BLOCK_SIZE as u32), DISCRETE_VALUES);
+        assert_eq!((crate::BASE as u32).pow(BLOCK_SIZE as u32), DISCRETE_VALUES);
     }
 
     #[test]
@@ -182,7 +173,7 @@ mod tests {
 
     #[test]
     fn cuid_is_not_cuid_zero_len() {
-        assert_eq!(is_cuid(""), false);
+        assert!(!is_cuid(""));
     }
 
     #[test]
@@ -199,6 +190,8 @@ mod tests {
 #[cfg(nightly)]
 #[cfg(test)]
 mod benchmarks {
+    #![allow(deprecated)]
+
     use super::*;
     use test::Bencher;
 
