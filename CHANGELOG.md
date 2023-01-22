@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [cuid 1.3.1]
+
+### Changed
+
+- Updated deprecation warnings to mention the `cuid2` crate
+
 ## [cuid 1.3.0], [cuid2 0.1.0]
 
 ### Deprecated
@@ -100,6 +106,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Benchmark suite
 
 [unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.0...HEAD
+[cuid 1.3.1]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.0...cuid-v1.3.1
+[cuid2 1.3.1]: https://github.com/mplanchard/cuid-rust/compare/v1.2.0...cuid2-v0.1.0
 [cuid2 0.1.0]: https://github.com/mplanchard/cuid-rust/compare/v1.2.0...cuid2-v0.1.0
 [cuid 1.3.0]: https://github.com/mplanchard/cuid-rust/compare/v1.2.0...cuid-v1.3.0
 [1.2.0]: https://github.com/mplanchard/cuid-rust/compare/v1.1.0...v1.2.0
