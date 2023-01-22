@@ -6,7 +6,9 @@
 
 This repository is the home of the [cuid] and [cuid2] crates. The original
 CUID standard is marked as [deprecated](https://github.com/paralleldrive/cuid2#improvements-over-cuid)
-in favor of CUID2, so please prefer the `cuid2` crate.
+in favor of CUID2, so please prefer the `cuid2` crate. `cuid2` is provided as a
+separate crate because its generated IDs have different semantics from `cuid`,
+so it is not necessarily a drop-in replacement.
 
 If you are using the `cuid` crate already, you can also use the `cuid2()`
 function from that crate.
