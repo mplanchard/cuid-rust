@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/mplanchard/cuid-rust/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/mplanchard/cuid-rust/actions/workflows/ci.yml?query=branch%3Amaster)
 [![Crates.io](https://img.shields.io/crates/v/cuid "Crates.io")](https://crates.io/crates/cuid/)
-[![docs.rs](https://docs.rs/cuid/badge.svg)](https://docs.rs/cuid/badge.svg)
+[![docs.rs](https://docs.rs/cuid/badge.svg)](https://docs.rs/cuid/)
 
 Cuids are "Collision-resistant ids optimized for horizontal scaling and
 binary search lookup performance."
