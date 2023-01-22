@@ -39,7 +39,8 @@ static FINGERPRINT: Lazy<String> =
 /// ```
 #[deprecated(
     since = "1.3.0",
-    note = "cuid() is deprecated. Use cuid2() instead. See https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
+    note = "cuid() is deprecated. Use cuid2() instead, or switch to the cuid2 crate. See \
+            https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
 )]
 #[inline]
 pub fn cuid() -> Result<String, CuidError> {
@@ -85,7 +86,9 @@ pub fn cuid() -> Result<String, CuidError> {
 /// ```
 #[deprecated(
     since = "1.3.0",
-    note = "slug() is based on cuid(), which is deprecated. Use cuid2() instead. See https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
+    note = "slug() is based on cuid(), which is deprecated. Use cuid2() instead, \
+            or switch to the cuid2 crate. See \
+            https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
 )]
 #[inline]
 pub fn slug() -> Result<String, CuidError> {
@@ -113,7 +116,9 @@ pub fn slug() -> Result<String, CuidError> {
 /// ```
 #[deprecated(
     since = "1.3.0",
-    note = "is_cuid() is based on cuid(), which is deprecated. Use cuid2() instead. See https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
+    note = "is_cuid() is based on cuid(), which is deprecated. Use cuid2() instead, \
+            or switch to the cuid2 crate. See \
+            https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
 )]
 #[inline]
 pub fn is_cuid<S: AsRef<str>>(to_check: S) -> bool {
@@ -142,7 +147,9 @@ pub fn is_cuid<S: AsRef<str>>(to_check: S) -> bool {
 /// ```
 #[deprecated(
     since = "1.3.0",
-    note = "is_slug() is based on cuid(), which is deprecated. Use cuid2() instead. See https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
+    note = "is_slug() is based on cuid(), which is deprecated. Use cuid2() instead, \
+            or switch to the cuid2 crate. See \
+            https://github.com/paralleldrive/cuid2#improvements-over-cuid for more information"
 )]
 #[inline]
 pub fn is_slug<S: AsRef<str>>(to_check: S) -> bool {
