@@ -1,0 +1,14 @@
+[package]
+name = "cuid-util"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[dev-dependencies]
+num = { version = "0.4.0", features = ["num-bigint"] }
+proptest = "1.0.0"
+# Our radix function is faster than this one, but we can use it to check our output
+radix_fmt = "1.0.0"

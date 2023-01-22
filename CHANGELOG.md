@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Moved common utility logic out into a `cuid-util` crate
+
+### Changed
+
+- Replaced base conversion logic in `cuid` with the logic in that crate,
+  yielding a solid performance improvement for CUID generation (10-20%)
+- Added `#[inline]` annotations for main cuid2 functions
+
 ## [cuid 1.3.1]
 
 ### Changed

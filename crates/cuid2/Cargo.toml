@@ -1,6 +1,6 @@
 [package]
 name = "cuid2"
-version = "0.1.0"
+version = "0.1.1"
 description = "An implementation of the CUID2 protocol in rust"
 documentation = "https://docs.rs/cuid/latest/cuid2/"
 edition.workspace = true
@@ -18,13 +18,18 @@ path = "src/lib.rs"
 name = "cuid2"
 path = "src/bin.rs"
 
+[[bench]]
+name = "cuid2"
+harness = false
+
 [dependencies]
+cuid-util = { path = "../cuid-util", version = "0.1.0" }
 num = { version = "0.4.0", features = ["num-bigint"] }
 proptest = "1.0.0"
 rand = "0.8.5"
 sha3 = "0.10.6"
 
 [dev-dependencies]
-# Our radix function is faster than this one, but we can use it to check our output
+criterion = "0.4.0"
 num_cpus = "1.15.0"
 radix_fmt = "1.0.0"

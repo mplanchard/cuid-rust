@@ -61,6 +61,7 @@ use std::{
     time::{SystemTime, UNIX_EPOCH},
 };
 
+use cuid_util::ToBase36;
 use num::bigint;
 use rand::{seq::SliceRandom, thread_rng, Rng};
 use sha3::{Digest, Sha3_512};
@@ -124,71 +125,6 @@ thread_local! {
         ],
         BIG_LENGTH.into(),
     )
-}
-
-// =============================================================================
-// UTILITY FUNCTIONS
-// =============================================================================
-
-// Construcing Base36 Values
-// =========================
-
-/// Converts any number representable as a u128 into a base36 String.
-///
-/// Benchmarking has shown this function to be faster than anything I've been
-/// able to find in a library.
-fn to_base_36<N: Into<u128>>(number: N) -> String {
-    const RADIX: u32 = 36;
-    let mut number = number.into();
-
-    // If the number is less than the radix, it can be represented by a single
-    // char. Just push that char and return.
-    if number < RADIX as u128 {
-        return char::from_digit(number as u32, RADIX)
-            .expect("35 and under is always valid")
-            .to_string();
-    }
-
-    // Allocate a string with the appropriate length for the result.
-    //
-    // Number of digits from n in base10 to base36 is log36(n) + 1.
-    //
-    // u128::MAX.log(36).trunc() is ~24, so we don't need to worry about
-    // converting the result to usize, since we know it will always fit in any
-    // unsigned integer.
-    let mut buffer = String::with_capacity((number as f64).log(36.0) as usize + 1);
-
-    while number > 0 {
-        buffer.push(
-            char::from_digit((number % RADIX as u128) as u32, RADIX)
-                .expect("Modulo radix always yields a valid number"),
-        );
-        number /= RADIX as u128;
-    }
-
-    // SAFETY: .as_mut_vec() is unsafe because it allows inserting bytes that
-    // are not valid UTF-8. We are not inserting any bytes, just reversing the
-    // string, so this is safe.
-    unsafe {
-        buffer.as_mut_vec().reverse();
-    }
-
-    buffer
-}
-
-/// Trait for types that can be converted to base 36.
-trait ToBase36 {
-    fn to_base_36(self) -> String;
-}
-
-/// Blanket impl for ToBase36 for anything that can be converted to a u128.
-impl<N> ToBase36 for N
-where
-    N: Into<u128>,
-{
-    fn to_base_36(self) -> String {
-        to_base_36(self)
-    }
 }
 
 // Hashing
@@ -358,6 +294,7 @@ impl CuidConstructor {
     }
 
     /// Creates a new CUID.
+    #[inline]
     pub fn create_id(&self) -> String {
         let time = get_timestamp();
 
@@ -399,6 +336,7 @@ impl Default for CuidConstructor {
 static DEFAULT_CONSTRUCTOR: CuidConstructor = CuidConstructor::new();
 
 /// Creates a new CUID.
+#[inline]
 pub fn create_id() -> String {
     DEFAULT_CONSTRUCTOR.create_id()
 }
@@ -408,6 +346,7 @@ pub fn create_id() -> String {
 /// Alias for `created_id()`, which is the interface defined in the reference
 /// implementation. The `cuid()` interface allows easier drop-in replacement
 /// for crates using the v1 `cuid` crate.
+#[inline]
 pub fn cuid() -> String {
     create_id()
 }
@@ -417,28 +356,6 @@ mod test {
     use std::{collections::HashSet, thread};
 
     use super::*;
-
-    use proptest::prelude::*;
-
-    proptest! {
-        #[test]
-        fn doesnt_panic(n: u128) {
-            to_base_36(n);
-        }
-
-        #[test]
-        fn expected_output(n: u128) {
-            let val = to_base_36(n);
-            assert_eq!(
-                &format!("{}", radix_fmt::radix_36(n)),
-                &val,
-            );
-            assert_eq!(
-                &bigint::BigUint::from_bytes_be(&n.to_be_bytes()).to_str_radix(36),
-                &val
-            )
-        }
-    }
 
     #[test]
     fn counter_increments() {

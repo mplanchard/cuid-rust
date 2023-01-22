@@ -65,7 +65,7 @@ Performance is one of the primary concerns of this library (see
 This implementation is currently about 20x faster than the reference JavaScript
 implementation.
 
-It takes about 300 nanoseconds to generate a CUID, or 250 nanoseconds
+It takes about 280 nanoseconds to generate a CUID, or 200 nanoseconds
 to generate a CUID slug, on relatively modern desktop hardware.
 
 In a long-running process or thread, CUID generation is faster, since the system
