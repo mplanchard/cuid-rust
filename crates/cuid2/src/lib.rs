@@ -70,7 +70,8 @@ use sha3::{Digest, Sha3_512};
 // CONSTANTS
 // =============================================================================
 
-/// Set of primes used during entropy calculation, pulled from cui2
+/// Set of primes used during entropy calculation, pulled from cuid2 reference
+/// implementation.
 ///
 /// cuid2 source does not indicate why these primes were chosen
 const PRIMES: [u32; 10] = [
@@ -181,6 +182,8 @@ fn create_entropy(length: u16) -> String {
     let mut result = String::with_capacity(length + 4);
 
     while result.len() < length {
+        // Panic safety: PRIMES is a static, non-empty array. `.choose()`
+        // only returns None if the array is empty.
         let prime = PRIMES.choose(&mut rng).expect("PRIMES must not be empty");
         let random_val = rng.gen_range(0..*prime);
         result.push_str(&random_val.to_base_36());
@@ -194,6 +197,15 @@ fn get_timestamp() -> String {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map(|time| time.as_millis().to_base_36())
+        // Panic safety: `.duration_since()` fails if the end time is not
+        // later than the start time, so this will only fail if the system
+        // time is before 1970-01-01. It is impossible on Unix systems to set
+        // a time before then, since the entire system uses a 32 or 64 bit
+        // unsigned integer for time, where zero is midnight 1970-01-01.
+        //
+        // If you are on a system that for some reason both can be and needs to
+        // be set >50 years in the past AND this library not working is a
+        // problem for you, please feel free to reach out.
         .expect(
             "Failed to calculate system timestamp! Current system time may be \
                  set to before the Unix epoch, or time may otherwise be broken. \
@@ -316,7 +328,8 @@ impl CuidConstructor {
 
         let first_letter = (*STARTING_CHARS
             .as_bytes()
-            // no-panic: choose() only returns None if the slice is empty
+            // Panic safety: choose() only returns None if the slice is empty,
+            // and STARTING_CHARS is a statically defined non-empty slice.
             .choose(&mut thread_rng())
             .expect("STARTING_CHARS cannot be empty")) as char;
 
