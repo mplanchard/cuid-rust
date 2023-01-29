@@ -19,6 +19,12 @@ pub fn to_base_36<N: Into<u128>>(number: N) -> String {
     // char. Just push that char and return.
     if number < RADIX as u128 {
         return char::from_digit(number as u32, RADIX)
+            // Panic safety: we just checked that `number < RADIX`. RADIX is a
+            // constant (36). `char::from_digit()` only fails if the number is
+            // not a valid digit in the specified radix (and it panics if the
+            // radix is greater than 36). Since we're working with base 36, we
+            // know that 0-35 are valid numbers, and we know that `number` is
+            // from 0-35.
             .expect("35 and under is always valid")
             .to_string();
     }
@@ -34,6 +40,13 @@ pub fn to_base_36<N: Into<u128>>(number: N) -> String {
     while number > 0 {
         buffer.push(
             char::from_digit((number % RADIX as u128) as u32, RADIX)
+                // Panic safety: the result of the modulo operation x % y on two
+                // numbers x and y must always be a number in the range [0, y).
+                // `char::from_digit()` here is therefore safe for the same
+                // reasons it is above: we know that any number modulo RADIX
+                // must be a number from 0 through (RADIX - 1). We know that
+                // RADIX is 36 (a constant). And so we know that
+                // `char::from_digit()` will not return an error.
                 .expect("Modulo radix always yields a valid number"),
         );
         number /= RADIX as u128;
