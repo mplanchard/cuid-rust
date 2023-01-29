@@ -32,9 +32,11 @@
               bashInteractive
               cargo-audit
               cargo-edit
+              cargo-flamegraph
               coreutils
               gnumake
               jq  # used for benchmark parsing
+              linuxPackages_latest.perf
               # Read our toolchain file to determine which version of rust,
               # components, and targets to install.
               (rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
