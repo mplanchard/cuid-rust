@@ -172,10 +172,12 @@ fn hash<S: AsRef<[u8]>, T: IntoIterator<Item = S>>(input: T, length: u16) -> Str
 /// let id = cuid2::create_id();
 /// let empty_id = "";
 /// let too_small = "a";
+/// let too_big = "a1l23j1l2k3j12o8312j3k12j3lj12k3j1lk2j312j3lkj12l3g1kj2h312312lk3j1l2j3lk12j3lkjlj1lk23jl131l2k3jl12j3lk1j2lk3j12lk3h12k3hhl1j2j3";
 /// let non_ascii_alphanumeric = "a#";
 /// assert!(cuid2::is_cuid2(id));
 /// assert!(!cuid2::is_cuid2(empty_id));
 /// assert!(!cuid2::is_cuid2(too_small));
+/// assert!(!cuid2::is_cuid2(too_big));
 /// assert!(!cuid2::is_cuid2(non_ascii_alphanumeric));
 /// ```
 #[inline]
