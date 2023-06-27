@@ -62,7 +62,7 @@ use std::{
 };
 
 use cuid_util::ToBase36;
-use num::{bigint, ToPrimitive};
+use num::bigint;
 use rand::{seq::SliceRandom, thread_rng, Rng};
 use sha3::{Digest, Sha3_512};
 
