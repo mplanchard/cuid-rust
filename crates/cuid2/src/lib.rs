@@ -62,7 +62,7 @@ use std::{
 };
 
 use cuid_util::ToBase36;
-use num::bigint;
+use num::{bigint, ToPrimitive};
 use rand::{seq::SliceRandom, thread_rng, Rng};
 use sha3::{Digest, Sha3_512};
 
@@ -165,6 +165,33 @@ fn hash<S: AsRef<[u8]>, T: IntoIterator<Item = S>>(input: T, length: u16) -> Str
 
 // Other Utility Functions
 // =======================
+
+/// Return whether a string is a legitimate CUID2
+/// ```rust
+/// use cuid2;
+/// let id = cuid2::create_id();
+/// let empty_id = "";
+/// let too_small = "a";
+/// let non_ascii_alphanumeric = "a#";
+/// assert!(cuid2::is_cuid2(id));
+/// assert!(!cuid2::is_cuid2(empty_id));
+/// assert!(!cuid2::is_cuid2(too_small));
+/// assert!(!cuid2::is_cuid2(non_ascii_alphanumeric));
+/// ```
+#[inline]
+pub fn is_cuid2<S: AsRef<str>>(to_check: S) -> bool {
+    let to_check = to_check.as_ref();
+    const MAX_LENGTH: usize = BIG_LENGTH as usize;
+    match to_check.len() {
+        2..=MAX_LENGTH => {
+            STARTING_CHARS.contains(&to_check[..1])
+                && to_check[1..].chars().into_iter().fold(true, |acc, ch| {
+                    acc && (ch.is_ascii_lowercase()) || ch.is_ascii_digit()
+                })
+        }
+        _ => false,
+    }
+}
 
 /// Creates a random string of the specified length.
 fn create_entropy(length: u16) -> String {
