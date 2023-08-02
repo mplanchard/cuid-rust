@@ -5,17 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [cuid 1.3.2], [cuid2 0.1.1]
 
 ### Added
 
-- Moved common utility logic out into a `cuid-util` crate
+- cuid/cuid2: Moved common utility logic out into a `cuid-util` crate
+- cuid2: #10: New `is_cuid2` function and `is_cuid` alias
 
 ### Changed
 
-- Replaced base conversion logic in `cuid` with the logic in that crate,
+- cuid: Replaced base conversion logic in `cuid` with the logic in `cuid-util`,
   yielding a solid performance improvement for CUID generation (10-20%)
-- Added `#[inline]` annotations for main cuid2 functions
+- cuid2: Added `#[inline]` annotations for main cuid2 functions
+
+### Fixed
+
+- cuid: 94d4cd0: Removed unused `bigint` dependency
+- cuid2: #11: Moved proptest to dev dependencies
 
 ## [cuid 1.3.1]
 
@@ -116,6 +122,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Benchmark suite
 
 [unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.0...HEAD
+[cuid 1.3.2]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.1...cuid-v1.3.2
+[cuid2 0.1.1]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.0...cuid2-v0.1.1
 [cuid 1.3.1]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.0...cuid-v1.3.1
 [cuid2 1.3.1]: https://github.com/mplanchard/cuid-rust/compare/v1.2.0...cuid2-v0.1.0
 [cuid2 0.1.0]: https://github.com/mplanchard/cuid-rust/compare/v1.2.0...cuid2-v0.1.0
