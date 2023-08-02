@@ -14,7 +14,6 @@ criterion = "~0.3"
 
 [dependencies]
 base36 = "0.0.1"
-bigint = "4.4.3"
 cuid-util = { path = "../cuid-util", version = "0.1.0" }
 cuid2 = { path = "../cuid2", version = "0.1.0" }
 hostname = "~0.3.0"
