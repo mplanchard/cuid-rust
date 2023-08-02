@@ -195,6 +195,14 @@ pub fn is_cuid2<S: AsRef<str>>(to_check: S) -> bool {
     }
 }
 
+/// Return whether a string is a legitimate CUID.
+///
+/// This is an alias of [is_cuid2]
+#[inline]
+pub fn is_cuid<S: AsRef<str>>(to_check: S) -> bool {
+    is_cuid2(to_check)
+}
+
 /// Creates a random string of the specified length.
 fn create_entropy(length: u16) -> String {
     let mut rng = thread_rng();
