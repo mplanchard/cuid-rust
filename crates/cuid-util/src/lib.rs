@@ -56,6 +56,8 @@ pub fn to_base_36<N: Into<u128>>(number: N) -> String {
     // are not valid UTF-8. We are not inserting any bytes, just reversing the
     // string, so this is safe.
     unsafe {
+        // We reverse here so that we can push to the back of the string
+        // prior to this, which is faster than pushing to the front of the string
         buffer.as_mut_vec().reverse();
     }
 

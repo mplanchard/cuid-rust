@@ -49,7 +49,7 @@
 //! If installed with `cargo install`, this package also provides a `cuid2`
 //! binary, which generates a CUID on the command line. It can be used like:
 //!
-//! ```ignore
+//! ```ignore,compile_fail
 //! > cuid2
 //! y3cfw1hafbtezzflns334sb2
 //! ```
@@ -70,14 +70,6 @@ use sha3::{Digest, Sha3_512};
 // CONSTANTS
 // =============================================================================
 
-/// Set of primes used during entropy calculation, pulled from cuid2 reference
-/// implementation.
-///
-/// cuid2 source does not indicate why these primes were chosen
-const PRIMES: [u32; 10] = [
-    109717, 109721, 109741, 109751, 109789, 109793, 109807, 109819, 109829, 109831,
-];
-
 const DEFAULT_LENGTH: u8 = 24;
 const BIG_LENGTH: u8 = 32;
 // valid characters to start an ID
@@ -92,9 +84,12 @@ const STARTING_CHARS: &str = "abcdefghijklmnopqrstuvwxyz";
 //   2063 and 4125, inclusive, the process ID, and the thread ID
 
 thread_local! {
-    /// Value use to initialize the ocunter. After the counter hits u64::MAX, it
+    /// Value used to initialize the counter. After the counter hits u64::MAX, it
     /// will roll back to this value.
-    static COUNTER_INIT: u64 = thread_rng().gen_range(0..2057);
+    // Updated 2023-08-08 to match updated reference implementation, which notes:
+    // > ~22k hosts before 50% chance of initial counter collision
+    // > with a remaining counter range of 9.0e+15 in JavaScript.
+    static COUNTER_INIT: u64 = thread_rng().gen_range(0..476_782_367);
 
     /// Use an individual counter per thread, starting at a randomly initialized value.
     ///
@@ -132,35 +127,42 @@ thread_local! {
 // =======
 
 /// Hash a value, including an additional salt of randomly generated data.
-///
-/// The length of the
+//
+// Updated 2023-08-08 to match the updated JS implementation, which is:
+//
+// ```js
+// const hash = (input = "") => {
+//   // Drop the first character because it will bias the histogram
+//   // to the left.
+//   return bufToBigInt(sha3(input)).toString(36).slice(1);
+// };
+// ```
+//
+// We don't drop the first character, because it doesn't actually affect the
+// histogram (the comment in the reference implementation is incorrect).
 fn hash<S: AsRef<[u8]>, T: IntoIterator<Item = S>>(input: T, length: u16) -> String {
-    let salt = create_entropy(length);
     let mut hasher = Sha3_512::new();
 
     for block in input {
         hasher.update(block.as_ref());
     }
-    hasher.update(salt.as_bytes());
 
     // 512 bits (64 bytes) of data ([u8; 64])
     let hash = hasher.finalize();
 
-    // Reference implementation:
-    // - takes the Uint8Array returned by sha3
-    // - converts each u8 to a string and joins them into one big string
-    // - converts this to a BigInt
-    // - converts the BigInto to Base36
-    // - removes the first two characters from the Base36 value
-
     // We'll convert the bytes directly to a big, unsigned int and then use
-    // its builtin radix conversion. This will still give us a unique Base36
-    // number corresponding to the hash, just without all of the intermediary
-    // string allocations.
+    // its builtin radix conversion.
     //
     // We don't use bigint for the rest of our base conversions, because it's
-    // significantly slower.
-    bigint::BigUint::from_bytes_be(&hash).to_str_radix(36)
+    // significantly slower, but we use it here since we need to deal with the
+    // 512-bit integer from the hash function.
+    let mut res = bigint::BigUint::from_bytes_be(&hash).to_str_radix(36);
+
+    // Note that truncate panics if the length does not fall on a char boundary,
+    // but we don't need to worry about that since all the chars will be ASCII.
+    res.truncate(length.into());
+
+    res
 }
 
 // Other Utility Functions
@@ -187,7 +189,7 @@ pub fn is_cuid2<S: AsRef<str>>(to_check: S) -> bool {
     match to_check.len() {
         2..=MAX_LENGTH => {
             STARTING_CHARS.contains(&to_check[..1])
-                && to_check[1..].chars().into_iter().fold(true, |acc, ch| {
+                && to_check[1..].chars().fold(true, |acc, ch| {
                     acc && (ch.is_ascii_lowercase()) || ch.is_ascii_digit()
                 })
         }
@@ -213,16 +215,17 @@ fn create_entropy(length: u16) -> String {
     // The string is generated and then pushed to until its desired length is
     // reached or exceeded. We therefore allocate enough for the length plus
     // the maximum value it might be exceeded by. The values pushed to the
-    // string are random numbers from 0 to one of the static PRIMES in base36.
-    // Therefore, the maximum overfill is the length of our largest prime in
-    // base36, i.e. 109831 -> 2cqv
-    let mut result = String::with_capacity(length + 4);
+    // string are random numbers from 0 to 36, converted to base 36.
+    // Therefore, the maximum overfill is 36 in base 36, i.e. 10, which is 2
+    // chars
+    let mut result = String::with_capacity(length + 2);
 
     while result.len() < length {
-        // Panic safety: PRIMES is a static, non-empty array. `.choose()`
-        // only returns None if the array is empty.
-        let prime = PRIMES.choose(&mut rng).expect("PRIMES must not be empty");
-        let random_val = rng.gen_range(0..*prime);
+        // Matches reference implementation logic as of 2023-08-08, which is:
+        // ```js
+        // entropy = entropy + Math.floor(random() * 36).toString(36);
+        // ```
+        let random_val = rng.gen_range(0u128..36u128);
         result.push_str(&random_val.to_base_36());
     }
 
@@ -233,6 +236,7 @@ fn create_entropy(length: u16) -> String {
 fn get_timestamp() -> String {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
+        // Use timestamp as milliseconds to match JS implementation
         .map(|time| time.as_millis().to_base_36())
         // Panic safety: `.duration_since()` fails if the end time is not
         // later than the start time, so this will only fail if the system
@@ -353,6 +357,7 @@ impl CuidConstructor {
 
         let fingerprint = (self.fingerprinter)();
 
+        // Construct the main part of the ID body by hashing the various inputs
         let id_body = hash(
             [
                 time.as_bytes(),
@@ -360,9 +365,12 @@ impl CuidConstructor {
                 count.as_bytes(),
                 fingerprint.as_bytes(),
             ],
-            DEFAULT_LENGTH.into(),
+            // The hash should be the desired total length minus 1 character
+            // for the starting char.
+            self.length - 1,
         );
 
+        // TODO check if index access makes a perf difference here
         let first_letter = (*STARTING_CHARS
             .as_bytes()
             // Panic safety: choose() only returns None if the slice is empty,
@@ -371,7 +379,7 @@ impl CuidConstructor {
             .expect("STARTING_CHARS cannot be empty")) as char;
 
         // Return only the requested length
-        format!("{first_letter}{id_body}")[..self.length as usize].to_owned()
+        format!("{first_letter}{id_body}")
     }
 }
 impl Default for CuidConstructor {

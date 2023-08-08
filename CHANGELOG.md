@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [cuid2: unreleased]
+
+### Changed
+
+- Internal updates to match updated CUID construction logic in [the reference
+  implementation](https://github.com/paralleldrive/cuid2/blob/main/src/index.js),
+  specifically:
+  - Simplified hashing function, no longer adding additional entropy in addition
+    to building a hash
+  - Increased range of possible values for counter initialization
+  - Random numbers for entropy are now random numbers from [0, 36), rather than 
+    a random choice from a static array of prime numbers
+
 ## [cuid 1.3.2], [cuid2 0.1.1]
 
 ### Added
