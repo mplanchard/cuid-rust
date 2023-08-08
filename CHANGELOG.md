@@ -137,7 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Benchmark suite
 
 [unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.2...HEAD
-[cuid2 v0.1.2]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.1...cuid-v0.1.2
+[cuid2 v0.1.2]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.1...cuid2-v0.1.2
 [cuid 1.3.2]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.1...cuid-v1.3.2
 [cuid2 0.1.1]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.0...cuid2-v0.1.1
 [cuid 1.3.1]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.0...cuid-v1.3.1
