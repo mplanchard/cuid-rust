@@ -7,3 +7,6 @@ components = [
     "rust-src",
     "rust-std",
 ]
+targets = [
+    "wasm32-unknown-unknown"
+]

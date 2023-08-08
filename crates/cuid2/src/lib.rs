@@ -97,30 +97,25 @@ thread_local! {
     static COUNTER: RefCell<u64> = COUNTER_INIT.with(|val| RefCell::new(*val));
 
     /// Fingerprint! The original implementation is a hash of:
-    /// - a random number from 2063 through (2063*1.9999)
     /// - stringified keys of the global object
+    /// - added entropy
     ///
     /// For us, we'll use
-    /// - a random number from 2063..4126
+    /// - A few random numbers
     /// - the process ID
     /// - the thread ID (which also ensures our CUIDs will be different per thread)
-    /// - the system hostname
     ///
-    /// We want a bit more system-specific stuff probably. The node `global`
-    /// object is the namespace object for the local module and contains
-    /// environment properties. We'll use the stringified environment variables,
-    /// which on any reasonable system, including Docker, should include the
-    /// HOSTNAME.
+    /// This is pretty non-language, non-system dependent, so it allows us to
+    /// compile to wasm and so on.
     static FINGERPRINT: String = hash(
         [
-            // Not certain why these numbers in particular. Reference impl uses
-            // (Math.random() + 1) * 2063, which is essentially the range below.
-            thread_rng().gen_range(2063_u64..4126_u64).to_be_bytes(),
-            u64::from(std::process::id()).to_be_bytes(),
-            get_thread_id().to_be_bytes(),
+            thread_rng().gen::<u128>().to_be_bytes(),
+            thread_rng().gen::<u128>().to_be_bytes(),
+            u128::from(std::process::id()).to_be_bytes(),
+            u128::from(get_thread_id()).to_be_bytes(),
         ],
         BIG_LENGTH.into(),
-    )
+    );
 }
 
 // Hashing
