@@ -4,6 +4,11 @@
 [![Crates.io](https://img.shields.io/crates/v/cuid "Crates.io")](https://crates.io/crates/cuid/)
 [![docs.rs](https://docs.rs/cuid/badge.svg)](https://docs.rs/cuid/)
 
+**DEPRECATED**
+
+> Note that this crate has been deprecated in favor of [cuid2](https://crates.io/crates/cuid2),
+> which uses the improved CUID2 algorithm from the [reference implementation](https://github.com/paralleldrive/cuid2).
+
 Cuids are "Collision-resistant ids optimized for horizontal scaling and
 binary search lookup performance."
 

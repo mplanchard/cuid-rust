@@ -9,6 +9,9 @@ authors.workspace = true
 homepage.workspace = true
 repository.workspace = true
 
+[badges]
+maintenance = { status = "deprecated" }
+
 [dev-dependencies]
 criterion = "~0.3"
 
