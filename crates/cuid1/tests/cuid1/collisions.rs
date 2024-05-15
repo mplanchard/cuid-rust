@@ -48,10 +48,7 @@ mod test {
         assert!(local_sets.len() == num_threads);
         let intersection: HashSet<_> = (*local_sets).iter().fold(HashSet::new(), |acc, set| {
             assert!(set.len() == ids_per_thread);
-            acc.intersection(set)
-                .into_iter()
-                .map(|i| i.to_owned())
-                .collect()
+            acc.intersection(set).map(|i| i.to_owned()).collect()
         });
         assert!(intersection.is_empty());
     }
