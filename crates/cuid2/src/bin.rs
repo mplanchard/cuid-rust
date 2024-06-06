@@ -2,6 +2,7 @@
 
 use std::{env, process::exit};
 use std::str::FromStr;
+use cuid2::CuidConstructor;
 
 struct ParsedArgs {
     pub cuid_length: u16
@@ -16,12 +17,13 @@ pub fn main() {
         .create_id());
 }
 
-const HELP: &str = r#"Usage: cuid2 [OPTION]... [LENGTH]
-Generate and print a CUID. The default LENGTH is 24.
+const HELP: &str = r#"Usage: cuid2 [OPTION]...
+Generate and print a CUID.
 
 Options:
-  -h, --help     display this help and exit
-  -v, --version  display version information and exit"#;
+  -h, --help            display this help and exit
+  -v, --version         display version information and exit
+  -l, --length [LENGTH] set the length of the CUID (default: 24)"#;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -31,27 +33,43 @@ fn parse_args() -> ParsedArgs {
         cuid_length: 24
     };
 
-    // The first argument should be the binary name. Skip it.
-    env::args().skip(1).for_each(|arg| match arg.as_str() {
-        "-h" | "--help" => {
-            println!("{}", HELP);
-            exit(0);
-        }
-        "-v" | "--version" => {
-            println!("{}", VERSION);
-            exit(0);
-        }
-        length_str => {
-            if let Ok(length) = u16::from_str(length_str) {
-                parsed_args.cuid_length = length
-            } else {
-                println!("error: unrecognized argument {}", arg);
-                println!();
+    let mut args = env::args().skip(1);
+
+    while let Some(arg) = args.next() {
+        match arg.as_str() {
+            "-h" | "--help" => {
                 println!("{}", HELP);
+                exit(0);
+            }
+            "-v" | "--version" => {
+                println!("{}", VERSION);
+                exit(0);
+            }
+            "-l" | "--length" /* takes 1 arg (integer) */ => {
+                let length_str = args.next().unwrap_or_else(|| {
+                    eprintln!("error: {} expects an argument", arg);
+                    eprintln!();
+                    eprintln!("{}", HELP);
+                    exit(1)
+                });
+
+                if let Ok(length) = u16::from_str(&length_str) {
+                    parsed_args.cuid_length = length
+                } else {
+                    eprintln!("error: length '{}' must be an integer", length_str);
+                    eprintln!();
+                    eprintln!("{}", HELP);
+                    exit(1);
+                }
+            }
+            other => {
+                eprintln!("error: unrecognized argument '{}'", other);
+                eprintln!();
+                eprintln!("{}", HELP);
                 exit(1);
             }
         }
-    });
+    }
 
     parsed_args
 }
