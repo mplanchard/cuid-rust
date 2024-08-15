@@ -2,15 +2,13 @@
 //!
 //! CUID generation in rust
 //!
-//! **NOTE:** The first version of the CUID specification is deprecated. Please
-//! use the `cuid2()` function from this crate instead, which is a re-export
-//! from the `cuid2` crate. Please upgrade to that crate for more CUID
-//! construction options.
-//!
 //! ```rust
 //! use cuid;
 //!
-//! // Get a CUID
+//! // Get a v1 CUID
+//! println!("{}", cuid::cuid1());
+//!
+//! // Get a v2 CUID
 //! println!("{}", cuid::cuid2());
 //! ```
 //!
@@ -28,9 +26,11 @@
 //! $> cuid --v2
 //! ```
 //!
-//! See the [original implementation] for more details on CUIDs in general.
+//! See the [original v1 implementation] and [original v2 implementation] for
+//! more details on CUIDs in general.
 //!
-//! [original implementation]: https://github.com/ericelliott/cuid
+//! [original v1 implementation]: https://github.com/ericelliott/cuid
+//! [original v2 implementation]: https://github.com/paralleldrive/cuid2
 //!
 
 mod cuid1;
@@ -39,8 +39,13 @@ mod text;
 mod time;
 
 #[allow(deprecated)]
-pub use cuid1::{cuid, is_cuid, is_slug, one_off_cuid, one_off_slug, slug};
-pub use cuid2::create_id as cuid2;
+pub use cuid1::{cuid, cuid1, cuid1_slug, is_cuid, is_cuid1, is_cuid1_slug, is_slug, slug};
+#[doc(hidden)]
+pub use cuid1::{one_off_cuid1, one_off_cuid1_slug};
+pub use cuid2::{
+    create_id as cuid2, is_cuid2, is_slug as is_cuid2_slug, slug as cuid2_slug,
+    CuidConstructor as Cuid2Constructor,
+};
 pub use error::CuidError;
 
 const BASE: u8 = 36;

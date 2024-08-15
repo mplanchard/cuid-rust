@@ -186,7 +186,10 @@ fn hash<S: AsRef<[u8]>, T: IntoIterator<Item = S>>(input: T, length: u16) -> Str
 #[inline]
 pub fn is_cuid2<S: AsRef<str>>(to_check: S) -> bool {
     const MAX_LENGTH: usize = BIG_LENGTH as usize;
+    is_cuid2_inner::<S, MAX_LENGTH>(to_check)
+}
 
+fn is_cuid2_inner<S: AsRef<str>, const MAX_LENGTH: usize>(to_check: S) -> bool {
     let to_check = to_check.as_ref().as_bytes();
 
     if (2..=MAX_LENGTH).contains(&to_check.len()) {
@@ -321,7 +324,7 @@ impl CuidConstructor {
     ///
     /// Panics if `length` is less than 2.
     ///
-    pub fn with_length(self, length: u16) -> Self {
+    pub const fn with_length(self, length: u16) -> Self {
         if length < 2 {
             panic!("CUID length must be at least 2")
         }
@@ -329,12 +332,12 @@ impl CuidConstructor {
     }
 
     /// Returns a new constructor with the specified counter function.
-    pub fn with_counter(self, counter: fn() -> u64) -> Self {
+    pub const fn with_counter(self, counter: fn() -> u64) -> Self {
         Self { counter, ..self }
     }
 
     /// Returns a new constructor with the specified fingerprinter function.
-    pub fn with_fingerprinter(self, fingerprinter: fn() -> String) -> Self {
+    pub const fn with_fingerprinter(self, fingerprinter: fn() -> String) -> Self {
         Self {
             fingerprinter,
             ..self
@@ -411,6 +414,10 @@ impl Default for CuidConstructor {
 /// `create_id()`.
 static DEFAULT_CONSTRUCTOR: CuidConstructor = CuidConstructor::new();
 
+const SLUG_LENGTH: u16 = 10;
+
+static SLUG_CONSTRUCTOR: CuidConstructor = CuidConstructor::new().with_length(SLUG_LENGTH);
+
 /// Creates a new CUID.
 #[inline]
 pub fn create_id() -> String {
@@ -425,6 +432,19 @@ pub fn create_id() -> String {
 #[inline]
 pub fn cuid() -> String {
     create_id()
+}
+
+/// Creates a new CUID slug, which is just a CUID with a length of 10 characters.
+#[inline]
+pub fn slug() -> String {
+    SLUG_CONSTRUCTOR.create_id()
+}
+
+/// Return whether a string looks like it could be a legitimate CUID slug.
+#[inline]
+pub fn is_slug<S: AsRef<str>>(to_check: S) -> bool {
+    const MAX_LENGTH: usize = SLUG_LENGTH as usize;
+    is_cuid2_inner::<S, MAX_LENGTH>(to_check)
 }
 
 #[cfg(test)]

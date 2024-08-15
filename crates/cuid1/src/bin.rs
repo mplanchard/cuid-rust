@@ -1,4 +1,4 @@
-use cuid::{one_off_cuid, one_off_slug};
+use cuid::{one_off_cuid1, one_off_cuid1_slug};
 use std::{
     env::{self, Args},
     process::exit,
@@ -19,9 +19,9 @@ pub fn main() {
         }
         false => {
             if args.slug {
-                one_off_slug()
+                one_off_cuid1_slug()
             } else {
-                one_off_cuid()
+                one_off_cuid1()
             }
         }
     };
