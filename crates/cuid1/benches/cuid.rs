@@ -8,28 +8,30 @@ use std::thread;
 use criterion::Criterion;
 
 fn bench_cuid(c: &mut Criterion) {
-    c.bench_function("generate cuid", |b| b.iter(|| cuid::cuid().unwrap()));
+    c.bench_function("generate cuid", |b| b.iter(|| cuid::cuid1().unwrap()));
 }
 
 fn bench_many_cuids(c: &mut Criterion) {
     c.bench_function("generate many cuids", |b| {
         b.iter(|| {
             (0..10_000).for_each(|_| {
-                cuid::cuid().unwrap();
+                cuid::cuid1().unwrap();
             })
         })
     });
 }
 
 fn bench_slug(c: &mut Criterion) {
-    c.bench_function("generate cuid slug", |b| b.iter(|| cuid::slug().unwrap()));
+    c.bench_function("generate cuid slug", |b| {
+        b.iter(|| cuid::cuid1_slug().unwrap())
+    });
 }
 
 fn bench_many_slugs(c: &mut Criterion) {
     c.bench_function("generate many slugs", |b| {
         b.iter(|| {
             (0..10_000).for_each(|_| {
-                cuid::slug().unwrap();
+                cuid::cuid1_slug().unwrap();
             })
         })
     });
@@ -44,7 +46,7 @@ fn bench_multithread_perf(c: &mut Criterion) {
             for _ in 0..4 {
                 let t = thread::spawn(move || {
                     for _ in 0..10_000 {
-                        cuid::cuid().unwrap();
+                        cuid::cuid1().unwrap();
                     }
                 });
                 threads.push(t);
@@ -66,7 +68,7 @@ fn bench_multithread_perf_lots_of_threads(c: &mut Criterion) {
             for _ in 0..16 {
                 let t = thread::spawn(move || {
                     for _ in 0..10_000 {
-                        cuid::cuid().unwrap();
+                        cuid::cuid1().unwrap();
                     }
                 });
                 threads.push(t);
