@@ -6,7 +6,7 @@
 //! use cuid;
 //!
 //! // Get a v1 CUID
-//! println!("{}", cuid::cuid1());
+//! println!("{}", cuid::cuid1().unwrap());
 //!
 //! // Get a v2 CUID
 //! println!("{}", cuid::cuid2());

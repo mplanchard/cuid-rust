@@ -230,21 +230,21 @@ mod tests {
 
     #[test]
     fn cuid_is_cuid() {
-        assert!(is_cuid(cuid1().unwrap()));
+        assert!(is_cuid1(cuid1().unwrap()));
     }
 
     #[test]
     fn cuid_is_not_cuid_zero_len() {
-        assert!(!is_cuid(""));
+        assert!(!is_cuid1(""));
     }
 
     #[test]
     fn slug_len() {
-        assert!(slug().unwrap().len() == 10);
+        assert!(cuid1_slug().unwrap().len() == 10);
     }
 
     #[test]
     fn slug_is_slug() {
-        assert!(is_slug(slug().unwrap()));
+        assert!(is_cuid1_slug(cuid1_slug().unwrap()));
     }
 }
