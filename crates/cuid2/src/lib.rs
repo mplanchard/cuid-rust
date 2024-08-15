@@ -70,7 +70,9 @@ use sha3::{Digest, Sha3_512};
 // CONSTANTS
 // =============================================================================
 
-const DEFAULT_LENGTH: u8 = 24;
+// Only public to expose to binary
+#[doc(hidden)]
+pub const DEFAULT_LENGTH: u8 = 24;
 const BIG_LENGTH: u8 = 32;
 // valid characters to start an ID
 const STARTING_CHARS: &str = "abcdefghijklmnopqrstuvwxyz";

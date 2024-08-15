@@ -1,4 +1,4 @@
-use cuid::{cuid, slug};
+use cuid::{one_off_cuid, one_off_slug};
 use std::{
     env::{self, Args},
     process::exit,
@@ -19,11 +19,9 @@ pub fn main() {
         }
         false => {
             if args.slug {
-                #[allow(deprecated)]
-                slug()
+                one_off_slug()
             } else {
-                #[allow(deprecated)]
-                cuid()
+                one_off_cuid()
             }
         }
     };

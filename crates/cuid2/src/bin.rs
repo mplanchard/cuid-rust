@@ -1,20 +1,24 @@
 //! Provide a simple binary for generating v2 cuids
 
-use std::{env, process::exit};
 use std::str::FromStr;
-use cuid2::CuidConstructor;
+use std::{env, process::exit};
+
+use cuid2::DEFAULT_LENGTH;
 
 struct ParsedArgs {
-    pub cuid_length: u16
+    pub cuid_length: u16,
 }
 
 /// Generates a new CUID and print it to stdout
 pub fn main() {
     let parsed_args = parse_args();
 
-    println!("{}", cuid2::CuidConstructor::new()
-        .with_length(parsed_args.cuid_length)
-        .create_id());
+    println!(
+        "{}",
+        cuid2::CuidConstructor::new()
+            .with_length(parsed_args.cuid_length)
+            .create_id()
+    );
 }
 
 const HELP: &str = r#"Usage: cuid2 [OPTION]...
@@ -30,7 +34,7 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 fn parse_args() -> ParsedArgs {
     // defaults here
     let mut parsed_args = ParsedArgs {
-        cuid_length: 24
+        cuid_length: DEFAULT_LENGTH.into(),
     };
 
     let mut args = env::args().skip(1);

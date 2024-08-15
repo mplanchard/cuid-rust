@@ -8,7 +8,8 @@ use crate::error::CuidError;
 use crate::time;
 
 use once_cell::sync::Lazy;
-use std::sync::atomic::AtomicU32;
+use rand::{thread_rng, Rng};
+use std::sync::atomic::{AtomicU32, Ordering};
 
 const BLOCK_SIZE: usize = 4;
 const DISCRETE_VALUES: u32 = 1679616; // BASE^BLOCK_SIZE
@@ -48,6 +49,17 @@ pub fn cuid() -> Result<String, CuidError> {
         &random::random_block()?,
     ]
     .concat())
+}
+
+/// Generate a single CUID, for use in the cuid binary.
+///
+/// Sets the counter to a random value before generation, so that it isn't
+/// always 0.
+#[doc(hidden)]
+pub fn one_off_cuid() -> Result<String, CuidError> {
+    let counter_init = thread_rng().gen();
+    COUNTER.store(counter_init, Ordering::Relaxed);
+    cuid()
 }
 
 /// Generate a CUID slug
@@ -92,6 +104,17 @@ pub fn slug() -> Result<String, CuidError> {
         &rand[rand.len() - 2..],
     ]
     .concat())
+}
+
+/// Generate a single CUID slug, for use in the cuid binary.
+///
+/// Sets the counter to a random value before generation, so that it isn't
+/// always 0.
+#[doc(hidden)]
+pub fn one_off_slug() -> Result<String, CuidError> {
+    let counter_init = thread_rng().gen();
+    COUNTER.store(counter_init, Ordering::Relaxed);
+    slug()
 }
 
 /// Return whether a string is a legitimate CUID
