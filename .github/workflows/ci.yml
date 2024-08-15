@@ -38,6 +38,23 @@ jobs:
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
 
+  # Ensure builds succeed for WASM targets
+  wasm:
+    name: "WASM Builds"
+    strategy:
+      matrix:
+        target:
+          - "wasm32-unknown-unknown"
+          - "wasm32-wasi"
+          - "wasm32-unknown-emscripten"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions-rs/cargo@v1"
+        with:
+          command: "build"
+          args: "--target ${{ matrix.target }}"
+
   lint:
     name: "Lint"
     runs-on: "ubuntu-latest"
@@ -52,6 +69,21 @@ jobs:
         with:
           command: "clippy"
           args: "--all-features -- -D warnings"
+
+  lint-release:
+    name: "Lint Release Build"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions-rs/toolchain@v1"
+        with:
+          toolchain: "stable"
+          override: true
+          components: clippy
+      - uses: "actions-rs/cargo@v1"
+        with:
+          command: "clippy"
+          args: "--release --all-features -- -D warnings"
 
   fmt:
     name: "Format"
@@ -75,6 +107,8 @@ jobs:
       - "fmt"
       - "test"
       - "lint"
+      - "lint-release"
       - "audit"
+      - "wasm"
     steps:
       - run: "echo 'All pre-commit checks passed!'"
