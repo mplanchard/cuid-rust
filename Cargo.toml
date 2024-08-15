@@ -1,5 +1,6 @@
 [workspace]
 members = [ "crates/*" ]
+resolver = "2"
 
 [workspace.package]
 edition = "2021"
@@ -7,3 +8,10 @@ authors = [ "Matthew Planchard <msplanchard@gmail.com>" ]
 license = "MIT"
 homepage = "https://github.com/mplanchard/cuid-rust"
 repository = "https://github.com/mplanchard/cuid-rust"
+
+[workspace.dependencies]
+cuid-util.path = "./crates/cuid-util"
+criterion = "0.5.0"
+proptest = "1.0.0"
+rand = "0.8"
+wasm-bindgen-test = "0.3.0"

@@ -26,6 +26,14 @@ fn convert_hostname(hn: &str) -> Result<String, CuidError> {
     .map(|base_str| pad(FINGERPRINT_PADDING, base_str))
 }
 
+#[cfg(target_family = "wasm")]
+/// Wasm doesn't support hostname, so just use a UUID
+fn host_id() -> Result<String, CuidError> {
+    let hn = uuid::Uuid::new_v4().to_string();
+    convert_hostname(&hn)
+}
+
+#[cfg(not(target_family = "wasm"))]
 fn host_id() -> Result<String, CuidError> {
     let hn = hostname::get()?;
     convert_hostname(&hn.to_string_lossy())

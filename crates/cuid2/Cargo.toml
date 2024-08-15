@@ -3,6 +3,7 @@ name = "cuid2"
 version = "0.1.2"
 description = "An implementation of the CUID2 protocol in rust"
 documentation = "https://docs.rs/cuid/latest/cuid2/"
+resolver = "2"
 edition.workspace = true
 license.workspace = true
 authors.workspace = true
@@ -23,13 +24,19 @@ name = "cuid2"
 harness = false
 
 [dependencies]
-cuid-util = { path = "../cuid-util", version = "0.1.0" }
+cuid-util.workspace = true
 num = { version = "0.4.0", features = ["num-bigint"] }
-rand = "0.8.5"
+rand.workspace = true
 sha3 = "0.10.6"
 
 [dev-dependencies]
-criterion = "0.4.0"
+criterion.workspace = true
 num_cpus = "1.15.0"
+proptest.workspace = true
 radix_fmt = "1.0.0"
-proptest = "1.0.0"
+wasm-bindgen-test.workspace = true
+
+[target.wasm32-unknown-unknown.dependencies]
+# Just specified so we can add a feature when the js feature is enabled.
+# This works fine on wasm targets other than unknown-unknown
+getrandom = { version = "0", features = ["js"] }
