@@ -75,15 +75,3 @@ mod tests {
 
     // TODO: Multi-thread counter tests
 }
-
-#[cfg(nightly)]
-#[cfg(test)]
-mod benchmarks {
-    use super::*;
-    use test::Bencher;
-
-    #[bench]
-    fn basic_increment(b: &mut Bencher) {
-        b.iter(|| fetch_and_increment())
-    }
-}

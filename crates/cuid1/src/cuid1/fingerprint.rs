@@ -87,38 +87,3 @@ mod fingerprint_tests {
         assert_eq!(4, fingerprint().unwrap().len())
     }
 }
-
-#[cfg(nightly)]
-#[cfg(test)]
-mod benchmarks {
-    use super::*;
-    use test::Bencher;
-
-    #[bench]
-    fn bench_pid(b: &mut Bencher) {
-        b.iter(|| {
-            pid().unwrap();
-        })
-    }
-
-    #[bench]
-    fn bench_convert_hostname_real(b: &mut Bencher) {
-        b.iter(|| {
-            convert_hostname(get_hostname).unwrap();
-        })
-    }
-
-    #[bench]
-    fn bench_convert_hostname_mock(b: &mut Bencher) {
-        b.iter(|| {
-            convert_hostname(|| Some(String::from("hostname"))).unwrap();
-        })
-    }
-
-    #[bench]
-    fn bench_fingerprint(b: &mut Bencher) {
-        b.iter(|| {
-            fingerprint().unwrap();
-        })
-    }
-}

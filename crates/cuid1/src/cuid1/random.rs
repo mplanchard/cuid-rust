@@ -35,28 +35,3 @@ mod test_randoms {
         assert!(random_block().unwrap() != random_block().unwrap())
     }
 }
-
-#[cfg(nightly)]
-#[cfg(test)]
-mod benchmarks {
-    use super::*;
-    use std::u32;
-    use test::Bencher;
-
-    #[bench]
-    fn bench_random_float(b: &mut Bencher) {
-        b.iter(|| random_float())
-    }
-
-    #[bench]
-    fn bench_random_64_bit_int(b: &mut Bencher) {
-        // this shouldn't take noticeably more time than generating a
-        // random float
-        b.iter(|| random_64_bit_int(u32::MAX))
-    }
-
-    #[bench]
-    fn bench_random_block(b: &mut Bencher) {
-        b.iter(|| random_block())
-    }
-}
