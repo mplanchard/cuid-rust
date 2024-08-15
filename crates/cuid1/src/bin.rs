@@ -1,4 +1,3 @@
-#[allow(deprecated)]
 use cuid::{cuid, slug};
 use std::{
     env::{self, Args},
