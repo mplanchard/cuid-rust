@@ -42,8 +42,9 @@ mod time;
 pub use cuid1::{cuid, cuid1, cuid1_slug, is_cuid, is_cuid1, is_cuid1_slug, is_slug, slug};
 #[doc(hidden)]
 pub use cuid1::{one_off_cuid1, one_off_cuid1_slug};
+
 pub use cuid2::{
-    create_id as cuid2, is_cuid2, is_slug as is_cuid2_slug, slug as cuid2_slug,
+    cuid as cuid2, is_cuid2, is_slug as is_cuid2_slug, slug as cuid2_slug,
     CuidConstructor as Cuid2Constructor,
 };
 pub use error::CuidError;
