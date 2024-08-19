@@ -7,6 +7,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [cuid2 v0.1.3], [cuid 1.3.3]
+
+### Upcoming
+
+- The next major release will be a breaking release, dropping the
+  top-level `cuid()`, `slug()`, and `is_cuid()` functions in favor of
+  their version-specific counterparts (see below).
+- I also intend to split the v1 CUID functionality out into its own
+  crate and publish it independently, like I have done for `cuid2`.
+  The top-level `cuid` crate will then pull in the sub-crates depending
+  on features, making it easy to just pull the CUID version you need.
+
+### Added
+
+- Provide new top-level functions from the `cuid` library to disambiguate
+  CUID versions:
+  - `cuid::cuid1()`: generate a v1 CUID, replacement for deprecated `cuid()`
+  - `cuid::cuid1_slug()`: generate a v1 CUID slug, replacement for deprecated `slug()`
+  - `cuid::is_cuid1()` - check whether a string looks like it could be a v1 CUID,
+    replacement for deprecated `is_cuid()`
+  - `cuid::is_cuid1_slug()` - check whether a string looks like it could be a v1 CUID
+    slug, replacement for deprecated `is_cuid()`
+  - `cuid::cuid2_slug()` - generate a v2 CUID of length 10
+  - `cuid::is_cuid2_slug()` - check whether a string looks like could be a v2 CUID
+     slug
+   - `cuid::Cuid2Constructor` - expose the v2 CUID constructor interface
+- Added a couple of functions to `cuid2` for parity with v1 functions:
+  - `cuid2::slug()` - generate a v2 CUID of length 10
+  - `cuid2::is_slug()` - check whether a string looks like could be a v2 CUID
+     slug
+- Added support for webassembly builds. Builds are tested for `wasm32-unknown-unknown`
+  and `wasm32-wasi` targets. I intend to add Javascript bindings and publish
+  npm packages in an upcoming update.
+  - The system hostname is not available to WASM, so for the CUID v1
+    fingerprint algorithm, we instead use a v4 UUID. This does mean the
+    fingerprint will not be consistent on a host over time, which slightly
+    diverges from the behavior of CUIDs on other targets. Please open an
+    issue if this is a problem for you.
+
+### Changed
+
+- CUID v1 functions are no longer marked as deprecated. The original JS
+  library was marked as insecure and deprecated by its creators, but this
+  was merely due to their personal stance that any k-sortable IDs are
+  insecure and should not be used. This library's author does not share
+  the same view. New functions have been provided to better disambiguate
+  creating v1 vs v2 IDs, and functions that do not explicitly specify
+  a version are still marked as deprecated.
+- The CUID binaries now randomize the counter prior to generating an ID,
+  rather than always starting at 0. This ensures that commandline-generated
+  CUIDs do not lose entropy relative to library-generated CUIDs due to
+  always having the same counter value.
+- The `cuid2::is_cuid()`/`cuid::is_cuid2()` function has been improved and
+  now rejects more strings that are invalid CUIDs (contribution by @stormshield-kg)
+- The `cuid2` binary now supports an optional `--length|-l` argument, which
+  enables specifying the length of the generated CUID (contribution by @der-fruhling)
+
+### Removed
+
+- Removed old benchmarks and `#[cfg(nightly)]` blocks. Criterion benchmarks
+  are the important ones, and those remain.
+
 ## [cuid2 v0.1.2]
 
 ### Changed
@@ -17,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Simplified hashing function, no longer adding additional entropy in addition
     to building a hash
   - Increased range of possible values for counter initialization
-  - Random numbers for entropy are now random numbers from [0, 36), rather than 
+  - Random numbers for entropy are now random numbers from [0, 36), rather than
     a random choice from a static array of prime numbers
 
 ## [cuid 1.3.2], [cuid2 0.1.1]
@@ -74,7 +136,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- ~10-20% performance improvement overall through optimization of 
+- ~10-20% performance improvement overall through optimization of
 `pad_with_char()`([b5503d6])
 
 ## [1.1.0] - 2021-08-03
@@ -136,7 +198,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CUID & CUID slug generation
 - Benchmark suite
 
-[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.2...HEAD
+[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.3...HEAD
+[cuid2 v0.1.3]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.2...cuid2-v0.1.3
+[cuid 1.3.3]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.2...cuid-v1.3.3
 [cuid2 v0.1.2]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.1...cuid2-v0.1.2
 [cuid 1.3.2]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.1...cuid-v1.3.2
 [cuid2 0.1.1]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.0...cuid2-v0.1.1
@@ -157,5 +221,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [edb22b5]: https://github.com/mplanchard/cuid-rust/commit/edb22b5
 [8d2c180]: https://github.com/mplanchard/cuid-rust/commit/8d2c180
 [a4fca2f]: https://github.com/mplanchard/cuid-rust/commit/a4fca2f
-[b5503d6]: https://github.com/mplanchard/cuid-rust/commit/b5503d6 
-[b93b5b3]: https://github.com/mplanchard/cuid-rust/commit/b93b5b3 
+[b5503d6]: https://github.com/mplanchard/cuid-rust/commit/b5503d6
+[b93b5b3]: https://github.com/mplanchard/cuid-rust/commit/b93b5b3

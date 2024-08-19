@@ -1,6 +1,6 @@
 [package]
 name = "cuid-util"
-version = "0.1.0"
+version = "0.1.1"
 description = "Shared utilities for the cuid and cuid2 crates"
 resolver = "2"
 edition.workspace = true

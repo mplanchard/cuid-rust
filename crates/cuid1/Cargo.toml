@@ -1,6 +1,6 @@
 [package]
 name = "cuid"
-version = "1.3.2"
+version = "1.3.3"
 description = "An ipmlementation of CUID protocol in rust"
 documentation = "https://docs.rs/cuid/latest/cuid/"
 resolver = "2"
@@ -16,7 +16,7 @@ maintenance = { status = "deprecated" }
 [dependencies]
 base36 = "0.0.1"
 cuid-util.workspace = true
-cuid2.path = "../cuid2"
+cuid2.workspace = true
 num = { version = "0.4.0", features = ["num-bigint"] }
 once_cell = "1.19.0"
 rand.workspace = true
