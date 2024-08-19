@@ -1,15 +1,18 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::error::CuidError;
 use crate::text::to_base_string;
 
-pub fn timestamp() -> Result<String, CuidError> {
+pub fn timestamp() -> String {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
         // millisecond timestamp to match javascript
         .map(|time| time.as_millis())
         .map(to_base_string)
-        .unwrap_or(Err(CuidError::TextError("Could not convert time to str")))
+        .expect(
+            "Failed to calculate system timestamp! Current system time may be \
+                 set to before the Unix epoch, or time may otherwise be broken. \
+                 Cannot continue",
+        )
 }
 
 #[cfg(test)]
@@ -21,7 +24,7 @@ mod time_tests {
     // be updated to 9
     #[test]
     fn test_timestamp_len() {
-        assert_eq!(timestamp().unwrap().len(), 8);
+        assert_eq!(timestamp().len(), 8);
     }
 
     #[test]
@@ -31,7 +34,7 @@ mod time_tests {
                 .duration_since(UNIX_EPOCH)
                 .unwrap()
                 .as_millis()
-                - u128::from_str_radix(&timestamp().unwrap(), BASE as u32).unwrap())
+                - u128::from_str_radix(&timestamp(), BASE as u32).unwrap())
                 < 5
         )
     }

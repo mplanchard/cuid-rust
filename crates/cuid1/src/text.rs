@@ -1,10 +1,8 @@
 use std::iter;
 use std::{char, cmp::Ordering};
 
-use crate::error::CuidError;
-
-pub fn to_base_string<N: Into<u128>>(number: N) -> Result<String, CuidError> {
-    Ok(cuid_util::to_base_36(number))
+pub fn to_base_string<N: Into<u128>>(number: N) -> String {
+    cuid_util::to_base_36(number)
 }
 
 /// Pad a string `to_pad` up to size `size` with char `char`

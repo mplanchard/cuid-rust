@@ -41,6 +41,7 @@
               # components, and targets to install.
               (rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
               rust-analyzer
+              shellcheck
               util-linux  # lspcu utility for getting info about cores
             ];
           };

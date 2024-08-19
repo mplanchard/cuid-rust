@@ -6,7 +6,7 @@ use std::collections::HashSet;
 fn check_cuid_length() {
     let mut set = HashSet::new();
     for _ in 0..100000 {
-        let id = cuid::cuid1().unwrap();
+        let id = cuid1::cuid();
         set.insert(id);
     }
     // all CUIDs are of the same length
@@ -19,7 +19,7 @@ fn check_cuid_length() {
 fn check_cuid_slug_length() {
     let mut set = HashSet::new();
     for _ in 0..100000 {
-        let id = cuid::cuid1_slug().unwrap();
+        let id = cuid1::slug();
         set.insert(id);
     }
     // all slugs are of the same length

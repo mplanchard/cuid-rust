@@ -10,8 +10,9 @@ jobs:
         toolchain: ["stable", "beta", "nightly"]
         test_args:
           - "-p cuid"
-          - "-p cuid -- collisions::test --ignored"
-          - "-p cuid -- collisions::single_thread --ignored --test-threads 1"
+          - "-p cuid1"
+          - "-p cuid1 -- collisions::test --ignored"
+          - "-p cuid1 -- collisions::single_thread --ignored --test-threads 1"
           - "-p cuid2"
           - "-p cuid2 -- --ignored test::collisions"
           - "-p cuid2 -- --ignored test::distribution"
@@ -120,12 +121,12 @@ jobs:
     name: "Verify"
     runs-on: "ubuntu-latest"
     needs:
+      - "audit"
       - "docs"
       - "fmt"
-      - "test"
       - "lint"
       - "lint-release"
-      - "audit"
+      - "test"
       - "wasm"
     steps:
       - run: "echo 'All pre-commit checks passed!'"

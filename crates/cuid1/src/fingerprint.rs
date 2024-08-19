@@ -1,15 +1,12 @@
 use std::process;
 
-use crate::error::CuidError;
 use crate::text::{pad, to_base_string};
 use crate::BASE;
 
 static FINGERPRINT_PADDING: usize = 2;
 
-fn pid() -> Result<String, CuidError> {
-    to_base_string(process::id())
-        .map(|s| pad(FINGERPRINT_PADDING, s))
-        .map_err(|_| CuidError::FingerprintError("Could not encode pid"))
+fn pid() -> String {
+    pad(FINGERPRINT_PADDING, to_base_string(process::id()))
 }
 
 /// Convert the hostname to a padded String in the appropriate base.
@@ -18,32 +15,37 @@ fn pid() -> Result<String, CuidError> {
 /// hostname, added to the base radix for CUID strings, added to the sum of
 /// the integer value of each character in the hostname, then converts that
 /// number to base radix.
-fn convert_hostname(hn: &str) -> Result<String, CuidError> {
-    to_base_string(
-        hn.chars()
-            .fold(hn.len() + BASE as usize, |acc, c| acc + c as usize) as u64,
+fn convert_hostname(hn: &str) -> String {
+    pad(
+        FINGERPRINT_PADDING,
+        to_base_string(
+            hn.chars()
+                .fold(hn.len() + BASE as usize, |acc, c| acc + c as usize) as u64,
+        ),
     )
-    .map(|base_str| pad(FINGERPRINT_PADDING, base_str))
 }
 
 #[cfg(target_family = "wasm")]
 /// Wasm doesn't support hostname, so just use a UUID
-fn host_id() -> Result<String, CuidError> {
+fn host_id() -> String {
     let hn = uuid::Uuid::new_v4().to_string();
     convert_hostname(&hn)
 }
 
 #[cfg(not(target_family = "wasm"))]
-fn host_id() -> Result<String, CuidError> {
-    let hn = hostname::get()?;
-    convert_hostname(&hn.to_string_lossy())
+fn host_id() -> String {
+    // If we can't get a hostname, fall back to a UUID
+    let hn = hostname::get()
+        .map(|hn| hn.to_string_lossy().to_string())
+        .unwrap_or_else(|_| uuid::Uuid::new_v4().to_string());
+    convert_hostname(&hn)
 }
 
-pub fn fingerprint() -> Result<String, CuidError> {
-    let mut hid = host_id()?;
-    let procid = pid()?;
+pub fn fingerprint() -> String {
+    let mut hid = host_id();
+    let procid = pid();
     hid.push_str(&procid);
-    Ok(hid)
+    hid
 }
 
 #[cfg(test)]
@@ -53,7 +55,7 @@ mod fingerprint_tests {
 
     #[test]
     fn test_pid_length() {
-        assert_eq!(pid().unwrap().len(), FINGERPRINT_PADDING)
+        assert_eq!(pid().len(), FINGERPRINT_PADDING)
     }
 
     // The below expected host_ids were all generated directly using
@@ -61,29 +63,29 @@ mod fingerprint_tests {
 
     #[test]
     fn test_convert_hostname_1() {
-        assert_eq!("a3", &*convert_hostname("foo").unwrap())
+        assert_eq!("a3", &*convert_hostname("foo"))
     }
 
     #[test]
     fn test_convert_hostname_2() {
-        assert_eq!("9o", &*convert_hostname("bar").unwrap())
+        assert_eq!("9o", &*convert_hostname("bar"))
     }
 
     #[test]
     fn test_convert_hostname_3() {
-        assert_eq!("nf", &*convert_hostname("mr-magoo").unwrap())
+        assert_eq!("nf", &*convert_hostname("mr-magoo"))
     }
 
     #[test]
     fn test_convert_hostname_4() {
         assert_eq!(
             "j9",
-            &*convert_hostname("wow-what-a-long-hostname-you-have").unwrap()
+            &*convert_hostname("wow-what-a-long-hostname-you-have")
         )
     }
 
     #[test]
     fn fingerprint_len() {
-        assert_eq!(4, fingerprint().unwrap().len())
+        assert_eq!(4, fingerprint().len())
     }
 }

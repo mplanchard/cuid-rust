@@ -1,26 +1,26 @@
 use std::sync::atomic::Ordering;
 
-use super::{BLOCK_SIZE, COUNTER, DISCRETE_VALUES};
-use crate::error::CuidError;
 use crate::text::{pad, to_base_string};
+use crate::{BLOCK_SIZE, COUNTER, DISCRETE_VALUES};
 
 /// Fetch the counter value and increment it.
 ///
 /// If the counter has reached its max (DISCRETE VALUES), reset it to 0.
-fn fetch_and_increment() -> Result<u32, CuidError> {
+fn fetch_and_increment() -> u32 {
     COUNTER
         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |i| match i {
             i if i == DISCRETE_VALUES - 1 => Some(0),
             _ => Some(i + 1),
         })
-        .map_err(|_| CuidError::CounterError)
+        .expect(
+            "fetch_update() only returns Err() if the inner function returns None,\
+             which we do not do",
+        )
 }
 
 /// Return the current counter value in the appropriate base as a String.
-pub fn current() -> Result<String, CuidError> {
-    fetch_and_increment()
-        .map(to_base_string)?
-        .map(|s| pad(BLOCK_SIZE, s))
+pub fn current() -> String {
+    pad(BLOCK_SIZE, to_base_string(fetch_and_increment()))
 }
 
 #[cfg(test)]
@@ -37,11 +37,11 @@ mod tests {
         COUNTER.store(start, Ordering::SeqCst);
         // Tests run in parallel, so we're not necessarily guaranteed
         // consistent ordering in the context of a test.
-        let first = fetch_and_increment().unwrap();
+        let first = fetch_and_increment();
         assert!(first >= start);
-        let second = fetch_and_increment().unwrap();
+        let second = fetch_and_increment();
         assert!(second > first);
-        let third = fetch_and_increment().unwrap();
+        let third = fetch_and_increment();
         assert!(third > second);
     }
 
@@ -55,8 +55,8 @@ mod tests {
         // Tests run in parallel, so we're not necessarily guaranteed
         // consistent ordering in the context of a test.
         // Prefer running tests with: cargo test -- --test-threads=1
-        let first = current().unwrap();
-        let second = current().unwrap();
+        let first = current();
+        let second = current();
         assert!(second > first);
     }
 
@@ -67,8 +67,8 @@ mod tests {
         COUNTER.store(max, Ordering::SeqCst);
         // Tests run in parallel, so we're not necessarily guaranteed
         // consistent ordering in the context of a test.
-        fetch_and_increment().unwrap(); // will return the max unless another thread rolled us over
-        let rolled_over = fetch_and_increment().unwrap(); // must be rolled over
+        fetch_and_increment(); // will return the max unless another thread rolled us over
+        let rolled_over = fetch_and_increment(); // must be rolled over
 
         assert!(rolled_over < max);
     }

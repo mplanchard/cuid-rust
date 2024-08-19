@@ -1,36 +1,31 @@
 [package]
-name = "cuid1"
-version = "0.1.0"
+name = "cuid"
+version = "1.3.3"
+description = "An ipmlementation of CUID protocol in rust"
+documentation = "https://docs.rs/cuid/latest/cuid/"
 resolver = "2"
 edition.workspace = true
-authors.workspace = true
 license.workspace = true
+authors.workspace = true
 homepage.workspace = true
 repository.workspace = true
 
 [dependencies]
 base36 = "0.0.1"
-cuid-util.workspace = true
+cuid1.workspace = true
+cuid2.workspace = true
 num = { version = "0.4.0", features = ["num-bigint"] }
 once_cell = "1.19.0"
 rand.workspace = true
-uuid = { version = "1.10.0", features = ["v4"] }
 
 [dev-dependencies]
 criterion.workspace = true
 
-# Not WASM deps
-[target.'cfg(not(target_family = "wasm"))'.dependencies]
-hostname = "0.4.0"
 
 [lib]
-name = "cuid1"
+name = "cuid"
 path = "src/lib.rs"
 
 [[bin]]
-name = "cuid1"
+name = "cuid"
 path = "src/bin.rs"
-
-[[bench]]
-name = "cuid1"
-harness = false

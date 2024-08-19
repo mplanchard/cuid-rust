@@ -10,7 +10,7 @@ mod test {
     fn check_cuid_collisions() {
         let mut set = HashSet::new();
         for _ in 0..1_200_000 {
-            let id = cuid::cuid1().unwrap();
+            let id = cuid1::cuid();
             set.insert(id);
         }
         // we generated unique CUIDs
@@ -31,7 +31,7 @@ mod test {
             let t = thread::spawn(move || {
                 let mut thread_set = HashSet::new();
                 for _ in 0..ids_per_thread {
-                    let id = cuid::cuid1().unwrap();
+                    let id = cuid1::cuid();
                     thread_set.insert(id);
                 }
                 let mut sets = thread_sets.lock().unwrap();
@@ -79,7 +79,7 @@ mod single_thread {
     fn check_slug_collisions() {
         let mut set = HashSet::new();
         for _ in 0..1_200_000 {
-            let id = cuid::cuid1_slug().unwrap();
+            let id = cuid1::slug();
             set.insert(id);
         }
         // we had no duplicate slugs
