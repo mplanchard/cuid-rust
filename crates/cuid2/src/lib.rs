@@ -58,8 +58,12 @@ use std::{
     cell::RefCell,
     collections::hash_map::DefaultHasher,
     hash::{Hash, Hasher},
-    time::{SystemTime, UNIX_EPOCH},
 };
+
+#[cfg(not(target_family = "wasm"))]
+use std::time::{SystemTime, UNIX_EPOCH};
+#[cfg(target_family = "wasm")]
+use web_time::{SystemTime, UNIX_EPOCH};
 
 use cuid_util::ToBase36;
 use num::bigint;
@@ -85,6 +89,21 @@ const STARTING_CHARS: &str = "abcdefghijklmnopqrstuvwxyz";
 // - fingerprint, a hash with added entropy, derived from a random number between
 //   2063 and 4125, inclusive, the process ID, and the thread ID
 
+fn fingerprint() -> String {
+    hash(
+        [
+            thread_rng().gen::<u128>().to_be_bytes(),
+            thread_rng().gen::<u128>().to_be_bytes(),
+            #[cfg(not(target_family = "wasm"))]
+            u128::from(std::process::id()).to_be_bytes(),
+            #[cfg(target_family = "wasm")]
+            thread_rng().gen::<u128>().to_be_bytes(),
+            u128::from(get_thread_id()).to_be_bytes(),
+        ],
+        BIG_LENGTH.into(),
+    )
+}
+
 thread_local! {
     /// Value used to initialize the counter. After the counter hits u64::MAX, it
     /// will roll back to this value.
@@ -109,15 +128,7 @@ thread_local! {
     ///
     /// This is pretty non-language, non-system dependent, so it allows us to
     /// compile to wasm and so on.
-    static FINGERPRINT: String = hash(
-        [
-            thread_rng().gen::<u128>().to_be_bytes(),
-            thread_rng().gen::<u128>().to_be_bytes(),
-            u128::from(std::process::id()).to_be_bytes(),
-            u128::from(get_thread_id()).to_be_bytes(),
-        ],
-        BIG_LENGTH.into(),
-    );
+    static FINGERPRINT: String = fingerprint();
 }
 
 // Hashing
@@ -462,6 +473,12 @@ mod test {
         assert!(next > start);
     }
 
+    #[wasm_bindgen_test::wasm_bindgen_test]
+    fn wasm_cuid_does_not_panic() {
+        cuid();
+    }
+
+    #[cfg(not(target_family = "wasm"))]
     #[test]
     #[ignore] // slow: run explicitly when desired
     fn collisions() {

@@ -30,13 +30,16 @@ rand.workspace = true
 sha3 = "0.10.6"
 
 [dev-dependencies]
+radix_fmt = "1.0.0"
+wasm-bindgen-test.workspace = true
+
+[target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
 criterion.workspace = true
 num_cpus = "1.15.0"
 proptest.workspace = true
-radix_fmt = "1.0.0"
-wasm-bindgen-test.workspace = true
 
 [target.wasm32-unknown-unknown.dependencies]
 # Just specified so we can add a feature when the js feature is enabled.
 # This works fine on wasm targets other than unknown-unknown
 getrandom = { version = "0", features = ["js"] }
+web-time = "1.1.0"

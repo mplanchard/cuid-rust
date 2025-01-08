@@ -43,6 +43,7 @@
               rust-analyzer
               shellcheck
               util-linux  # lspcu utility for getting info about cores
+              wasm-pack
             ];
           };
         });

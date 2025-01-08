@@ -50,10 +50,12 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v2"
+      - uses: "jetli/wasm-pack-action@v0.4.0"
       - uses: "actions-rs/cargo@v1"
         with:
           command: "build"
           args: "--target ${{ matrix.target }}"
+      - run: "cd crates/cuid2 && wasm-pack test --node"
 
   lint:
     name: "Lint"
