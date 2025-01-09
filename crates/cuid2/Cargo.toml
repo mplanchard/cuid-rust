@@ -30,6 +30,7 @@ rand.workspace = true
 sha3 = "0.10.6"
 
 [dev-dependencies]
+paste.workspace = true
 radix_fmt = "1.0.0"
 wasm-bindgen-test.workspace = true
 

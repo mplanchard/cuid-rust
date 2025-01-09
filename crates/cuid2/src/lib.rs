@@ -60,6 +60,7 @@ use std::{
     hash::{Hash, Hasher},
 };
 
+// std::time::SystemTime panics on WASM, so use a different library there.
 #[cfg(not(target_family = "wasm"))]
 use std::time::{SystemTime, UNIX_EPOCH};
 #[cfg(target_family = "wasm")]
@@ -96,6 +97,7 @@ fn fingerprint() -> String {
             thread_rng().gen::<u128>().to_be_bytes(),
             #[cfg(not(target_family = "wasm"))]
             u128::from(std::process::id()).to_be_bytes(),
+            // WASM has no concept of a PID, so just use another random block
             #[cfg(target_family = "wasm")]
             thread_rng().gen::<u128>().to_be_bytes(),
             u128::from(get_thread_id()).to_be_bytes(),
@@ -464,6 +466,18 @@ mod test {
 
     use super::*;
 
+    /// Run an already-defined test in WASM as well.
+    macro_rules! wasm_test {
+        ($name:ident) => {
+            paste::paste! {
+                #[wasm_bindgen_test::wasm_bindgen_test]
+                fn [<wasm_ $name>]() {
+                    $name()
+                }
+            }
+        };
+    }
+
     #[test]
     fn counter_increments() {
         let start = get_count();
@@ -472,17 +486,32 @@ mod test {
         // concurrent test may have also incremented
         assert!(next > start);
     }
+    wasm_test!(counter_increments);
 
+    #[test]
+    fn cuid_generation() {
+        assert!(is_cuid(cuid()))
+    }
+    wasm_test!(cuid_generation);
+
+    // lesser version of the collisions test for WASM
     #[wasm_bindgen_test::wasm_bindgen_test]
-    fn wasm_cuid_does_not_panic() {
-        cuid();
+    fn wasm_collisions() {
+        let count = 10_000;
+        let cuids = (0..count).fold(HashSet::with_capacity(count), |mut acc, _| {
+            acc.insert(cuid());
+            acc
+        });
+        assert_eq!(count, cuids.len());
     }
 
-    #[cfg(not(target_family = "wasm"))]
+    #[cfg(not(target_family = "wasm"))] // uses num_cpus, which we can't compile on wasm
     #[test]
     #[ignore] // slow: run explicitly when desired
     fn collisions() {
         // generate ~10e6 IDs across all available cores
+
+        use wasm_bindgen_test::wasm_bindgen_test;
         let cores = num_cpus::get();
         let per_core = 10_000_000 / cores;
 
