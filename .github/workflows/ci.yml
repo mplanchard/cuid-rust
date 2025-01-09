@@ -46,7 +46,6 @@ jobs:
       matrix:
         target:
           - "wasm32-unknown-unknown"
-          - "wasm32-wasi"
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v2"
