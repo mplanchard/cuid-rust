@@ -6,9 +6,11 @@ mod random;
 mod text;
 mod time;
 
-use once_cell::sync::Lazy;
 use rand::{thread_rng, Rng};
-use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::{
+    atomic::{AtomicU32, Ordering},
+    LazyLock,
+};
 
 const BASE: u8 = 36;
 const BLOCK_SIZE: usize = 4;
@@ -17,7 +19,7 @@ const START_STR: &str = "c";
 
 static COUNTER: AtomicU32 = AtomicU32::new(0);
 
-static FINGERPRINT: Lazy<String> = Lazy::new(fingerprint::fingerprint);
+static FINGERPRINT: LazyLock<String> = LazyLock::new(fingerprint::fingerprint);
 
 /// Generate a v1 CUID
 ///
