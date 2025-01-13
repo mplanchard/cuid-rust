@@ -58,6 +58,7 @@ jobs:
           command: "build"
           args: "--target ${{ matrix.target }}"
       - run: "cd crates/cuid2 && wasm-pack test --node"
+      - run: "cd crates/cuid1 && wasm-pack test --node"
 
   lint:
     name: "Lint"

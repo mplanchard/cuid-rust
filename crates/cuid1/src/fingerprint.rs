@@ -5,8 +5,16 @@ use crate::BASE;
 
 static FINGERPRINT_PADDING: usize = 2;
 
+/// Get a PID for the running process.
+///
+/// On WASM, which does not have PIDs, replace with a random number.
 fn pid() -> String {
-    pad(FINGERPRINT_PADDING, to_base_string(process::id()))
+    #[cfg(not(target_family = "wasm"))]
+    let pid = process::id();
+    #[cfg(target_family = "wasm")]
+    let pid = rand::random::<u32>();
+
+    pad(FINGERPRINT_PADDING, to_base_string(pid))
 }
 
 /// Convert the hostname to a padded String in the appropriate base.

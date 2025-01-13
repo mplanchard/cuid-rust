@@ -510,8 +510,6 @@ mod test {
     #[ignore] // slow: run explicitly when desired
     fn collisions() {
         // generate ~10e6 IDs across all available cores
-
-        use wasm_bindgen_test::wasm_bindgen_test;
         let cores = num_cpus::get();
         let per_core = 10_000_000 / cores;
 

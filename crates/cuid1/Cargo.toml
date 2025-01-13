@@ -8,20 +8,6 @@ license.workspace = true
 homepage.workspace = true
 repository.workspace = true
 
-[dependencies]
-cuid-util.workspace = true
-num = { version = "0.4.0", features = ["num-bigint"] }
-once_cell = "1.19.0"
-rand.workspace = true
-uuid = { version = "1.10.0", features = ["v4"] }
-
-[dev-dependencies]
-criterion.workspace = true
-
-# Not WASM deps
-[target.'cfg(not(target_family = "wasm"))'.dependencies]
-hostname = "0.4.0"
-
 [lib]
 name = "cuid1"
 path = "src/lib.rs"
@@ -33,3 +19,28 @@ path = "src/bin.rs"
 [[bench]]
 name = "cuid1"
 harness = false
+
+[dependencies]
+cuid-util.workspace = true
+num = { version = "0.4.0", features = ["num-bigint"] }
+once_cell = "1.19.0"
+rand.workspace = true
+uuid = { version = "1.10.0", features = ["v4"] }
+
+[dev-dependencies]
+paste.workspace = true
+wasm-bindgen-test.workspace = true
+
+# Not WASM deps
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
+hostname = "0.4.0"
+
+# WASM deps
+[target.'cfg(target_family = "wasm")'.dependencies]
+# Just specified so we can add a feature when the js feature is enabled.
+# This works fine on wasm targets other than unknown-unknown
+getrandom = { version = "0", features = ["js"] }
+web-time = "1.1.0"
+
+[target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
+criterion.workspace = true

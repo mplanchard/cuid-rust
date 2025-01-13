@@ -1,4 +1,8 @@
+// std::time::SystemTime panics on WASM, so use a different library there.
+#[cfg(not(target_family = "wasm"))]
 use std::time::{SystemTime, UNIX_EPOCH};
+#[cfg(target_family = "wasm")]
+use web_time::{SystemTime, UNIX_EPOCH};
 
 use crate::text::to_base_string;
 

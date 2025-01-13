@@ -158,33 +158,51 @@ pub fn is_slug<S: AsRef<str>>(to_check: S) -> bool {
 mod tests {
     use super::*;
 
+    /// Run an already-defined test in WASM as well.
+    macro_rules! wasm_test {
+        ($name:ident) => {
+            paste::paste! {
+                #[wasm_bindgen_test::wasm_bindgen_test]
+                fn [<wasm_ $name>]() {
+                    $name()
+                }
+            }
+        };
+    }
+
     #[test]
     fn correct_discrete_values() {
         assert_eq!((crate::BASE as u32).pow(BLOCK_SIZE as u32), DISCRETE_VALUES);
     }
+    wasm_test!(correct_discrete_values);
 
     #[test]
     fn cuid_len() {
         assert_eq!(cuid().len(), 25);
     }
+    wasm_test!(cuid_len);
 
     #[test]
     fn cuid_is_cuid() {
         assert!(is_cuid(cuid()));
     }
+    wasm_test!(cuid_is_cuid);
 
     #[test]
     fn cuid_is_not_cuid_zero_len() {
         assert!(!is_cuid(""));
     }
+    wasm_test!(cuid_is_not_cuid_zero_len);
 
     #[test]
     fn slug_len() {
         assert!(slug().len() == 10);
     }
+    wasm_test!(slug_len);
 
     #[test]
     fn slug_is_slug() {
         assert!(is_slug(slug()));
     }
+    wasm_test!(slug_is_slug);
 }

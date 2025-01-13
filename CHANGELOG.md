@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Fixed
+
+- (v1) Replaced `std::sys::SystemTime` with `web_time::SystemTime` so
+  that CUID generation does not panic in WASM builds
+
 ## [cuid2 v0.1.4]
 
 ### Fixed
@@ -206,7 +211,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Benchmark suite
 
 [unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.4...HEAD
-[cuid2 v0.1.3]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.3...cuid2-v0.1.4
+[cuid2 v0.1.4]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.3...cuid2-v0.1.4
 [cuid2 v0.1.3]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.2...cuid2-v0.1.3
 [cuid 1.3.3]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.2...cuid-v1.3.3
 [cuid2 v0.1.2]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.1...cuid2-v0.1.2
