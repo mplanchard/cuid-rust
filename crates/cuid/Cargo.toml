@@ -14,6 +14,10 @@ repository.workspace = true
 cuid1 = { workspace = true, optional = true }
 cuid2 = { workspace = true, optional = true }
 
+[dev-dependencies]
+paste.workspace = true
+wasm-bindgen-test.workspace = true
+
 [lib]
 name = "cuid"
 path = "src/lib.rs"

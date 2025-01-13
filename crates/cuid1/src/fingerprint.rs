@@ -1,5 +1,3 @@
-use std::process;
-
 use crate::text::{pad, to_base_string};
 use crate::BASE;
 
@@ -10,7 +8,7 @@ static FINGERPRINT_PADDING: usize = 2;
 /// On WASM, which does not have PIDs, replace with a random number.
 fn pid() -> String {
     #[cfg(not(target_family = "wasm"))]
-    let pid = process::id();
+    let pid = std::process::id();
     #[cfg(target_family = "wasm")]
     let pid = rand::random::<u32>();
 
