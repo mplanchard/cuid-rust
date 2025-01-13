@@ -1,4 +1,4 @@
-# cuid-rust
+# cuid
 
 [![Build Status](https://github.com/mplanchard/cuid-rust/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/mplanchard/cuid-rust/actions/workflows/ci.yml?query=branch%3Amaster)
 [![Crates.io](https://img.shields.io/crates/v/cuid "Crates.io")](https://crates.io/crates/cuid/)
@@ -25,14 +25,28 @@ therefore up to the users of this crate to choose an ID
 appropriately. Therefore, this library will continue to support v1
 CUIDs for the foreseeable future. See the original authors' position in more detail [here](https://github.com/paralleldrive/cuid2?tab=readme-ov-file#note-on-k-sortablesequentialmonotonically-increasing-ids).
 
-If you only need `cuid2`, you can use the `cuid2` crate: [cuid2 crate](https://docs.rs/cuid2/latest/cuid2/).
+By default, both `cuid1` and `cuid2` algorithms are provided. If you
+only need one, you can disable default features and select just the one
+you need, for example to only include v2 CUIDs:
+
+```toml
+cuid = { version = "2.0.0", default-features = false, features = ["v2"] }
+```
+
+You can also use the [cuid1] or [cuid2] crates independently.
+
+## Upgrading to version 2.0
+
+Functions like `cuid()` have been removed in favor of version-specific
+functions, like `cuid1()`. You can either update the function calls or
+replace your use of the cuid crate with the [cuid1] or [cuid2] crate.
 
 ## Installation
 
 In cargo.toml
 
 ```toml
-cuid = "1.4.0"
+cuid = "2.0.0"
 ```
 
 Or install the binary:
@@ -59,18 +73,18 @@ fn main() -> () {
     // the length, counter function, and fingerprinter (note that
     // these are const functions, so you can create a static
     // constructor if desired.
-    let constructor = CuidConstructor::new()
+    static CONSTRUCTOR: Cuid2Constructor = Cuid2Constructor::new()
         .with_length(20)
         .with_counter(const_counter)
         .with_fingerprinter(const_fingerprinter);
     println!("{}", constructor.create_id());
 }
 
-fn const_counter() -> u64 {
+const fn const_counter() -> u64 {
     42
 }
 
-fn const_fingerprinter() -> String {
+const fn const_fingerprinter() -> String {
     "fingers".to_string()
 }
 ```
@@ -165,3 +179,5 @@ sudo nice -n -20 su <username> -l -c "cd $PWD && cargo bench"
 ```
 
 [benches]: ./benches/cuid.rs
+[cuid1]: https://crates.io/crates/cuid1/
+[cuid2]: https://crates.io/crates/cuid2/

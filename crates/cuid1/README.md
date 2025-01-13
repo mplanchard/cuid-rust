@@ -1,8 +1,8 @@
 # cuid1
 
 [![Build Status](https://github.com/mplanchard/cuid-rust/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/mplanchard/cuid-rust/actions/workflows/ci.yml?query=branch%3Amaster)
-[![Crates.io](https://img.shields.io/crates/v/cuid "Crates.io")](https://crates.io/crates/cuid1/)
-[![docs.rs](https://docs.rs/cuid/badge.svg)](https://docs.rs/cuid1/)
+[![Crates.io](https://img.shields.io/crates/v/cuid1 "Crates.io")](https://crates.io/crates/cuid1/)
+[![docs.rs](https://docs.rs/cuid1/badge.svg)](https://docs.rs/cuid1/)
 
 Cuids are "Collision-resistant ids optimized for horizontal scaling and
 binary search lookup performance."
@@ -14,6 +14,9 @@ This library provides the `cuid1` algorithm:
 - `cuid1` is a k-sortable ID that is extremely fast to generate with
   very good randomness properties
 
+Note that the [cuid] crate is also available, and provides access to
+both the `cuid1` and `cuid2` algorithms.
+
 **NOTE:** It is the position of the original authors of CUID that
 `cuid1` is "insecure" due to its being k-sortable and potentially
 exposing information about generation order and/or time of
@@ -21,9 +24,11 @@ generation. It is my position that these properties apply to a number
 of very good ID-generating algorithms (such as UUIDv7), and it is
 therefore up to the users of this crate to choose an ID
 appropriately. Therefore, this library will continue to support v1
-CUIDs for the foreseeable future. See the original authors' position in more detail [here](https://github.com/paralleldrive/cuid2?tab=readme-ov-file#note-on-k-sortablesequentialmonotonically-increasing-ids).
+CUIDs for the foreseeable future. See the original authors' position
+in more detail [here](https://github.com/paralleldrive/cuid2?tab=readme-ov-file#note-on-k-sortablesequentialmonotonically-increasing-ids).
 
-If you only need `cuid2`, you can use the `cuid2` crate: [cuid2 crate](https://docs.rs/cuid2/latest/cuid2/).
+If you would like an algorithm that is not k-sortable, you can use the
+[`cuid2` crate](https://docs.rs/cuid2/latest/cuid2/).
 
 ## Installation
 
@@ -129,3 +134,6 @@ sudo nice -n -20 su <username> -l -c "cd $PWD && cargo bench"
 ```
 
 [benches]: ./benches/cuid.rs
+[cuid]: https://crates.io/crates/cuid/
+[cuid1]: https://crates.io/crates/cuid1/
+[cuid2]: https://crates.io/crates/cuid2/
