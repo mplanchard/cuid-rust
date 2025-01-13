@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [cuid1 v0.1.0]
+
+Technically, this is a new crate! This was published containing the
+fix below. This will be included in the next major version of `cuid`,
+which will be a breaking release in which the top-level `cuid()` function
+is replaced by explicit calls to either `cuid1()` or `cuid2()`.
 
 ### Fixed
 
@@ -210,7 +215,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CUID & CUID slug generation
 - Benchmark suite
 
-[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.4...HEAD
+[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid1-v0.1.0...HEAD
+[cuid1 v0.1.0]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.3...cuid1-v0.1.0
 [cuid2 v0.1.4]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.3...cuid2-v0.1.4
 [cuid2 v0.1.3]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.2...cuid2-v0.1.3
 [cuid 1.3.3]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.2...cuid-v1.3.3
