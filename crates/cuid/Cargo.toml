@@ -11,8 +11,8 @@ homepage.workspace = true
 repository.workspace = true
 
 [dependencies]
-cuid1.workspace = true
-cuid2.workspace = true
+cuid1 = { workspace = true, optional = true }
+cuid2 = { workspace = true, optional = true }
 
 [lib]
 name = "cuid"
@@ -21,3 +21,8 @@ path = "src/lib.rs"
 [[bin]]
 name = "cuid"
 path = "src/bin.rs"
+
+[features]
+default = ["v1", "v2"]
+v1 = ["dep:cuid1"]
+v2 = ["dep:cuid2"]

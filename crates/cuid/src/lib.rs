@@ -24,6 +24,7 @@
 //!
 //! ```sh
 //! $> cuid --v2
+//! i12sf8k69lbvktlr7qb4p6xv
 //! ```
 //!
 //! See the [original v1 implementation] and [original v2 implementation] for
@@ -33,10 +34,15 @@
 //! [original v2 implementation]: https://github.com/paralleldrive/cuid2
 //!
 
-pub use cuid1::{cuid as cuid1, is_cuid as is_cuid1, is_slug as is_cuid1_slug, slug as cuid1_slug};
+#[cfg(feature = "v1")]
+pub use cuid1::{
+    cuid as cuid1, is_cuid as is_cuid1, is_slug as is_cuid1_slug, slug as cuid1_slug,
+};
+#[cfg(feature = "v1")]
 #[doc(hidden)]
 pub use cuid1::{one_off_cuid1, one_off_cuid1_slug};
 
+#[cfg(feature = "v2")]
 pub use cuid2::{
     cuid as cuid2, is_cuid2, is_slug as is_cuid2_slug, slug as cuid2_slug,
     CuidConstructor as Cuid2Constructor,
