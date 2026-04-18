@@ -206,7 +206,9 @@ pub fn is_cuid2<S: AsRef<str>>(to_check: S) -> bool {
 fn is_cuid2_inner<S: AsRef<str>, const MAX_LENGTH: usize>(to_check: S) -> bool {
     let to_check = to_check.as_ref().as_bytes();
 
-    if (2..=MAX_LENGTH).contains(&to_check.len()) && let [first, tail @ ..] = to_check {
+    if (2..=MAX_LENGTH).contains(&to_check.len())
+        && let [first, tail @ ..] = to_check
+    {
         return STARTING_CHARS.as_bytes().contains(first)
             && tail.iter().all(|x| matches!(x, b'0'..=b'9' | b'a'..=b'z'));
     }
