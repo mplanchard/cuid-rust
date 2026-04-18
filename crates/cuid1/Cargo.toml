@@ -26,7 +26,7 @@ harness = false
 cuid-util.workspace = true
 num.workspace = true
 rand.workspace = true
-uuid = { version = "1.10.0", features = ["v4"] }
+uuid = { workspace = true, features = ["v4"] }
 
 [dev-dependencies]
 paste.workspace = true
