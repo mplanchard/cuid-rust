@@ -41,6 +41,7 @@ hostname.workspace = true
 # This isn't a direct dependency, but we need to ensure the feature
 # is enabled for webassembly builds to work.
 getrandom = { workspace = true, features = ["wasm_js"] }
+uuid = { workspace = true, features = ["v4", "rng-getrandom"] }
 web-time.workspace = true
 
 [target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
