@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [cuid1 v0.1.1], [cuid2 v0.1.5]
+
+### Changed
+
+- Updated a variety of dependencies, Rust edition, and so on.
+- Updated transitive dependency specification for `getrandom` to
+  current version, resolves #19
+
 ## [cuid1 v0.1.0]
 
 Technically, this is a new crate! This was published containing the
@@ -215,10 +223,15 @@ is replaced by explicit calls to either `cuid1()` or `cuid2()`.
 - CUID & CUID slug generation
 - Benchmark suite
 
-[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid1-v0.1.0...HEAD
+[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid1-v0.1.1...HEAD
+
+[cuid1 v0.1.1]: https://github.com/mplanchard/cuid-rust/compare/cuid1-v0.1.0...cuid1-v0.1.0
 [cuid1 v0.1.0]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.3...cuid1-v0.1.0
+
+[cuid2 v0.1.5]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.4...cuid2-v0.1.5
 [cuid2 v0.1.4]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.3...cuid2-v0.1.4
 [cuid2 v0.1.3]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.2...cuid2-v0.1.3
+
 [cuid 1.3.3]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.2...cuid-v1.3.3
 [cuid2 v0.1.2]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.1...cuid2-v0.1.2
 [cuid 1.3.2]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.1...cuid-v1.3.2
