@@ -34,7 +34,7 @@ wasm-bindgen-test.workspace = true
 
 # Not WASM deps
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
-hostname = "0.4.0"
+hostname.workspace = true
 
 # WASM deps
 [target.'cfg(target_family = "wasm")'.dependencies]
