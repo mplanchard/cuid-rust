@@ -25,7 +25,6 @@ harness = false
 [dependencies]
 cuid-util.workspace = true
 num.workspace = true
-once_cell = "1.19.0"
 rand.workspace = true
 uuid = { version = "1.10.0", features = ["v4"] }
 
