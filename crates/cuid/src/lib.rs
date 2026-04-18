@@ -7,9 +7,11 @@
 //!
 //! // Get a v1 CUID
 //! println!("{}", cuid::cuid1());
+//! println!("{}", cuid::v1::cuid());
 //!
 //! // Get a v2 CUID
 //! println!("{}", cuid::cuid2());
+//! println!("{}", cuid::v2::cuid());
 //! ```
 //!
 //! Note that this crate also provides a very simple, single purpose

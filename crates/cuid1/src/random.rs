@@ -1,14 +1,14 @@
-use rand::{thread_rng, CryptoRng, Rng};
+use rand::prelude::RngExt;
 
 use super::{BLOCK_SIZE, DISCRETE_VALUES};
 use crate::text::{pad, to_base_string};
 
-fn random_float_from_rng<R: Rng + CryptoRng>(mut rng: R) -> f64 {
-    rng.gen::<f64>()
+fn random_float_from_rng<R: RngExt>(mut rng: R) -> f64 {
+    rng.random::<f64>()
 }
 
 fn random_float() -> f64 {
-    random_float_from_rng(thread_rng())
+    random_float_from_rng(&mut rand::rng())
 }
 
 fn random_64_bit_int<N: Into<f64>>(max: N) -> u64 {
