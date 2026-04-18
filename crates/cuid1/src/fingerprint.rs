@@ -1,5 +1,5 @@
-use crate::text::{pad, to_base_string};
 use crate::BASE;
+use crate::text::{pad, to_base_string};
 
 static FINGERPRINT_PADDING: usize = 2;
 

@@ -7,8 +7,8 @@ mod text;
 mod time;
 
 use std::sync::{
-    atomic::{AtomicU32, Ordering},
     LazyLock,
+    atomic::{AtomicU32, Ordering},
 };
 
 const BASE: u8 = 36;

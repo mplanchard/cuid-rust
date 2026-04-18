@@ -3,7 +3,7 @@ members = [ "crates/*" ]
 resolver = "2"
 
 [workspace.package]
-edition = "2021"
+edition = "2024"
 authors = [ "Matthew Planchard <msplanchard@gmail.com>" ]
 license = "MIT"
 homepage = "https://github.com/mplanchard/cuid-rust"

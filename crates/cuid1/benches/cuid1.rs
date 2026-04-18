@@ -1,6 +1,6 @@
 use std::thread;
 
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 
 fn bench_cuid(c: &mut Criterion) {
     c.bench_function("generate cuid", |b| b.iter(cuid1::cuid));

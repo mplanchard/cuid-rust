@@ -46,8 +46,8 @@ pub use cuid1::{one_off_cuid1, one_off_cuid1_slug};
 
 #[cfg(feature = "v2")]
 pub use cuid2::{
-    self as v2, cuid as cuid2, is_cuid2, is_slug as is_cuid2_slug, slug as cuid2_slug,
-    CuidConstructor as Cuid2Constructor,
+    self as v2, CuidConstructor as Cuid2Constructor, cuid as cuid2, is_cuid2,
+    is_slug as is_cuid2_slug, slug as cuid2_slug,
 };
 
 #[cfg(test)]

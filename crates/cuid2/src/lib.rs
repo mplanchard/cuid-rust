@@ -68,7 +68,7 @@ use web_time::{SystemTime, UNIX_EPOCH};
 
 use cuid_util::ToBase36;
 use num::bigint;
-use rand::{seq::IndexedRandom, RngExt};
+use rand::{RngExt, seq::IndexedRandom};
 use sha3::{Digest, Sha3_512};
 
 // =============================================================================
@@ -206,11 +206,9 @@ pub fn is_cuid2<S: AsRef<str>>(to_check: S) -> bool {
 fn is_cuid2_inner<S: AsRef<str>, const MAX_LENGTH: usize>(to_check: S) -> bool {
     let to_check = to_check.as_ref().as_bytes();
 
-    if (2..=MAX_LENGTH).contains(&to_check.len()) {
-        if let [first, tail @ ..] = to_check {
-            return STARTING_CHARS.as_bytes().contains(first)
-                && tail.iter().all(|x| matches!(x, b'0'..=b'9' | b'a'..=b'z'));
-        }
+    if (2..=MAX_LENGTH).contains(&to_check.len()) && let [first, tail @ ..] = to_check {
+        return STARTING_CHARS.as_bytes().contains(first)
+            && tail.iter().all(|x| matches!(x, b'0'..=b'9' | b'a'..=b'z'));
     }
 
     false
