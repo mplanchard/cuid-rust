@@ -15,4 +15,4 @@ repository.workspace = true
 num.workspace = true
 proptest.workspace = true
 # Our radix function is faster than this one, but we can use it to check our output
-radix_fmt = "1.0.0"
+radix_fmt.workspace = true

@@ -27,11 +27,10 @@ harness = false
 cuid-util.workspace = true
 num.workspace = true
 rand.workspace = true
-sha3 = "0.10.6"
+sha3.workspace = true
 
 [dev-dependencies]
 paste.workspace = true
-radix_fmt = "1.0.0"
 wasm-bindgen-test.workspace = true
 
 [target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
