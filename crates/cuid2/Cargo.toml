@@ -35,7 +35,7 @@ wasm-bindgen-test.workspace = true
 
 [target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
 criterion.workspace = true
-num_cpus = "1.15.0"
+num_cpus.workspace = true
 proptest.workspace = true
 
 [target.'cfg(target_family = "wasm")'.dependencies]
