@@ -281,7 +281,7 @@ dependencies = [
 
 [[package]]
 name = "cuid"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "cuid1",
  "cuid2",
@@ -316,7 +316,7 @@ dependencies = [
 
 [[package]]
 name = "cuid2"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "ahash",
  "criterion",
