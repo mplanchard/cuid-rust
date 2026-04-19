@@ -7,18 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-## [cuid v2.0.3]
+## [cuid v2.0.2 through v2.0.4][cuid v2.0.4]
+
+(took me a few tries to remember how I set it up :P)
 
 ### Changed
 
 - Ensure that top-level `cuid` crate requires current versions of sub-crates,
   but correctly this time.
-
-## [cuid v2.0.2]
-
-### Changed
-
-- Ensure that top-level `cuid` crate requires current versions of sub-crates.
 
 ## [cuid v2.0.1]
 
@@ -266,9 +262,9 @@ is replaced by explicit calls to either `cuid1()` or `cuid2()`.
 - CUID & CUID slug generation
 - Benchmark suite
 
-[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.2...HEAD
+[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.4...HEAD
 
-[cuid v2.0.2]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.1...cuid-v2.0.2
+[cuid v2.0.4]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.1...cuid-v2.0.4
 [cuid v2.0.1]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.0...cuid-v2.0.1
 [cuid v2.0.0]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.3...cuid-v2.0.0
 
