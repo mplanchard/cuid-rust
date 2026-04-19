@@ -1,6 +1,16 @@
-//! # cuid-rust
+//! # CUID generation in rust
 //!
-//! CUID generation in rust
+//! This crate contains implementations of both the [v1] and [v2] CUID
+//! algorithms. By default, both v1 and v2 CUIDs are available. If you
+//! are optimizing for binary size, you can exclude one or the other
+//! by setting `default_features = false` and selecting the one you
+//! need (see [Features](#Features), below).
+//!
+//! In addition, both CUID algorithms are provided as their own
+//! independent crates, which this one merely wraps. They are creatively
+//! named [cuid1](https://docs.rs/cuid/latest/cuid1/) and [cuid2](https://docs.rs/cuid/latest/cuid2/).
+//!
+//! ## Usage
 //!
 //! ```rust
 //! use cuid;
@@ -29,11 +39,52 @@
 //! i12sf8k69lbvktlr7qb4p6xv
 //! ```
 //!
-//! See the [original v1 implementation] and [original v2 implementation] for
-//! more details on CUIDs in general.
+//! v2 CUIDs also support some customization, allowing the specification
+//! of:
+//! - length
+//! - a counter function
+//! - a system fingerprint function
 //!
-//! [original v1 implementation]: https://github.com/ericelliott/cuid
-//! [original v2 implementation]: https://github.com/paralleldrive/cuid2
+//! See the [v2 CuidConstructor](https://docs.rs/cuid2/0.1.5/cuid2/struct.CuidConstructor.html)
+//! docs for more details.
+//!
+//! ## Should I Use v1 or v2?
+//!
+//! According to the original implementation, v1 CUIDs are deprecated
+//! because they are "insecure," due to the fact that they are k-sortable,
+//! which is to say, as one goes forward in time, v1 CUIDs go up.
+//!
+//! K-sortability is actually a common property of IDs, and is sometimes
+//! desired. For example, k-sortable IDs are great for PKs for high-volume
+//! timeseries data, since they significantly improve index locality of
+//! adjacent rows. As an example, v7 UUIDs are k-sortable, and you can find
+//! plenty of material online discussing performance improvements using
+//! them for primary keys in postgres or other databases.
+//!
+//! That said, k-sortable IDs are significantly more "guessable" than
+//! non-k-sortable IDs, which can potentially be a security issue for
+//! certain applications.
+//!
+//! For CUID, the v1 algorithm is simpler and faster than the v2
+//! algorithm. Generating a v1 CUID is around 8-10x faster than a v2
+//! CUID (~275 ns vs ~2.4 us on my machine).
+//!
+//! As such, if your use-case is not sensitive to guessability, I
+//! would recommend going with v1.
+//!
+//! For more information, see [this issue](https://github.com/mplanchard/cuid-rust/issues/17)
+//!
+//! ## Prior Art
+//!
+//! See the [original v1 implementation][v1] and [original v2
+//! implementation][v2] for more details on CUIDs in general.
+//!
+//! [v1]: https://github.com/ericelliott/cuid
+//! [v2]: https://github.com/paralleldrive/cuid2
+//!
+//! ## Features
+//! - `v1` (enabled by default): provides access to v1 CUIDs
+//! - `v2` (enabled by default): provides access to v2 CUIDs
 //!
 
 #[cfg(feature = "v1")]

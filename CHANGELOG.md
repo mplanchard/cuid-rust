@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [cuid v2.0.0]
+
+### Removed
+
+- The top-level `cuid()`, `slug()`, and `is_cuid()` functions have been
+  removed. These were implicitly yielding v1 CUIDs, and it is now required
+  for CUID version to be explicitly specified.
+
+  Importing `cuid::v1::*` or qualifying each function like `v1::cuid()` is
+  equivalent to the removed top-level functions.
+
+  In addition, version-specific top-level function names like `cuid1()`,
+  `cuid1_slug()`, and `is_cuid1()` are provided.
+
 ## [cuid1 v0.1.1], [cuid2 v0.1.5]
 
 ### Changed
@@ -224,6 +238,8 @@ is replaced by explicit calls to either `cuid1()` or `cuid2()`.
 - Benchmark suite
 
 [unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid1-v0.1.1...HEAD
+
+[cuid 2.0.0]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.2...cuid-v2.0.0
 
 [cuid1 v0.1.1]: https://github.com/mplanchard/cuid-rust/compare/cuid1-v0.1.0...cuid1-v0.1.0
 [cuid1 v0.1.0]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.3...cuid1-v0.1.0

@@ -279,7 +279,7 @@ dependencies = [
 
 [[package]]
 name = "cuid1"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "criterion",
  "cuid-util",
@@ -295,7 +295,7 @@ dependencies = [
 
 [[package]]
 name = "cuid2"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "criterion",
  "cuid-util",
