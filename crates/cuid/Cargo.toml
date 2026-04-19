@@ -1,6 +1,6 @@
 [package]
 name = "cuid"
-version = "2.0.0"
+version = "2.0.1"
 description = "An ipmlementation of CUID protocol in rust"
 documentation = "https://docs.rs/cuid/latest/cuid/"
 resolver = "2"

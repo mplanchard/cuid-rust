@@ -1,0 +1,95 @@
+    Finished `bench` profile [optimized] target(s) in 0.06s
+
+running 2 tests
+test test::test_v1 ... ignored
+test test::test_v2 ... ignored
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 24 tests
+test counter::tests::counter_increasing_basic ... ignored
+test counter::tests::counter_increasing_rollover ... ignored
+test counter::tests::counter_is_monotonic_with_increasing_length ... ignored
+test fingerprint::fingerprint_tests::fingerprint_len ... ignored
+test fingerprint::fingerprint_tests::test_convert_hostname_1 ... ignored
+test fingerprint::fingerprint_tests::test_convert_hostname_2 ... ignored
+test fingerprint::fingerprint_tests::test_convert_hostname_3 ... ignored
+test fingerprint::fingerprint_tests::test_convert_hostname_4 ... ignored
+test fingerprint::fingerprint_tests::test_pid_length ... ignored
+test random::test_randoms::multiple_blocks_not_equal ... ignored
+test random::test_randoms::random_block_len ... ignored
+test tests::correct_discrete_values ... ignored
+test tests::cuid_is_cuid ... ignored
+test tests::cuid_is_not_cuid_zero_len ... ignored
+test tests::cuid_len ... ignored
+test tests::slug_is_slug ... ignored
+test tests::slug_len ... ignored
+test text::pad_tests::does_not_pad_str_of_size ... ignored
+test text::pad_tests::multichar_pad ... ignored
+test text::pad_tests::pad_0s ... ignored
+test text::pad_tests::single_char_pad ... ignored
+test text::pad_tests::smaller_pad ... ignored
+test time::time_tests::test_timestamp ... ignored
+test time::time_tests::test_timestamp_len ... ignored
+
+test result: ok. 0 passed; 0 failed; 24 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+Gnuplot not found, using plotters backend
+generate cuid           time:   [127.01 ns 127.25 ns 127.50 ns]
+                        change: [+0.9916% +1.2490% +1.4903%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+
+generate cuid slug      time:   [108.17 ns 108.34 ns 108.49 ns]
+                        change: [-0.1458% +0.1748% +0.4666%] (p = 0.28 > 0.05)
+                        No change in performance detected.
+
+Benchmarking generate many cuids: Warming up for 3.0000 s
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.5s, enable flat sampling, or reduce sample count to 60.
+generate many cuids     time:   [1.3062 ms 1.3077 ms 1.3098 ms]
+                        change: [-0.7527% -0.5815% -0.4073%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+
+Benchmarking generate many slugs: Warming up for 3.0000 s
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.4s, enable flat sampling, or reduce sample count to 60.
+generate many slugs     time:   [1.0833 ms 1.0853 ms 1.0871 ms]
+                        change: [-1.1367% -0.8566% -0.6011%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+
+multithreaded perf      time:   [2.6060 ms 2.6101 ms 2.6144 ms]
+                        change: [-0.0898% +0.1465% +0.3929%] (p = 0.24 > 0.05)
+                        No change in performance detected.
+
+multithreaded perf (many threads)
+                        time:   [8.6176 ms 8.6322 ms 8.6471 ms]
+                        change: [-4.4735% -3.0504% -1.5908%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+
+running 4 tests
+test test::collisions ... ignored
+test test::counter_increments ... ignored
+test test::cuid_generation ... ignored
+test test::distribution ... ignored
+
+test result: ok. 0 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+Gnuplot not found, using plotters backend
+generate cuid2          time:   [961.42 ns 962.55 ns 963.86 ns]
+                        change: [-16.003% -15.279% -14.814%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+generate many cuid2     time:   [9.5089 ms 9.5195 ms 9.5346 ms]
+                        change: [-13.990% -13.814% -13.644%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+generate small cuid2    time:   [670.69 ns 671.27 ns 671.78 ns]
+                        change: [-27.129% -26.939% -26.752%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+
+running 2 tests
+test tests::doesnt_panic ... ignored
+test tests::expected_output ... ignored
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s

@@ -31,6 +31,7 @@
             buildInputs = [
               bashInteractive
               cargo-audit
+              cargo-criterion
               cargo-edit
               cargo-flamegraph
               coreutils

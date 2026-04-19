@@ -56,7 +56,6 @@
 
 use std::{
     cell::RefCell,
-    collections::hash_map::DefaultHasher,
     hash::{Hash, Hasher},
 };
 
@@ -66,9 +65,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 #[cfg(target_family = "wasm")]
 use web_time::{SystemTime, UNIX_EPOCH};
 
-use cuid_util::ToBase36;
 use num::bigint;
-use rand::{RngExt, seq::IndexedRandom};
+use rand::RngExt;
 use sha3::{Digest, Sha3_512};
 
 // =============================================================================
@@ -80,7 +78,11 @@ use sha3::{Digest, Sha3_512};
 pub const DEFAULT_LENGTH: u8 = 24;
 const BIG_LENGTH: u8 = 32;
 // valid characters to start an ID
-const STARTING_CHARS: &str = "abcdefghijklmnopqrstuvwxyz";
+const STARTING_CHARS: &[u8] = b"abcdefghijklmnopqrstuvwxyz";
+const B36_LOOKUP: [char; 36] = [
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+    'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+];
 
 // =============================================================================
 // THREAD LOCALS
@@ -209,7 +211,7 @@ fn is_cuid2_inner<S: AsRef<str>, const MAX_LENGTH: usize>(to_check: S) -> bool {
     if (2..=MAX_LENGTH).contains(&to_check.len())
         && let [first, tail @ ..] = to_check
     {
-        return STARTING_CHARS.as_bytes().contains(first)
+        return STARTING_CHARS.contains(first)
             && tail.iter().all(|x| matches!(x, b'0'..=b'9' | b'a'..=b'z'));
     }
 
@@ -228,34 +230,36 @@ pub fn is_cuid<S: AsRef<str>>(to_check: S) -> bool {
 fn create_entropy(length: u16, rng: &mut impl RngExt) -> String {
     let length: usize = length.into();
 
-    // Allocate a string with the appropriate capacity to avoid reallocation.
-    //
-    // The string is generated and then pushed to until its desired length is
-    // reached or exceeded. We therefore allocate enough for the length plus
-    // the maximum value it might be exceeded by. The values pushed to the
-    // string are random numbers from 0 to 36, converted to base 36.
-    // Therefore, the maximum overfill is 36 in base 36, i.e. 10, which is 2
-    // chars
-    let mut result = String::with_capacity(length + 2);
-
+    // String will not exceed this length because we push one char
+    // to it in each loop iteration.
+    let mut result = String::with_capacity(length);
     while result.len() < length {
-        // Matches reference implementation logic as of 2023-08-08, which is:
+        // Ultimately, matches reference implementation logic as of 2023-08-08,
+        // which is:
         // ```js
         // entropy = entropy + Math.floor(random() * 36).toString(36);
         // ```
-        let random_val = rng.random_range(0u128..36u128);
-        result.push_str(&random_val.to_base_36());
+
+        let range_bottom = 0;
+        let range_top = 36;
+        debug_assert_eq!(0, range_bottom);
+        debug_assert_eq!(36, range_top);
+
+        let random_val = rng.random_range(range_bottom..range_top);
+        debug_assert!(random_val < 36);
+
+        result.push(char::from_digit(random_val, 36).expect("range is within radix"));
     }
 
     result
 }
 
 /// Retrieves the current timestmap and converts to Base36.
-fn get_timestamp() -> String {
+fn get_timestamp() -> u128 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
         // Use timestamp as milliseconds to match JS implementation
-        .map(|time| time.as_millis().to_base_36())
+        .map(|time| time.as_millis())
         // Panic safety: `.duration_since()` fails if the end time is not
         // later than the start time, so this will only fail if the system
         // time is before 1970-01-01. It is impossible on Unix systems to set
@@ -273,19 +277,13 @@ fn get_timestamp() -> String {
 }
 
 /// Retrieves and increments the counter value.
+#[inline]
 fn get_count() -> u64 {
-    COUNTER.with(|cell| {
-        cell.replace_with(|counter| {
-            counter
-                .checked_add(1)
-                // if we hit u64::MAX, roll back to the original thread-local
-                // initialization value
-                .unwrap_or_else(|| COUNTER_INIT.with(|x| *x))
-        })
-    })
+    COUNTER.with(|cell| cell.replace_with(|counter| counter.wrapping_add(1)))
 }
 
 /// Retrieves the thread-local fingerprint.
+#[inline]
 fn get_fingerprint() -> String {
     FINGERPRINT.with(|x| x.clone())
 }
@@ -294,7 +292,10 @@ fn get_fingerprint() -> String {
 fn get_thread_id() -> u64 {
     // ThreadId doesn't implement debug or display, but it does implement Hash,
     // so we can get the hash value to use in our fingerprint.
-    let mut hasher = DefaultHasher::new();
+    // Note that AHasher::default() does not have a random seed, but
+    // this is somewhat preferable for us, since we want each thread to
+    // be hashed with the same seed.
+    let mut hasher = ahash::AHasher::default();
     std::thread::current().id().hash(&mut hasher);
     hasher.finish()
 }
@@ -383,22 +384,24 @@ impl CuidConstructor {
     /// Creates a new CUID.
     #[inline]
     pub fn create_id(&self) -> String {
+        // Note: the reference implementation converts this to a base36
+        // number prior to hashing it. I see no reason why the alternative
+        // representation would improve the quality of the hash. Avoiding
+        // it saves us String allocations and radix conversion.
         let time = get_timestamp();
 
         let mut rng = rand::rng();
-
         let entropy = create_entropy(self.length, &mut rng);
 
-        let count = (self.counter)().to_base_36();
-
+        let count = (self.counter)();
         let fingerprint = (self.fingerprinter)();
 
         // Construct the main part of the ID body by hashing the various inputs
         let id_body = hash(
             [
-                time.as_bytes(),
+                &time.to_be_bytes(),
                 entropy.as_bytes(),
-                count.as_bytes(),
+                &count.to_be_bytes(),
                 fingerprint.as_bytes(),
             ],
             // The hash should be the desired total length minus 1 character
@@ -406,16 +409,13 @@ impl CuidConstructor {
             self.length - 1,
         );
 
-        // TODO check if index access makes a perf difference here
-        let first_letter = (*STARTING_CHARS
-            .as_bytes()
-            // Panic safety: choose() only returns None if the slice is empty,
-            // and STARTING_CHARS is a statically defined non-empty slice.
-            .choose(&mut rng)
-            .expect("STARTING_CHARS cannot be empty")) as char;
+        let letter_idx = rng.random_range(0..STARTING_CHARS.len());
+        let first_letter = STARTING_CHARS[letter_idx];
 
-        // Return only the requested length
-        format!("{first_letter}{id_body}")
+        let mut id = String::with_capacity(id_body.len() + 1);
+        id.push(first_letter.into());
+        id.push_str(&id_body);
+        id
     }
 }
 impl Default for CuidConstructor {

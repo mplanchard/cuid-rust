@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [cuid v2.0.1]
+
+Note that starting with this release, *releases* on GH will only be made
+for the main `cuid` crate. Tags will still be created for both `cuid`
+and the `cuid1` and `cuid2` subcrates, though.
+
+### [cuid2 v0.1.6]
+
+#### Changed
+
+- 15-20% performance improvement for cuid2 generation, due mostly to
+  optimizations in `create_entropy()`, along with a few other smaller
+  optimizations
+
 ## [cuid v2.0.0]
 
 ### Removed
@@ -239,13 +253,15 @@ is replaced by explicit calls to either `cuid1()` or `cuid2()`.
 - CUID & CUID slug generation
 - Benchmark suite
 
-[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.0...HEAD
+[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.1...HEAD
 
+[cuid 2.0.1]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.0...cuid-v2.0.1
 [cuid 2.0.0]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.3...cuid-v2.0.0
 
 [cuid1 v0.1.1]: https://github.com/mplanchard/cuid-rust/compare/cuid1-v0.1.0...cuid1-v0.1.0
 [cuid1 v0.1.0]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.3...cuid1-v0.1.0
 
+[cuid2 v0.1.6]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.5...cuid2-v0.1.6
 [cuid2 v0.1.5]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.4...cuid2-v0.1.5
 [cuid2 v0.1.4]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.3...cuid2-v0.1.4
 [cuid2 v0.1.3]: https://github.com/mplanchard/cuid-rust/compare/cuid2-v0.1.2...cuid2-v0.1.3
