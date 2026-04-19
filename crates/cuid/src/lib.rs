@@ -66,8 +66,8 @@
 //! certain applications.
 //!
 //! For CUID, the v1 algorithm is simpler and faster than the v2
-//! algorithm. Generating a v1 CUID is around 8-10x faster than a v2
-//! CUID (~275 ns vs ~2.4 us on my machine).
+//! algorithm. Generating a v1 CUID is around 7-8x faster than a v2
+//! CUID (~127 ns vs ~962 ns on my machine).
 //!
 //! As such, if your use-case is not sensitive to guessability, I
 //! would recommend going with v1.
