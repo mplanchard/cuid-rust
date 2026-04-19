@@ -1,6 +1,6 @@
 [package]
 name = "cuid"
-version = "2.0.2"
+version = "2.0.3"
 description = "An ipmlementation of CUID protocol in rust"
 documentation = "https://docs.rs/cuid/latest/cuid/"
 resolver = "2"
@@ -11,8 +11,8 @@ homepage.workspace = true
 repository.workspace = true
 
 [dependencies]
-cuid1 = { workspace = true, version = "0.1.1", optional = true }
-cuid2 = { workspace = true, version = "0.1.6", optional = true }
+cuid1 = { workspace = true, version = "=0.1.1", optional = true }
+cuid2 = { workspace = true, version = "=0.1.6", optional = true }
 
 [dev-dependencies]
 paste.workspace = true

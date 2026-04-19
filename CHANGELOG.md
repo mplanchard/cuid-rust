@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [cuid v2.0.3]
+
+### Changed
+
+- Ensure that top-level `cuid` crate requires current versions of sub-crates,
+  but correctly this time.
+
 ## [cuid v2.0.2]
 
 ### Changed
