@@ -262,11 +262,11 @@ is replaced by explicit calls to either `cuid1()` or `cuid2()`.
 - CUID & CUID slug generation
 - Benchmark suite
 
-[unreleased]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.4...HEAD
+[unreleased]: https://github.com/mplanchard/cuid-rust/compare/v2.0.4...HEAD
 
-[cuid v2.0.4]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.1...cuid-v2.0.4
-[cuid v2.0.1]: https://github.com/mplanchard/cuid-rust/compare/cuid-v2.0.0...cuid-v2.0.1
-[cuid v2.0.0]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.3...cuid-v2.0.0
+[cuid v2.0.4]: https://github.com/mplanchard/cuid-rust/compare/v2.0.1...v2.0.4
+[cuid v2.0.1]: https://github.com/mplanchard/cuid-rust/compare/v2.0.0...v2.0.1
+[cuid v2.0.0]: https://github.com/mplanchard/cuid-rust/compare/v1.3.3...v2.0.0
 
 [cuid1 v0.1.1]: https://github.com/mplanchard/cuid-rust/compare/cuid1-v0.1.0...cuid1-v0.1.0
 [cuid1 v0.1.0]: https://github.com/mplanchard/cuid-rust/compare/cuid-v1.3.3...cuid1-v0.1.0
