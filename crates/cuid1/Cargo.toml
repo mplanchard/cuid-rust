@@ -1,5 +1,6 @@
 [package]
 name = "cuid1"
+# Don't forget to update in workspace root also
 version = "0.1.1"
 description = "An implementation of the CUID protocol in rust"
 documentation = "https://docs.rs/cuid/latest/cuid1/"
