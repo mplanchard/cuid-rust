@@ -4,7 +4,7 @@
 //! algorithms. By default, both v1 and v2 CUIDs are available. If you
 //! are optimizing for binary size, you can exclude one or the other
 //! by setting `default_features = false` and selecting the one you
-//! need (see [Features](#Features), below).
+//! need (see [Features](#features), below).
 //!
 //! In addition, both CUID algorithms are provided as their own
 //! independent crates, which this one merely wraps. They are creatively
